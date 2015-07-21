@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.45" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.timetabler.Controller">
+   <center>
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+            <Tab text="Teachers">
+               <content>
+                  <VBox>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#addTeacher" text="+" />
+                        <ListView fx:id="teachers" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+          <Tab text="Subjects">
+            <content>
+                  <VBox>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#addSubject" text="+" />
+                        <ListView fx:id="subjects" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </center>
+</BorderPane>
