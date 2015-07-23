@@ -1,4 +1,4 @@
-package me.timetabler;
+package me.timetabler.add_dialogs;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -6,8 +6,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import me.timetabler.Subject;
+import me.timetabler.Teacher;
 import me.util.Log;
 
 import java.io.IOException;
@@ -24,9 +25,9 @@ public class AddSubjectDialog extends Stage implements Initializable {
 
     public Subject subject;
 
-    public AddSubjectDialog() {
+    public AddSubjectDialog(ListView<Teacher> teachers) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("addDialogue.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("addSubjectDialogue.fxml"));
             loader.setController(this);
             Parent root = loader.load();
             setTitle("Add Subject");
