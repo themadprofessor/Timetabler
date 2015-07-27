@@ -17,12 +17,9 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
     @FXML WebView view;
     private WebEngine engine;
-    private ArrayList<Teacher> teachers;
-    private ArrayList<Subject> subjects;
+    public static ArrayList<Teacher> teachers = new ArrayList<>();
+    public static ArrayList<Subject> subjects = new ArrayList<>();
     private JSObject bridge;
-    private JSObject teachersJS;
-    private JSObject subjectsJS;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         engine = view.getEngine();

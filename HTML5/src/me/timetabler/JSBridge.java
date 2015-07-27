@@ -13,10 +13,12 @@ public class JSBridge {
     public void addSubject(String name, String id) {
         Subject subject = new Subject(name, id);
         Log.out(subject.name);
+        Controller.subjects.add(subject);
     }
 
     public void addTeacher(String name, String id) {
         Teacher teacher = new Teacher(name, id);
         Log.out(teacher.name);
+        Controller.teachers.add(teacher);
     }
 }

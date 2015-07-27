@@ -26,14 +26,7 @@
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
-        <script>
-            $(document).ready(function(){
-                $("#tabs a").click(function(e){
-                    e.preventDefault();
-                    $(this).tab('show');
-                });
-            });
-        </script>
+
     </head>
     <body>
         <div class="supreme-container">
@@ -51,7 +44,7 @@
                         <div class="panel-heading"><h4>List Of Teachers</h4></div>
                         <div class="panel-body"><button type="button" class="btn btn-info tn-lg" data-toggle="modal" data-target="#addTeacher">Add Teacher</button></div>
                         <!-- Table -->
-                        <table class="table">
+                        <table id="listTeacher" class="table">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -68,7 +61,7 @@
                         <div class="panel-heading"><h4>List Of Subjects</h4></div>
                         <div class="panel-body"><button type="button" class="btn btn-info tn-lg" data-toggle="modal" data-target="#addSubject">Add Subject</button></div>
                         <!-- Table -->
-                        <table class="table">
+                        <table id="listSubject" class="table">
                             <thead>
                             <tr>
                                 <th>ID</th>

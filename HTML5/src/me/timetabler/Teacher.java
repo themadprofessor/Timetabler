@@ -11,4 +11,9 @@ public class Teacher {
         this.name = name;
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

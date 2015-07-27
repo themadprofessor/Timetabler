@@ -6,11 +6,33 @@ $(document).ready(function(){
 });
 
 function addSubject(e) {
-    java.addSubject(document.getElementById("nameSubject").value, document.getElementById("idSubject").value);
+    var name = document.getElementById("nameSubject").value;
+    var id = document.getElementById("idSubject").value;
+
+    var table = document.getElementById("listSubject");
+    var row = table.insertRow(table.rows.length);
+
+    var idCell = row.insertCell(0);
+    idCell.innerHTML = id;
+
+    var nameCell = row.insertCell(1);
+    nameCell.innerHTML = name;
+
+    java.addSubject(name.value, id);
 }
 
 function addTeacher(e) {
-    java.addTeacher(document.getElementById("nameTeacher").value, document.getElementById("idTeacher").value);
-}
+    var name = document.getElementById("nameTeacher").value;
+    var id = document.getElementById("idTeacher").value;
 
-function showTeachers()
+    var table = document.getElementById("listTeacher");
+    var row = table.insertRow(table.rows.length);
+
+    var idCell = row.insertCell(0);
+    idCell.innerHTML = id;
+
+    var nameCell = row.insertCell(1);
+    nameCell.innerHTML = name;
+
+    java.addTeacher(name, id);
+}
