@@ -1,23 +1,46 @@
 package me.timetabler;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import me.util.Log;
 
-public class Main extends Application {
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
-        primaryStage.setTitle("Timetabler");
-        primaryStage.setScene(new Scene(root, 800, 600));
-        primaryStage.show();
+/**
+ * Created by stuart on 24/08/15.
+ */
+public class Main {
+    public static void main(String[] args) {
+        new Main();
     }
 
-
-    public static void main(String[] args) {
-        launch(args);
+    public Main() {
+        File mapFile = new File("assets/map.csv");
+        ArrayList<ArrayList<CellType>> map = new ArrayList<>();
+        Pattern stairRegex = Pattern.compile("-[0-9]+");
+        try {
+            Files.lines(mapFile.toPath()).forEachOrdered(line -> {
+                String[] rowStrings = line.split(",");
+                ArrayList<CellType> row = new ArrayList<>();
+                for (String rowString : rowStrings) {
+                    if ("".equals(rowString)) {
+                        row.add(new Wall());
+                    } else if ("0".equals(rowString)) {
+                        row.add(new Path());
+                    } else if (stairRegex.matcher(rowString).matches()) {
+                        row.add(new StairCase(Integer.valueOf(rowString) * -1));
+                    } else {
+                        row.add(new ClassRoom(rowString));
+                    }
+                }
+                map.add(row);
+            });
+        } catch (IOException e) {
+            Log.err(e);
+        }
+        Log.out("done");
     }
 }

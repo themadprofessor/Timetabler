@@ -11,7 +11,11 @@ import javafx.stage.Stage;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("main.fxml")));
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
+        Controller controller = new Controller();
+        loader.setController(controller);
+        Scene scene = new Scene(loader.load());
         primaryStage.setScene(scene);
         primaryStage.setTitle("Timetabler");
         primaryStage.show();

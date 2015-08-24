@@ -1,9 +1,11 @@
 package me.timetabler;
 
+import netscape.javascript.JSObject;
+
 /**
  * Created by stuart on 16/07/15.
  */
-public class Subject {
+public class Subject{
     public String name;
     public String id;
 

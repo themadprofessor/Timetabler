@@ -20,6 +20,7 @@ public class Controller implements Initializable {
     public static ArrayList<Teacher> teachers = new ArrayList<>();
     public static ArrayList<Subject> subjects = new ArrayList<>();
     private JSObject bridge;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         engine = view.getEngine();
