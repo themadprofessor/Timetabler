@@ -1,9 +1,12 @@
-package me.timetabler;
+package me.timetabler.Map;
 
 /**
- * Created by stuart on 24/08/15.
+ * A cell representing a non-traversable area on the map
  */
 public class Wall implements CellType {
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isTraversable() {
         return false;
