@@ -1,0 +1,12 @@
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.web.WebView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.45" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <VBox HBox.hgrow="ALWAYS">
+            <WebView fx:id="view" VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </children>
+</HBox>

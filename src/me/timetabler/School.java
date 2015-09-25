@@ -1,19 +1,26 @@
 package me.timetabler;
 
-import me.timetabler.Map.Building;
-import me.timetabler.Map.SchoolMap;
+import me.timetabler.data.Staff;
+import me.timetabler.data.Subject;
+import me.timetabler.map.Building;
+import me.timetabler.map.SchoolMap;
 import sun.plugin.dom.exception.InvalidStateException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by stuart on 25/08/15.
  */
 public class School {
-    private HashMap<String, Building> buildings;
+    public HashMap<String, Building> buildings;
+    public List<Subject> subjects;
+    public List<Staff> staff;
     private SchoolMap schoolMap;
 
     public School(File mapFolder) throws FileNotFoundException {
@@ -25,8 +32,11 @@ public class School {
         for (File file : files) {
             if (file.getName().equals("school.csv")) {
                 schoolMap = new SchoolMap(file);
+                /*buildings.forEach((name, building) -> {
+
+                });*/
             } else {
-                buildings.put(file.getName().replace(".csv", ""), new Building(new SchoolMap(file)));
+                buildings.put(file.getName().replace(".csv", ""), new Building(new SchoolMap(file), file.getName().replace(".csv", "")));
             }
         }
 
@@ -36,5 +46,7 @@ public class School {
         if (buildings.size() == 0) {
             throw new InvalidStateException("No buildings found!");
         }
+        staff = Collections.synchronizedList(new ArrayList<Staff>());
+        subjects = Collections.synchronizedList(new ArrayList<Subject>());
     }
 }
