@@ -9,4 +9,8 @@ public class Bridge {
     public void out(String msg) {
         Log.out(msg);
     }
+
+    public void say(int i) {
+        Log.out(i);
+    }
 }

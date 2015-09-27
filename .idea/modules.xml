@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HTML5/HTML5.iml" filepath="$PROJECT_DIR$/HTML5/HTML5.iml" />
       <module fileurl="file://$PROJECT_DIR$/Timetabler.iml" filepath="$PROJECT_DIR$/Timetabler.iml" />
     </modules>
   </component>

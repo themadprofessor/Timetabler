@@ -19,7 +19,6 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
     @FXML WebView view;
     private WebEngine engine;
-    private JSObject bridge;
     private List<Subject> subjects;
     private List<Staff> staff;
 
@@ -32,13 +31,13 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         engine = view.getEngine();
         engine.load(String.valueOf(getClass().getResource("html/index.html")));
-        engine.getLoadWorker().stateProperty().addListener(((observable, oldValue, newValue) -> {
+        engine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == Worker.State.SUCCEEDED) {
-                bridge = (JSObject) engine.executeScript("window");
-                bridge.setMember("bridge", new Bridge());
-                bridge.setMember("subjects", subjects);
-                bridge.setMember("staff", staff);
+                JSObject bridge = (JSObject) engine.executeScript("window");
+                bridge.setMember("java", new Bridge());
+                subjects.forEach(subject -> bridge.call("displaySubject", subject.id, subject.name));
+                staff.forEach(staff -> bridge.call("displayStaff", staff.id, staff.name));
             }
-        }));
+        });
     }
 }

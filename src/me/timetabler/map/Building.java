@@ -2,14 +2,16 @@ package me.timetabler.map;
 
 import me.timetabler.Walker;
 import me.util.Log;
+import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 /**
  * Created by stuart on 25/08/15.
  */
-public class Building implements CellType {
+public class Building implements ImportantCell {
     private ArrayList<ClassRoom> classRooms;
     public String name;
 
@@ -21,11 +23,15 @@ public class Building implements CellType {
             classRooms = new ArrayList<>();
         }
         Walker walker = new Walker(schoolMap);
-        classRooms.forEach(source -> classRooms.forEach(destination -> {
-            if (!source.equals(destination) && (!source.distances.containsKey(destination.toString()) || !destination.distances.containsKey(source.toString()))) {
-                int distance = walker.walk(schoolMap.getRoomCoordinates(source.number).get(), schoolMap.getRoomCoordinates(destination.number).get());
-                source.distances.put(destination.number, distance);
-                destination.distances.put(source.number, distance);
+        Optional<ArrayList<ImportantCell>> important = schoolMap.getAllImportantCells();
+        if (!important.isPresent()) {
+            throw new InvalidStateException("No Important Cells Found in Building [" + name +']');
+        }
+        important.get().forEach(source -> important.get().forEach(destination -> {
+            if (!source.equals(destination) && (!source.getDistances().containsKey(destination) || !destination.getDistances().containsKey(source))) {
+                int distance = walker.walk(schoolMap.getCoordinates(source).get(), schoolMap.getCoordinates(destination).get());
+                source.getDistances().put(destination, distance);
+                destination.getDistances().put(source, distance);
                 Log.out("[" + distance + "] Between " + source + " and " + destination);
             }
         }));
@@ -36,5 +42,17 @@ public class Building implements CellType {
     @Override
     public boolean isTraversable() {
         return true;
+    }
+
+    @Override
+    public HashMap<CellType, Integer> getDistances() {
+        HashMap<CellType, Integer> distances = new HashMap<>();
+        classRooms.forEach(classRoom -> distances.putAll(classRoom.getDistances()));
+        return distances;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

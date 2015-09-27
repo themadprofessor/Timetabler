@@ -9,6 +9,7 @@ import me.timetabler.Coordinates;
 import me.util.Log;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -22,6 +23,9 @@ public class SchoolMap {
 
     public SchoolMap(File mapFile) {
         try {
+            if (!mapFile.exists()) {
+                throw new FileNotFoundException(mapFile.getName());
+            }
             ArrayList<String> lines = (ArrayList<String>) Files.readAllLines(mapFile.toPath());
             height = lines.size();
             lines.forEach(line -> {
@@ -47,7 +51,7 @@ public class SchoolMap {
                     } else if (cellsStrings[x].startsWith("C-")) {
                         schoolGrid[x][y] = new ClassRoom(cellsStrings[x].replace("C-", ""));
                     } else {
-                        schoolGrid[x][y] = new Building(new SchoolMap(new File("assets/" + cellsStrings[x] + ".csv")),cellsStrings[x]);
+                        schoolGrid[x][y] = new Building(new SchoolMap(new File("assets/" + cellsStrings[x] + ".csv")), cellsStrings[x]);
                     }
                 }
             }
@@ -74,6 +78,18 @@ public class SchoolMap {
         return this.getCell(coordinates.x, coordinates.y);
     }
 
+    public Optional<Coordinates> getCoordinates(CellType cell) {
+        for (int y = 0; y < this.height; y++) {
+            for (int x = 0; x < this.width; x++) {
+                CellType tmpCell = schoolGrid[x][y];
+                if (cell.equals(tmpCell)) {
+                    return Optional.of(new Coordinates(x, y));
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
     public Optional<Coordinates> getRoomCoordinates(String number) {
         for(int y = 0; y < this.height - 1; ++y) {
             for(int x = 0; x < this.width - 1; ++x) {
@@ -85,25 +101,6 @@ public class SchoolMap {
         }
 
         return Optional.empty();
-    }
-
-    public Optional<ArrayList<StairCase>> getStaircases(int number) {
-        ArrayList<StairCase> stairs = new ArrayList<>();
-
-        for(int x = 0; x < this.width; ++x) {
-            for(int y = 0; y < this.height; ++y) {
-                CellType cell = schoolGrid[x][y];
-                if(cell instanceof StairCase && ((StairCase)cell).number == number) {
-                    stairs.add((StairCase) cell);
-                }
-            }
-        }
-
-        if(stairs.size() != 0) {
-            return Optional.of(stairs);
-        } else {
-            return Optional.empty();
-        }
     }
 
     public Optional<ArrayList<ClassRoom>> getAllClassrooms() {
@@ -120,6 +117,42 @@ public class SchoolMap {
 
         if(classrooms.size() != 0) {
             return Optional.of(classrooms);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<ArrayList<Building>> getAllBuildings() {
+        ArrayList<Building> buildings = new ArrayList<>();
+        for (int y = 0; y < this.height; y++) {
+            for (int x = 0; x < this.width; x++) {
+                CellType cell = schoolGrid[x][y];
+                if (cell instanceof Building) {
+                    buildings.add((Building) cell);
+                }
+            }
+        }
+
+        if (buildings.size() != 0) {
+            return Optional.of(buildings);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<ArrayList<ImportantCell>> getAllImportantCells() {
+        ArrayList<ImportantCell> cells = new ArrayList<>();
+        for (int y = 0; y < this.height; y++) {
+            for (int x = 0; x < this.width; x++) {
+                CellType cell = schoolGrid[x][y];
+                if (cell instanceof ImportantCell) {
+                    cells.add((ImportantCell) cell);
+                }
+            }
+        }
+
+        if (cells.size() != 0) {
+            return Optional.of(cells);
         } else {
             return Optional.empty();
         }

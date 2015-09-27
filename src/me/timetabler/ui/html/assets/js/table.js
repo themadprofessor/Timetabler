@@ -4,9 +4,12 @@ $('#staffModal').on('shown.bs.modal', function () {
 $('#subjectModal').on('shown.bs.modal', function () {
   $('#subjectAddButton').focus()
 });
-window.onload = function () {
-    brige.out("Loaded UI");
-}
+
+/*window.onload = function () {
+    staff.foreach(function(s) = {
+        displayStaff(s.id, s.name);
+    });
+}*/
 
 function addStaff(e) {
     var id = document.getElementById("staffID").value;
