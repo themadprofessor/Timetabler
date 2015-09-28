@@ -36,7 +36,7 @@ public class School {
 
                 });*/
             } else {
-                buildings.put(file.getName().replace(".csv", ""), new Building(new SchoolMap(file), file.getName().replace(".csv", "")));
+                //buildings.put(file.getName().replace(".csv", ""), new Building(new SchoolMap(file), file.getName().replace(".csv", "")));
             }
         }
 
@@ -46,7 +46,7 @@ public class School {
         if (buildings.size() == 0) {
             throw new InvalidStateException("No buildings found!");
         }
-        staff = Collections.synchronizedList(new ArrayList<Staff>());
-        subjects = Collections.synchronizedList(new ArrayList<Subject>());
+        staff = Collections.synchronizedList(new ArrayList<>());
+        subjects = Collections.synchronizedList(new ArrayList<>());
     }
 }

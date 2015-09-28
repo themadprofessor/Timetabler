@@ -12,15 +12,15 @@ import java.util.Optional;
  * Created by stuart on 25/08/15.
  */
 public class Building implements ImportantCell {
-    private ArrayList<ClassRoom> classRooms;
+    private ArrayList<ImportantCell> important;
     public String name;
 
     public Building(SchoolMap schoolMap, String name) {
-        Optional<ArrayList<ClassRoom>> optional = schoolMap.getAllClassrooms();
+        Optional<ArrayList<ImportantCell>> optional = schoolMap.getAllImportantCells();
         if (optional.isPresent()) {
-            classRooms = optional.get();
+            important = optional.get();
         } else {
-            classRooms = new ArrayList<>();
+            important = new ArrayList<>();
         }
         Walker walker = new Walker(schoolMap);
         Optional<ArrayList<ImportantCell>> important = schoolMap.getAllImportantCells();
@@ -47,7 +47,7 @@ public class Building implements ImportantCell {
     @Override
     public HashMap<CellType, Integer> getDistances() {
         HashMap<CellType, Integer> distances = new HashMap<>();
-        classRooms.forEach(classRoom -> distances.putAll(classRoom.getDistances()));
+        important.forEach(classRoom -> distances.putAll(classRoom.getDistances()));
         return distances;
     }
 
