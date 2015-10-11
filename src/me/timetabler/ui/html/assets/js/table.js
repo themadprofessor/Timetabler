@@ -4,13 +4,17 @@ $('#staffModal').on('shown.bs.modal', function () {
 $('#subjectModal').on('shown.bs.modal', function () {
   $('#subjectAddButton').focus()
 });
+/*$('#staffName').keyup(function(event){
+  if (event.keyCode == 13) {
+    $('#staffSave').click();
+  }
+});*/
 
 function addStaff() {
     var id = document.getElementById("staffID").value;
     var name = document.getElementById("staffName").value;
     displayStaff(id, name);
-    var tmp = JSON.stringify({id, name});
-    java.addStaff(tmp);
+    java.addStaff(JSON.stringify({"id":id, "name":name}));
 }
 
 function displayStaff(id, name) {
@@ -25,6 +29,7 @@ function addSubject() {
     var id = document.getElementById("subjectID");
     var name = document.getElementById("subjectName");
     displaySubject(id, name);
+    java.addSubject(JSON.stringify({"id":id, "name":name}));
 }
 
 function displaySubject(id, name) {

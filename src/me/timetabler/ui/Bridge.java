@@ -5,7 +5,6 @@ import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
 import me.util.Log;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,12 +31,11 @@ public class Bridge {
 
     public void addSubject(String json) {
         Subject subject = gson.fromJson(json, Subject.class);
-        subjects.put(subject.id, subject);
+        this.subjects.put(subject.id, subject);
     }
 
     public void addStaff(String json) {
         Staff staff = gson.fromJson(json, Staff.class);
         this.staff.put(staff.id, staff);
-        Log.out(json);
     }
 }
