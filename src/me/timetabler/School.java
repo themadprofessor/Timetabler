@@ -35,7 +35,7 @@ public class School {
             throw new FileNotFoundException("Could not find school.csv!");
         }
         if (buildings.size() == 0) {
-            throw new Exception("Failed to find any buildings");
+            throw new IllegalStateException("Failed to find any buildings");
         }
         staff = Collections.synchronizedMap(new HashMap<>());
         subjects = Collections.synchronizedMap(new HashMap<>());
