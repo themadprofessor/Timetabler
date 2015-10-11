@@ -10,7 +10,7 @@ import me.timetabler.data.Subject;
 import netscape.javascript.JSObject;
 
 import java.net.URL;
-import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -19,10 +19,10 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
     @FXML WebView view;
     private WebEngine engine;
-    private List<Subject> subjects;
-    private List<Staff> staff;
+    private Map<String, Subject> subjects;
+    private Map<String, Staff> staff;
 
-    public Controller(List<Subject> subjects, List<Staff> staff) {
+    public Controller(Map<String, Subject> subjects, Map<String, Staff> staff) {
         this.subjects = subjects;
         this.staff = staff;
     }
@@ -34,9 +34,11 @@ public class Controller implements Initializable {
         engine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == Worker.State.SUCCEEDED) {
                 JSObject bridge = (JSObject) engine.executeScript("window");
-                bridge.setMember("java", new Bridge());
-                subjects.forEach(subject -> bridge.call("displaySubject", subject.id, subject.name));
-                staff.forEach(staff -> bridge.call("displayStaff", staff.id, staff.name));
+                bridge.setMember("java", new Bridge(subjects, staff));
+                subjects.forEach((id, subject) -> bridge.call("displaySubject", id, subject.name));
+                staff.forEach((id, staff) -> bridge.call("displayStaff", id, staff.name));
+                engine.executeScript("console.log = function(msg) {java.out(msg);}");
+                engine.executeScript("console.error = function(msg) {java.err(msg);}");
             }
         });
     }

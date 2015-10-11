@@ -9,6 +9,7 @@ import me.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Created by stuart on 24/08/15.
@@ -26,25 +27,28 @@ public class Main extends Application{
     }
 
     @Override
-    public void init() throws Exception {
-        super.init();
+    public void init() {
         try {
             school = new School(new File("assets"));
             Log.out("Loaded School Map");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Log.err(e);
         }
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/main.fxml"));
-        Controller controller = new Controller(school.subjects, school.staff);
-        loader.setController(controller);
-        Scene scene = new Scene(loader.load());
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Timetabler");
+    public void start(Stage primaryStage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/main.fxml"));
+            Controller controller = new Controller(school.subjects, school.staff);
+            loader.setController(controller);
+            Scene scene = new Scene(loader.load());
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("Timetabler");
 
-        primaryStage.show();
+            primaryStage.show();
+        } catch (Exception e) {
+            Log.err(e);
+        }
     }
 }

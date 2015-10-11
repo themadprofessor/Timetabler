@@ -2,25 +2,19 @@ package me.timetabler;
 
 import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
-import me.timetabler.map.Building;
 import me.timetabler.map.SchoolMap;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by stuart on 25/08/15.
  */
 public class School {
-    public HashMap<String, Building> buildings;
-    public List<Subject> subjects;
-    public List<Staff> staff;
+    public Map<String, Subject> subjects;
+    public Map<String, Staff> staff;
     private SchoolMap schoolMap;
 
     public School(File mapFolder) throws FileNotFoundException {
@@ -28,15 +22,12 @@ public class School {
             throw new InvalidParameterException("Map folder is not a folder!");
         }
         File[] files = mapFolder.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".csv"));
-        buildings = new HashMap<>();
+        HashMap<String, SchoolMap> buildings = new HashMap<>();
         for (File file : files) {
             if (file.getName().equals("school.csv")) {
                 schoolMap = new SchoolMap(file);
-                /*buildings.forEach((name, building) -> {
-
-                });*/
             } else {
-                //buildings.put(file.getName().replace(".csv", ""), new Building(new SchoolMap(file), file.getName().replace(".csv", "")));
+                buildings.put(file.getName().replace(".csv", ""), new SchoolMap(file));
             }
         }
 
@@ -44,9 +35,9 @@ public class School {
             throw new FileNotFoundException("Could not find school.csv!");
         }
         if (buildings.size() == 0) {
-            throw new InvalidStateException("No buildings found!");
+            throw new Exception("Failed to find any buildings");
         }
-        staff = Collections.synchronizedList(new ArrayList<>());
-        subjects = Collections.synchronizedList(new ArrayList<>());
+        staff = Collections.synchronizedMap(new HashMap<>());
+        subjects = Collections.synchronizedMap(new HashMap<>());
     }
 }

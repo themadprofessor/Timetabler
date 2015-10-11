@@ -242,12 +242,11 @@
         </div>
     </footer>
 
-    <div class="modal fade" id="staffModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal fade" id="staffModal" tabindex="-1" role="dialog" aria-labelledby="staffModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Add Staff Member</h4>
+                    <h4 id=staffModalLabel class="modal-title">Add Staff Member</h4>
                 </div>
                 <div class="modal-body">
                     <form class="" action="index.html" method="post">
@@ -270,7 +269,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="subjectModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal fade" id="subjectModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -286,7 +285,7 @@
                         </div>
                         <div class="form-group">
                             <label for="subjectName">Subject Name</label>
-                            <input type="text" class="form-control" id="subjectName" placeholder="">
+                            <input type="text" class="form-control" id="subjectName" placeholder="Name">
                             <p class="help-block">The name of the subject.</p>
                         </div>
                     </form>
@@ -303,6 +302,7 @@
     <script type="text/javascript" src="assets/plugins/jquery.easing.1.3.js"></script>
     <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="assets/plugins/jquery-scrollTo/jquery.scrollTo.min.js"></script>
+    <script type="text/javascript" src="assets/js/json.js"></script>
     <script type="text/javascript" src="assets/js/main.js"></script>
     <script type="text/javascript" src="assets/js/table.js"></script>
 </body>

@@ -7,6 +7,7 @@ package me.timetabler.map;
 
 import me.timetabler.Coordinates;
 import me.util.Log;
+import sun.plugin.dom.exception.InvalidStateException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Optional;
 
 public class SchoolMap {
@@ -51,14 +53,28 @@ public class SchoolMap {
                     } else if (cellsStrings[x].startsWith("C-")) {
                         schoolGrid[x][y] = new ClassRoom(cellsStrings[x].replace("C-", ""));
                     } else {
-                        schoolGrid[x][y] = new Building(new SchoolMap(new File("assets/" + cellsStrings[x] + ".csv")), cellsStrings[x]);
+                        schoolGrid[x][y] = new Building(cellsStrings[x]);
                     }
                 }
             }
         } catch (IOException e) {
             Log.err(e);
         }
+    }
 
+    public void init(HashMap<String, SchoolMap> buildings) {
+        Optional<ArrayList<Building>> optionalBuildings = getAllBuildings();
+        if (optionalBuildings.isPresent()) {
+            optionalBuildings.get().forEach(building -> {
+                buildings.forEach((name, map) -> {
+                    if (building.name.equals(name)) {
+                        building.init(map);
+                    }
+                });
+            });
+        } else {
+            throw new InvalidStateException("No Buildings found in map!");
+        }
     }
 
     public CellType getCell(int x, int y) {

@@ -15,7 +15,11 @@ public class Building implements ImportantCell {
     private ArrayList<ImportantCell> important;
     public String name;
 
-    public Building(SchoolMap schoolMap, String name) {
+    public Building(String name) {
+        this.name = name;
+    }
+
+    public void init(SchoolMap schoolMap) {
         Optional<ArrayList<ImportantCell>> optional = schoolMap.getAllImportantCells();
         if (optional.isPresent()) {
             important = optional.get();
@@ -35,9 +39,7 @@ public class Building implements ImportantCell {
                 Log.out("[" + distance + "] Between " + source + " and " + destination);
             }
         }));
-        this.name = name;
     }
-
 
     @Override
     public boolean isTraversable() {

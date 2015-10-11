@@ -5,16 +5,12 @@ $('#subjectModal').on('shown.bs.modal', function () {
   $('#subjectAddButton').focus()
 });
 
-/*window.onload = function () {
-    staff.foreach(function(s) = {
-        displayStaff(s.id, s.name);
-    });
-}*/
-
-function addStaff(e) {
+function addStaff() {
     var id = document.getElementById("staffID").value;
     var name = document.getElementById("staffName").value;
     displayStaff(id, name);
+    var tmp = JSON.stringify({id, name});
+    java.addStaff(tmp);
 }
 
 function displayStaff(id, name) {
@@ -25,15 +21,15 @@ function displayStaff(id, name) {
     row.insertCell(1).innerHTML = name;
 }
 
-function addSubject(e) {
+function addSubject() {
     var id = document.getElementById("subjectID");
     var name = document.getElementById("subjectName");
     displaySubject(id, name);
 }
 
 function displaySubject(id, name) {
-    var table = document.getElementById("subjectTable");
-    var row = table.insertRow(table.rows.length);
+    var table = document.getElementById("subjectTable").value;
+    var row = table.insertRow(table.rows.length).value;
 
     row.insertCell(0).innerHTML = id;
     row.insertCell(1).innerHTML = name;
