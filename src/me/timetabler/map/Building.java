@@ -2,11 +2,9 @@ package me.timetabler.map;
 
 import me.timetabler.Walker;
 import me.util.Log;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Optional;
 
 /**
  * Created by stuart on 25/08/15.
@@ -20,18 +18,13 @@ public class Building implements ImportantCell {
     }
 
     public void init(SchoolMap schoolMap) {
-        Optional<ArrayList<ImportantCell>> optional = schoolMap.getAllImportantCells();
-        if (optional.isPresent()) {
-            important = optional.get();
-        } else {
-            important = new ArrayList<>();
-        }
+        ArrayList<ImportantCell> importantCells = schoolMap.getAllImportantCells();
         Walker walker = new Walker(schoolMap);
-        Optional<ArrayList<ImportantCell>> important = schoolMap.getAllImportantCells();
-        if (!important.isPresent()) {
-            throw new InvalidStateException("No Important Cells Found in Building [" + name +']');
+        ArrayList<ImportantCell> important = schoolMap.getAllImportantCells();
+        if (important.isEmpty()) {
+            throw new IllegalStateException("No Important Cells Found in Building [" + name +']');
         }
-        important.get().forEach(source -> important.get().forEach(destination -> {
+        important.forEach(source -> important.forEach(destination -> {
             if (!source.equals(destination) && (!source.getDistances().containsKey(destination) || !destination.getDistances().containsKey(source))) {
                 int distance = walker.walk(schoolMap.getCoordinates(source).get(), schoolMap.getCoordinates(destination).get());
                 source.getDistances().put(destination, distance);

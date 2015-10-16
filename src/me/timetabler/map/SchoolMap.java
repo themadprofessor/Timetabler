@@ -7,7 +7,6 @@ package me.timetabler.map;
 
 import me.timetabler.Coordinates;
 import me.util.Log;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,6 +22,10 @@ public class SchoolMap {
     private int height;
     private CellType[][] schoolGrid;
 
+    /**
+     * Creates a object which represents the map of a building or school. Any building reference is not created to avoid StackOverflowExceptions.
+     * @param mapFile The file while contains the CSV map
+     */
     public SchoolMap(File mapFile) {
         try {
             if (!mapFile.exists()) {
@@ -62,10 +65,14 @@ public class SchoolMap {
         }
     }
 
+    /**
+     * Uses the already created Building objects to populate the map.
+     * @param buildings All buildings which exist in the whole map.
+     */
     public void init(HashMap<String, SchoolMap> buildings) {
-        Optional<ArrayList<Building>> optionalBuildings = getAllBuildings();
-        if (optionalBuildings.isPresent()) {
-            optionalBuildings.get().forEach(building -> {
+        ArrayList<Building> optionalBuildings = getAllBuildings();
+        if (!optionalBuildings.isEmpty()) {
+            optionalBuildings.forEach(building -> {
                 buildings.forEach((name, map) -> {
                     if (building.name.equals(name)) {
                         building.init(map);
@@ -73,10 +80,16 @@ public class SchoolMap {
                 });
             });
         } else {
-            throw new InvalidStateException("No Buildings found in map!");
+            throw new IllegalStateException("No Buildings found in map!");
         }
     }
 
+    /**
+     * Gets the Cell at the given coordinate.
+     * @param x The x component of the coordinate.
+     * @param y The y component of the coordinate
+     * @return The cell at the given coordinate.
+     */
     public CellType getCell(int x, int y) {
         if(x != this.width && y != this.height && x >= 0 && y >= 0) {
             Object cell = schoolGrid[x][y];
@@ -90,10 +103,20 @@ public class SchoolMap {
         }
     }
 
+    /**
+     * Gets the cell at the given coordinate.
+     * @param coordinates The coordinate to look for.
+     * @return The cell at the given coordinate.
+     */
     public CellType getCell(Coordinates coordinates) {
         return this.getCell(coordinates.x, coordinates.y);
     }
 
+    /**
+     * Gets the coordinate of the given cell in the map. If the cell does not exist in the map, the Optional will be empty.
+     * @param cell The cell to look for.
+     * @return The coordinate of the cell, if present.
+     */
     public Optional<Coordinates> getCoordinates(CellType cell) {
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
@@ -106,6 +129,11 @@ public class SchoolMap {
         return Optional.empty();
     }
 
+    /**
+     * Gets the coordinate of the classroom with the given number/ID. If the room does not exist in the map,  the Optional will be empty.
+     * @param number The number/ID of the classroom.
+     * @return The coordinate of the room, if present.
+     */
     public Optional<Coordinates> getRoomCoordinates(String number) {
         for(int y = 0; y < this.height - 1; ++y) {
             for(int x = 0; x < this.width - 1; ++x) {
@@ -119,7 +147,11 @@ public class SchoolMap {
         return Optional.empty();
     }
 
-    public Optional<ArrayList<ClassRoom>> getAllClassrooms() {
+    /**
+     * Gets a list of all classrooms in the map.
+     * @return The list of classrooms in the map, which can be empty.
+     */
+    public ArrayList<ClassRoom> getAllClassrooms() {
         ArrayList<ClassRoom> classrooms = new ArrayList<>();
 
         for(int y = 0; y < this.height - 1; ++y) {
@@ -130,15 +162,14 @@ public class SchoolMap {
                 }
             }
         }
-
-        if(classrooms.size() != 0) {
-            return Optional.of(classrooms);
-        } else {
-            return Optional.empty();
-        }
+        return classrooms;
     }
 
-    public Optional<ArrayList<Building>> getAllBuildings() {
+    /**
+     * Gets a list containing all the buildings in the map.
+     * @return The list of buildings in the map, which can be empty.
+     */
+    public ArrayList<Building> getAllBuildings() {
         ArrayList<Building> buildings = new ArrayList<>();
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
@@ -148,15 +179,14 @@ public class SchoolMap {
                 }
             }
         }
-
-        if (buildings.size() != 0) {
-            return Optional.of(buildings);
-        } else {
-            return Optional.empty();
-        }
+        return buildings;
     }
 
-    public Optional<ArrayList<ImportantCell>> getAllImportantCells() {
+    /**
+     * Gets a list of all the ImportantCells(ClassRoom, Building, Entrance in the map.
+     * @return The list of the ImportantCells in the map which can be empty.
+     */
+    public ArrayList<ImportantCell> getAllImportantCells() {
         ArrayList<ImportantCell> cells = new ArrayList<>();
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
@@ -166,14 +196,13 @@ public class SchoolMap {
                 }
             }
         }
-
-        if (cells.size() != 0) {
-            return Optional.of(cells);
-        } else {
-            return Optional.empty();
-        }
+        return cells;
     }
 
+    /**
+     * Creates a string representation of the map as a CSV.
+     * @return The string representation of the map.
+     */
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

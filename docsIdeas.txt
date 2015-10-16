@@ -1,0 +1,21 @@
+Main
+  Extends application for JavaFX and overrides methods for simplicity
+School
+  Is just wrapper to school data such as subjects, staff and map
+  SynchronizedMaps just in case concurrent editing occurs
+Walker
+  Recursive walking
+  It does not remember past cell as is stored in stack
+  When fails, it goes up the stack to find cell with possible paths
+  The value of distance is decreased as it travels up the stack
+  Final distance starts at max value making sure is always larger than distance
+SchoolMap
+  Reads CSV into 2D array defaulted to walls
+  ClassRoom's must only be adjacent to one traversable cell (path, entrance, classroom)
+  Does not create buildings at creation to avoid stack overflow
+  Returns optionals to avoid null pointers
+  Overwrote toString for debugging
+ui folder
+  JavaFX to create a window containing only a WebView to display the html in the html folder
+  Bootstrap and HTML5 is sued to make nice ui
+
