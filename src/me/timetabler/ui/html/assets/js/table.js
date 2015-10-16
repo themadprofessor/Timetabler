@@ -26,15 +26,15 @@ function displayStaff(id, name) {
 }
 
 function addSubject() {
-    var id = document.getElementById("subjectID");
-    var name = document.getElementById("subjectName");
+    var id = document.getElementById("subjectID").value;
+    var name = document.getElementById("subjectName").value;
     displaySubject(id, name);
     java.addSubject(JSON.stringify({"id":id, "name":name}));
 }
 
 function displaySubject(id, name) {
-    var table = document.getElementById("subjectTable").value;
-    var row = table.insertRow(table.rows.length).value;
+    var table = document.getElementById("subjectTable");
+    var row = table.insertRow(table.rows.length);
 
     row.insertCell(0).innerHTML = id;
     row.insertCell(1).innerHTML = name;
