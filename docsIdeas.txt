@@ -11,11 +11,15 @@ Walker
   Final distance starts at max value making sure is always larger than distance
 SchoolMap
   Reads CSV into 2D array defaulted to walls
+  Uses CSV as is compatible with excel, which used to design map
   ClassRoom's must only be adjacent to one traversable cell (path, entrance, classroom)
   Does not create buildings at creation to avoid stack overflow
   Returns optionals to avoid null pointers
   Overwrote toString for debugging
 ui folder
   JavaFX to create a window containing only a WebView to display the html in the html folder
-  Bootstrap and HTML5 is sued to make nice ui
+  Bootstrap and HTML5 is used to make nice ui
+SchoolDataParser
+  Uses CSV as compatible with excel for ease of modification outside program
+  Separated write method in case needs other output, e.g. network, console
 

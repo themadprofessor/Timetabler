@@ -10,7 +10,7 @@ import me.util.Log;
 import java.io.File;
 
 /**
- * Created by stuart on 24/08/15.
+ * The entry point of the program. It handles
  */
 public class Main extends Application{
     private School school;
@@ -20,6 +20,7 @@ public class Main extends Application{
         for (int i = 0; i < args.length; i++) {
             if ("--debug".equals(args[i])) {
                 Log.DEBUG = true;
+                i++;
             }
         }
         launch(args);
@@ -50,16 +51,18 @@ public class Main extends Application{
             Scene scene = new Scene(loader.load());
             primaryStage.setScene(scene);
             primaryStage.setTitle("Timetabler");
-            primaryStage.setOnCloseRequest(event -> {
-                parser.writeStaff(new File("staff.csv"), school.staff);
-                Log.debug("Wrote " + school.staff.size() + " Staff");
-                parser.writeSubjects(new File("subjects.csv"), school.subjects);
-                Log.debug("Wrote " + school.subjects.size() + " Subjects");
-                Log.out("Saved School Data");
-            });
             primaryStage.show();
         } catch (Exception e) {
             Log.err(e);
         }
+    }
+
+    @Override
+    public void stop() throws Exception {
+        parser.writeStaff(new File("staff.csv"), school.staff);
+        Log.debug("Wrote " + school.staff.size() + " Staff");
+        parser.writeSubjects(new File("subjects.csv"), school.subjects);
+        Log.debug("Wrote " + school.subjects.size() + " Subjects");
+        Log.out("Saved School Data");
     }
 }

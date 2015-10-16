@@ -65,8 +65,8 @@ public class SchoolDataParser {
             } catch (IOException e) {
                 Log.err(e);
             }
-            return result;
         }
+        return result;
     }
 
     public Map<String, Staff> readStaff(File file) {
