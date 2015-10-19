@@ -13,29 +13,32 @@ $('#subjectModal').on('shown.bs.modal', function () {
 function addStaff() {
     var id = document.getElementById("staffID").value;
     var name = document.getElementById("staffName").value;
-    displayStaff(id, name);
+    addToTable("staffTable", [id, name]);
     java.addStaff(JSON.stringify({"id":id, "name":name}));
-}
-
-function displayStaff(id, name) {
-    var table = document.getElementById("staffTable");
-    var row = table.insertRow(table.rows.length);
-
-    row.insertCell(0).innerHTML = id;
-    row.insertCell(1).innerHTML = name;
 }
 
 function addSubject() {
     var id = document.getElementById("subjectID").value;
     var name = document.getElementById("subjectName").value;
-    displaySubject(id, name);
+    addToTable("subjectTable", [id, name]);
     java.addSubject(JSON.stringify({"id":id, "name":name}));
 }
 
-function displaySubject(id, name) {
-    var table = document.getElementById("subjectTable");
-    var row = table.insertRow(table.rows.length);
+function addClass() {
+    var id = document.getElementById("classID").value;
+    var subject = document.getElementById("classSubject").value;
+    addToTable("classTable", [id, subject]);
+}
 
-    row.insertCell(0).innerHTML = id;
-    row.insertCell(1).innerHTML = name;
+function addToTable(tableName, items) {
+    var table = document.getElementById(tableName);
+    var row = table.insertRow(table.rows.length);
+    for (i = 0; i < items.length; i++) {
+        row.insertCell(i).innerHTML = items[i];
+    }
+}
+
+function addToSelect(selectName, text, value) {
+    var options = document.getElementById(selectName);
+    options[options.length] = new Option(text, value);
 }

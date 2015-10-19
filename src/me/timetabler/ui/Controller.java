@@ -35,8 +35,11 @@ public class Controller implements Initializable {
             if (newValue == Worker.State.SUCCEEDED) {
                 JSObject bridge = (JSObject) engine.executeScript("window");
                 bridge.setMember("java", new Bridge(subjects, staff));
-                subjects.forEach((id, subject) -> bridge.call("displaySubject", id, subject.name));
-                staff.forEach((id, staff) -> bridge.call("displayStaff", id, staff.name));
+                subjects.forEach((id, subject) -> {
+                    bridge.call("addToTable", "subjectTable", new String[]{id, subject.name});
+                    bridge.call("addToSelect", "classSubject", subject.name, subject.name);
+                });
+                staff.forEach((id, staff) -> bridge.call("addToTable", "staffTable", new String[]{id, staff.id}));
                 engine.executeScript("console.log = function(msg) {java.out(msg);}");
                 engine.executeScript("console.error = function(msg) {java.err(msg);}");
             }

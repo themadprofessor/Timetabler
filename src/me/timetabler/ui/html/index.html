@@ -21,10 +21,6 @@
             background-color: inherit;
         }
     </style>
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
 
 <body data-spy="scroll">
@@ -49,8 +45,8 @@
                         <li class="active nav-item sr-only"><a class="scrollto" href="#promo">Home</a></li>
                         <li class="nav-item"><a class="scrollto" href="#staff">Staff</a></li>
                         <li class="nav-item"><a class="scrollto" href="#subjects">Subjects</a></li>
-                        <!--<li class="nav-item"><a class="scrollto" href="#docs">Docs</a></li>
-                        <li class="nav-item"><a class="scrollto" href="#license">License</a></li>
+                        <li class="nav-item"><a class="scrollto" href="#classes">Classes</a></li>
+                        <!--<li class="nav-item"><a class="scrollto" href="#license">License</a></li>
                         <li class="nav-item last"><a class="scrollto" href="#contact">Contact</a></li>-->
                     </ul>
                 </div>
@@ -89,7 +85,7 @@
         <div class="container">
             <h2 class="title text-center">Subject Information</h2>
             <p class="intro text-center">View and edit subject information</p>
-            <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#subjectModal" id="staffAddButton">
+            <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#subjectModal" id="subjectAddButton">
                 <i class="fa fa-plus fa-2x"></i>
             </button>
             <table id="subjectTable" class="table table-hover">
@@ -101,7 +97,7 @@
         </div>
     </section>
 
-    <section id="docs" class="docs section">
+    <section id="classes" class="docs section">
         <div class="container">
             <h2 class="title text-center">Get Started</h2>
             <p class="intro text-center">View and edit staff information</p>
@@ -256,9 +252,10 @@
                             <p class="help-block">The unique class ID.</p>
                         </div>
                         <div class="form-group">
-                            <label for="classStaff">Teacher ID</label>
-                            <input type="text" class="form-control" id="classStaff" placeholder="Staff">
-                            <p class="help-block">The unique staff ID of the member of staff who will be teaching the class.</p>
+                            <label for="classSubject">Subject ID</label>
+                            <select class="form-control" id="classSubject" placeholder="Subject">
+                            </select>
+                            <p class="help-block">The unique subject ID for the subject the class is taught.</p>
                         </div>
                     </form>
                 </div>

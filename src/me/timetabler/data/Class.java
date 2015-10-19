@@ -6,5 +6,5 @@ package me.timetabler.data;
 public class Class {
     public String teacher;
     public String subject;
-    public String name;
+    public String ID;
 }

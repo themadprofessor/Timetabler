@@ -9,7 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -70,7 +70,7 @@ public class SchoolDataParser {
     }
 
     public Map<String, Staff> readStaff(File file) {
-        Map<String, Staff> staff = Collections.synchronizedMap(new HashMap<>());
+        Map<String, Staff> staff = Collections.synchronizedMap(new LinkedHashMap<>());
         if (!file.exists()) {
             return staff;
         }
@@ -90,7 +90,7 @@ public class SchoolDataParser {
     }
 
     public Map<String, Subject> readSubjects(File file) {
-        Map<String, Subject> subjects = Collections.synchronizedMap(new HashMap<>());
+        Map<String, Subject> subjects = Collections.synchronizedMap(new LinkedHashMap<>());
         if (!file.exists()) {
             return subjects;
         }
