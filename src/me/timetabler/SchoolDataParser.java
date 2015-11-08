@@ -69,6 +69,9 @@ public class SchoolDataParser {
         return result;
     }
 
+    /* Read staff from a file, file formate is CSV.
+     *
+     */
     public Map<String, Staff> readStaff(File file) {
         Map<String, Staff> staff = Collections.synchronizedMap(new LinkedHashMap<>());
         if (!file.exists()) {
