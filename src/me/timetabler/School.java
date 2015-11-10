@@ -7,7 +7,9 @@ import me.timetabler.map.SchoolMap;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.security.InvalidParameterException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by stuart on 25/08/15.
@@ -37,6 +39,7 @@ public class School {
         if (buildings.size() == 0) {
             throw new IllegalStateException("Failed to find any buildings");
         }
+        schoolMap.init(buildings);
         staff = Collections.synchronizedMap(new HashMap<>());
         subjects = Collections.synchronizedMap(new HashMap<>());
     }

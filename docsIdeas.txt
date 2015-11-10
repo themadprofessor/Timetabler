@@ -1,19 +1,18 @@
 Main
-  Extends application for JavaFX and overrides methods for simplicity
+  Extends application for JavaFX and overrides methods for compatibility
 School
-  Is just wrapper to school data such as subjects, staff and map
+  Is just wrapper to school data such as subjects, staff and map, allows for utility methods
   SynchronizedMaps just in case concurrent editing occurs
 Walker
-  Recursive walking
+  Recursive walking for simpler code
   It does not remember past cell as is stored in stack
   When fails, it goes up the stack to find cell with possible paths
   The value of distance is decreased as it travels up the stack
   Final distance starts at max value making sure is always larger than distance
 SchoolMap
-  Reads CSV into 2D array defaulted to walls
   Uses CSV as is compatible with excel, which used to design map
-  ClassRoom's must only be adjacent to one traversable cell (path, entrance, classroom)
-  Does not create buildings at creation to avoid stack overflow
+  ClassRoom's must only be adjacent to one traversable cell (path, entrance, classroom), to avoid unnecessary complexity
+  Does not create buildings at creation to avoid stack overflow, instead generates them after map generation and populates the map with buildings
   Returns optionals to avoid null pointers
   Overwrote toString for debugging
 ui folder
@@ -21,5 +20,5 @@ ui folder
   Bootstrap and HTML5 is used to make nice ui
 SchoolDataParser
   Uses CSV as compatible with excel for ease of modification outside program
-  Separated write method in case needs other output, e.g. network, console
-
+  Separated write method in case needs other output, e.g. network, console, SQL
+  SynchronizedMaps just in case concurrent editing occurs

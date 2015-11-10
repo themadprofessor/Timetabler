@@ -16,6 +16,12 @@ import java.util.Map;
  * Created by stuart on 16/10/15.
  */
 public class SchoolDataParser {
+    /**
+     * Writes the given map of subjects to the given CSV file.
+     * @param file The CSV file to write to
+     * @param map The map containing the subjects
+     * @return Returns false if the map failed to write or the map is empty. Returns true otherwise
+     */
     public boolean writeSubjects(File file, Map<String, Subject> map) {
         StringBuilder builder = new StringBuilder();
         String[] names = new String[map.keySet().size()];
@@ -32,7 +38,13 @@ public class SchoolDataParser {
         return write(file, builder.toString());
     }
 
-    public boolean writeStaff(File file,Map<String, Staff> map) {
+    /**
+     * Writes the given map of staff to the given CSV file.
+     * @param file The CSV file to write to
+     * @param map The map containing the staff
+     * @return Returns false if the map failed to write or the map is empty. Returns true otherwise
+     */
+    public boolean writeStaff(File file, Map<String, Staff> map) {
         StringBuilder builder = new StringBuilder();
         String[] names = new String[map.keySet().size()];
         map.keySet().toArray(names);
@@ -48,6 +60,12 @@ public class SchoolDataParser {
         return write(file, builder.toString());
     }
 
+    /**
+     * Writes the given string to the given file
+     * @param file The file to write to
+     * @param string The string to write
+     * @return Returns true if string wrote successfully. Returns false otherwise
+     */
     private boolean write(File file, String string) {
         boolean result = true;
         FileOutputStream out = null;
@@ -69,8 +87,10 @@ public class SchoolDataParser {
         return result;
     }
 
-    /* Read staff from a file, file formate is CSV.
-     *
+    /**
+     * Reads the staff data from the given file into a synchronised LinkedHashMap
+     * @param file The file to be read
+     * @return A map containing the parsed staff data
      */
     public Map<String, Staff> readStaff(File file) {
         Map<String, Staff> staff = Collections.synchronizedMap(new LinkedHashMap<>());
@@ -92,6 +112,11 @@ public class SchoolDataParser {
         return staff;
     }
 
+    /**
+     * Reads the staff data from the given file into a synchronised LinkedHashMap
+     * @param file the file to be read
+     * @return Returns the map containing the subject data
+     */
     public Map<String, Subject> readSubjects(File file) {
         Map<String, Subject> subjects = Collections.synchronizedMap(new LinkedHashMap<>());
         if (!file.exists()) {

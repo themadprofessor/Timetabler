@@ -66,3 +66,4 @@ public class Main extends Application{
         Log.out("Saved School Data");
     }
 }
+

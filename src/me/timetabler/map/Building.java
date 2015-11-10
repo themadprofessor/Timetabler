@@ -15,12 +15,12 @@ public class Building implements ImportantCell {
 
     public Building(String name) {
         this.name = name;
+        important = new ArrayList<>();
     }
 
     public void init(SchoolMap schoolMap) {
-        ArrayList<ImportantCell> importantCells = schoolMap.getAllImportantCells();
+        important = schoolMap.getAllImportantCells();
         Walker walker = new Walker(schoolMap);
-        ArrayList<ImportantCell> important = schoolMap.getAllImportantCells();
         if (important.isEmpty()) {
             throw new IllegalStateException("No Important Cells Found in Building [" + name +']');
         }
@@ -29,7 +29,7 @@ public class Building implements ImportantCell {
                 int distance = walker.walk(schoolMap.getCoordinates(source).get(), schoolMap.getCoordinates(destination).get());
                 source.getDistances().put(destination, distance);
                 destination.getDistances().put(source, distance);
-                Log.out("[" + distance + "] Between " + source + " and " + destination);
+                Log.debug("[" + distance + "] Between " + source + " and " + destination);
             }
         }));
     }
@@ -42,7 +42,10 @@ public class Building implements ImportantCell {
     @Override
     public HashMap<CellType, Integer> getDistances() {
         HashMap<CellType, Integer> distances = new HashMap<>();
-        important.forEach(classRoom -> distances.putAll(classRoom.getDistances()));
+        important.forEach(cell -> {
+            Log.out(cell);
+            distances.putAll(cell.getDistances());
+        });
         return distances;
     }
 

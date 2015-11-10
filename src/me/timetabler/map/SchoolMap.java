@@ -72,13 +72,11 @@ public class SchoolMap {
     public void init(HashMap<String, SchoolMap> buildings) {
         ArrayList<Building> optionalBuildings = getAllBuildings();
         if (!optionalBuildings.isEmpty()) {
-            optionalBuildings.forEach(building -> {
-                buildings.forEach((name, map) -> {
-                    if (building.name.equals(name)) {
-                        building.init(map);
-                    }
-                });
-            });
+            optionalBuildings.forEach(building -> buildings.forEach((name, map) -> {
+                if (building.name.equals(name)) {
+                    building.init(map);
+                }
+            }));
         } else {
             throw new IllegalStateException("No Buildings found in map!");
         }
