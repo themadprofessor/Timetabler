@@ -39,7 +39,7 @@ public class Controller implements Initializable {
                     bridge.call("addToTable", "subjectTable", new String[]{id, subject.name});
                     bridge.call("addToSelect", "classSubject", subject.name, subject.name);
                 });
-                staff.forEach((id, staff) -> bridge.call("addToTable", "staffTable", new String[]{id, staff.id}));
+                staff.forEach((id, staff) -> bridge.call("addToTable", "staffTable", new String[]{id, staff.name}));
                 engine.executeScript("console.log = function(msg) {java.out(msg);}");
                 engine.executeScript("console.error = function(msg) {java.err(msg);}");
             }
