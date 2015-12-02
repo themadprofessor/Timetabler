@@ -10,12 +10,16 @@ import me.util.Log;
 import java.io.File;
 
 /**
- * The entry point of the program. It handles
+ * The entry point of the program. It handles command line parameters
  */
 public class Main extends Application{
     private School school;
     private SchoolDataParser parser;
 
+    /**
+     * Entry point to the program and handles command line parameters
+     * @param args The command line parameters
+     */
     public static void main(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if ("--debug".equals(args[i])) {
@@ -26,6 +30,9 @@ public class Main extends Application{
         launch(args);
     }
 
+    /**
+     * Called before UI is initialised. Loads and parses all school data and initialises the map
+     */
     @Override
     public void init() {
         try {
@@ -42,6 +49,10 @@ public class Main extends Application{
         }
     }
 
+    /**
+     * Initialises the UI
+     * @param primaryStage The primary JavaFX stage for the Ui to placed in
+     */
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -57,8 +68,11 @@ public class Main extends Application{
         }
     }
 
+    /**
+     * Called after the UI is closed. Exports school data to CSV.
+     */
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         parser.writeStaff(new File("staff.csv"), school.staff);
         Log.debug("Wrote " + school.staff.size() + " Staff");
         parser.writeSubjects(new File("subjects.csv"), school.subjects);
