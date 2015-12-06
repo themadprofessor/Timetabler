@@ -1,0 +1,7 @@
+map: #Configuration regarding the map
+    - top_map: assets/maps/school.csv #Highest level of the map
+    - other_maps: assets/maps #All other maps
+data: #Configuration regarding the school data
+    - data_type: CSV #The type of data stored in the data files
+    - staff_location: assets/staff.csv #The location of the staff data
+    - subjects_location: assets/subjects.csv #The location of the subject data

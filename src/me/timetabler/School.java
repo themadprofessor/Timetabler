@@ -19,18 +19,16 @@ public class School {
     public Map<String, Staff> staff;
     private SchoolMap schoolMap;
 
-    public School(File mapFolder) throws FileNotFoundException {
+    public School(Map<String, String> config) throws FileNotFoundException {
+        File mapFolder = new File(config.get("other_maps"));
+        schoolMap = new SchoolMap(new File(config.get("top_map")));
         if (mapFolder.isFile()) {
             throw new InvalidParameterException("Map folder is not a folder!");
         }
-        File[] files = mapFolder.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".csv"));
+        File[] files = mapFolder.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".csv") && pathname.getPath().endsWith(config.get("top_map")));
         HashMap<String, SchoolMap> buildings = new HashMap<>();
         for (File file : files) {
-            if (file.getName().equals("school.csv")) {
-                schoolMap = new SchoolMap(file);
-            } else {
-                buildings.put(file.getName().replace(".csv", ""), new SchoolMap(file));
-            }
+            buildings.put(file.getName().replace(".csv", ""), new SchoolMap(file));
         }
 
         if (schoolMap == null) {

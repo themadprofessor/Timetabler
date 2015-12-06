@@ -4,10 +4,15 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import me.timetabler.parsers.ConfigParser;
+import me.timetabler.parsers.ConfigType;
+import me.timetabler.parsers.SchoolDataParser;
+import me.timetabler.parsers.YamlConfigParser;
 import me.timetabler.ui.Controller;
 import me.util.Log;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * The entry point of the program. It handles command line parameters
@@ -15,6 +20,7 @@ import java.io.File;
 public class Main extends Application{
     private School school;
     private SchoolDataParser parser;
+    private Map<String, Map<String, String>> config;
 
     /**
      * Entry point to the program and handles command line parameters
@@ -22,7 +28,7 @@ public class Main extends Application{
      */
     public static void main(String[] args) {
         for (int i = 0; i < args.length; i++) {
-            if ("--debug".equals(args[i])) {
+            if ("-v".equals(args[i])) {
                 Log.DEBUG = true;
                 i++;
             }
@@ -36,12 +42,20 @@ public class Main extends Application{
     @Override
     public void init() {
         try {
-            school = new School(new File("assets"));
+            config = ConfigParser.getParser(ConfigType.YAML).parse();
+            if (config == null) {
+                Log.err("Unknown config type!");
+                System.exit(1);
+            }
+            school = new School(config.get("map"));
             Log.out("Loaded School Map");
-            parser = new SchoolDataParser();
-            school.staff = parser.readStaff(new File("staff.csv"));
+            parser = SchoolDataParser.getParser(config.get("data"));
+            if (parser == null) {
+                Log.err("Unknown data type!");
+            }
+            school.staff = parser.readStaff();
             Log.debug("Read " + school.staff.size() + " Staff");
-            school.subjects = parser.readSubjects(new File("subjects.csv"));
+            school.subjects = parser.readSubjects();
             Log.debug("Read " + school.subjects.size() + " Subjects");
             Log.out("Loaded School Data");
         } catch (Exception e) {
@@ -73,9 +87,9 @@ public class Main extends Application{
      */
     @Override
     public void stop() {
-        parser.writeStaff(new File("staff.csv"), school.staff);
+        parser.writeStaff(school.staff);
         Log.debug("Wrote " + school.staff.size() + " Staff");
-        parser.writeSubjects(new File("subjects.csv"), school.subjects);
+        parser.writeSubjects(school.subjects);
         Log.debug("Wrote " + school.subjects.size() + " Subjects");
         Log.out("Saved School Data");
     }
