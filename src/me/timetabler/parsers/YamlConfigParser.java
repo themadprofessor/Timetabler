@@ -1,9 +1,7 @@
 package me.timetabler.parsers;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -48,8 +46,9 @@ public class YamlConfigParser implements ConfigParser {
     }
 
     private void checkFile(File file) throws IOException {
+        assert file != null;
         if (!file.exists()) {
-            throw new FileNotFoundException("Config file does not exist! It should be there: [" + loc.getPath() + ']');
+            throw new FileNotFoundException("Config file does not exist! It should be there: [" + file.getPath() + ']');
         } else if (file.isDirectory()) {
             throw new IOException("The config file is a directory! It should be a file.");
         } else if (!file.canRead()) {

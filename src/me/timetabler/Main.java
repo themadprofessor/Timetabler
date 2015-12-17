@@ -7,11 +7,9 @@ import javafx.stage.Stage;
 import me.timetabler.parsers.ConfigParser;
 import me.timetabler.parsers.ConfigType;
 import me.timetabler.parsers.SchoolDataParser;
-import me.timetabler.parsers.YamlConfigParser;
 import me.timetabler.ui.Controller;
 import me.util.Log;
 
-import java.io.File;
 import java.util.Map;
 
 /**
@@ -20,7 +18,6 @@ import java.util.Map;
 public class Main extends Application{
     private School school;
     private SchoolDataParser parser;
-    private Map<String, Map<String, String>> config;
 
     /**
      * Entry point to the program and handles command line parameters
@@ -42,7 +39,7 @@ public class Main extends Application{
     @Override
     public void init() {
         try {
-            config = ConfigParser.getParser(ConfigType.YAML).parse();
+            Map<String, Map<String, String>> config = ConfigParser.getParser(ConfigType.YAML).parse();
             if (config == null) {
                 Log.err("Unknown config type!");
                 System.exit(1);
@@ -57,6 +54,8 @@ public class Main extends Application{
             Log.debug("Read " + school.staff.size() + " Staff");
             school.subjects = parser.readSubjects();
             Log.debug("Read " + school.subjects.size() + " Subjects");
+            school.classes = parser.readClasses();
+            Log.debug("Read " + school.classes.size() + " Classes");
             Log.out("Loaded School Data");
         } catch (Exception e) {
             Log.err(e);
@@ -71,7 +70,7 @@ public class Main extends Application{
     public void start(Stage primaryStage) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/main.fxml"));
-            Controller controller = new Controller(school.subjects, school.staff);
+            Controller controller = new Controller(school.subjects, school.staff, school.classes);
             loader.setController(controller);
             Scene scene = new Scene(loader.load());
             primaryStage.setScene(scene);
@@ -87,11 +86,17 @@ public class Main extends Application{
      */
     @Override
     public void stop() {
-        parser.writeStaff(school.staff);
-        Log.debug("Wrote " + school.staff.size() + " Staff");
-        parser.writeSubjects(school.subjects);
-        Log.debug("Wrote " + school.subjects.size() + " Subjects");
-        Log.out("Saved School Data");
+        try {
+            parser.writeStaff(school.staff);
+            Log.debug("Wrote " + school.staff.size() + " Staff");
+            parser.writeSubjects(school.subjects);
+            Log.debug("Wrote " + school.subjects.size() + " Subjects");
+            parser.writeClasses(school.classes);
+            Log.debug("Wrote " + school.classes.size() + " Classes");
+            Log.out("Saved School Data");
+        } catch (Exception e) {
+            Log.err(e);
+        }
     }
 }
 

@@ -128,8 +128,8 @@ public class SchoolMap {
     }
 
     /**
-     * Gets the coordinate of the classroom with the given number/ID. If the room does not exist in the map,  the Optional will be empty.
-     * @param number The number/ID of the classroom.
+     * Gets the coordinate of the classroom with the given number/id. If the room does not exist in the map,  the Optional will be empty.
+     * @param number The number/id of the classroom.
      * @return The coordinate of the room, if present.
      */
     public Optional<Coordinates> getRoomCoordinates(String number) {

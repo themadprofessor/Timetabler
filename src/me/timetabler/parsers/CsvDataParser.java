@@ -1,5 +1,6 @@
 package me.timetabler.parsers;
 
+import me.timetabler.data.SchoolClass;
 import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
 import me.util.Log;
@@ -62,6 +63,22 @@ public class CsvDataParser implements SchoolDataParser {
         Staff staff = map.get(names[names.length-1]);
         builder.append(staff.id).append(',').append(staff.name);
         return write(String.valueOf(config.get("staff_location")), builder.toString());
+    }
+
+    public boolean writeClasses(Map<String, SchoolClass> classMap) {
+        StringBuilder builder = new StringBuilder();
+        String[] ids = new String[classMap.keySet().size()];
+        classMap.keySet().toArray(ids);
+        if (ids.length == 0) {
+            return false;
+        }
+        for (int i = 0; i< classMap.size()-1; i++) {
+            SchoolClass clazz = classMap.get(ids[i]);
+            builder.append(clazz.id).append(',').append(clazz.subjectId).append('\n');
+        }
+        SchoolClass clazz = classMap.get(ids[ids.length-1]);
+        builder.append(clazz.id).append(',').append(clazz.subjectId);
+        return write(String.valueOf(config.get("classes_location")), builder.toString());
     }
 
     /**
@@ -138,5 +155,25 @@ public class CsvDataParser implements SchoolDataParser {
             Log.err(e);
         }
         return subjects;
+    }
+
+    public Map<String, SchoolClass> readClasses() {
+        File file = new File(String.valueOf(config.get("classes_location")));
+        Map<String, SchoolClass> classes = Collections.synchronizedMap(new LinkedHashMap<>());
+        if (!file.exists()) {
+            return classes;
+        }
+        try {
+            Files.lines(file.toPath()).forEach(line -> {
+                SchoolClass clazz = new SchoolClass();
+                String[] split = line.split(",");
+                clazz.id = split[0];
+                clazz.subjectId = split[1];
+                classes.put(clazz.id, clazz);
+            });
+        } catch (IOException e) {
+            Log.err(e);
+        }
+        return classes;
     }
 }

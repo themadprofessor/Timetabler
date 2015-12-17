@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
-<!--[if !IE]> <html lang="en"> <![endif]-->
 <head>
     <title>Free Bootstrap Theme for Developers</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="favicon.ico">
-    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,300italic,400italic' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href="assets/fonts/latio/latio.css" rel="stylesheet" type="text/css">
+    <link href="assets/fonts/montserrat/montserrat.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/plugins/font-awesome/css/font-awesome.css">
     <link rel="stylesheet" href="assets/plugins/prism/prism.css">
@@ -56,7 +53,7 @@
 
     <section id="promo" class="promo section offset-header">
         <div class="container text-center">
-            <h2 class="title">Timetabler</h3>
+            <h2 class="title">Timetabler</h2>
             <p class="intro">The interface is contained within this page.<br> Navigate using the navbar above or scroll.</p>
             <ul class="meta list-inline">
                 <li>Created by: Stuart Reilly</li>
@@ -99,8 +96,8 @@
 
     <section id="classes" class="docs section">
         <div class="container">
-            <h2 class="title text-center">Get Started</h2>
-            <p class="intro text-center">View and edit staff information</p>
+            <h2 class="title text-center">Class Information</h2>
+            <p class="intro text-center">View and edit class information</p>
             <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#classModal" id="classAddButton">
                 <i class="fa fa-plus fa-2x"></i>
             </button>
@@ -252,10 +249,10 @@
                             <p class="help-block">The unique class ID.</p>
                         </div>
                         <div class="form-group">
-                            <label for="classSubject">Subject ID</label>
-                            <select class="form-control" id="classSubject" placeholder="Subject">
+                            <label for="classSubject">Subject</label>
+                            <select class="form-control" id="classSubject">
                             </select>
-                            <p class="help-block">The unique subject ID for the subject the class is taught.</p>
+                            <p class="help-block">The subject the class is taught.</p>
                         </div>
                     </form>
                 </div>

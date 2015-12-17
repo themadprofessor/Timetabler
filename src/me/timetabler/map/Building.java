@@ -1,6 +1,5 @@
 package me.timetabler.map;
 
-import me.timetabler.Walker;
 import me.util.Log;
 
 import java.util.ArrayList;

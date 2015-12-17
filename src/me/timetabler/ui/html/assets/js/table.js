@@ -14,20 +14,21 @@ function addStaff() {
     var id = document.getElementById("staffID").value;
     var name = document.getElementById("staffName").value;
     addToTable("staffTable", [id, name]);
-    java.addStaff(JSON.stringify({"id":id, "name":name}));
+    java.add("Staff", JSON.stringify({"id":id, "name":name}))
 }
 
 function addSubject() {
     var id = document.getElementById("subjectID").value;
     var name = document.getElementById("subjectName").value;
     addToTable("subjectTable", [id, name]);
-    java.addSubject(JSON.stringify({"id":id, "name":name}));
+    java.add("Subject", JSON.stringify({"id":id, "name":name}));
 }
 
 function addClass() {
     var id = document.getElementById("classID").value;
     var subject = document.getElementById("classSubject").value;
     addToTable("classTable", [id, subject]);
+    java.add("Class", JSON.stringify({"id":id, "subjectId":subject}));
 }
 
 function addToTable(tableName, items) {

@@ -1,7 +1,6 @@
-package me.timetabler;
+package me.timetabler.map;
 
-import me.timetabler.map.CellType;
-import me.timetabler.map.SchoolMap;
+import me.timetabler.Coordinates;
 
 /**
  * Created by stuart on 25/08/15.
