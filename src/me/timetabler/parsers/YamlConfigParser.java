@@ -1,5 +1,7 @@
 package me.timetabler.parsers;
 
+import me.util.Log;
+
 import java.io.*;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -17,10 +19,12 @@ public class YamlConfigParser implements ConfigParser {
 
     public YamlConfigParser(File loc) {
         this.loc = loc;
+        Log.debug("Using YAML Config Parser");
     }
 
     public YamlConfigParser(String loc) {
         this.loc = new File(loc);
+        Log.debug("Using YAML Config Parser");
     }
 
     @Override
@@ -36,9 +40,13 @@ public class YamlConfigParser implements ConfigParser {
             if (mapRegex.matcher(line).matches()) {
                 currentMap = line.split(":")[0].trim();
                 map.put(currentMap, new LinkedHashMap<>());
+                Log.verbose("Added New Config Map [" + currentMap + ']');
             } else if (itemRegex.matcher(line).matches()) {
                 String[] keyValue = line.trim().split(":");
-                map.get(currentMap).put(String.valueOf(keyValue[0].subSequence(2, keyValue[0].length())), keyValue[1].trim());
+                String key = String.valueOf(keyValue[0].subSequence(2, keyValue[0].length()));
+                String value = keyValue[1].trim();
+                map.get(currentMap).put(key, value);
+                Log.verbose("Added New Key/Value Pair [" + key + '/' + value + "] To [" + currentMap + "]");
             }
         }
 

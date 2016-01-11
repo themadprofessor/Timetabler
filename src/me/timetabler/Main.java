@@ -9,6 +9,7 @@ import me.timetabler.parsers.ConfigType;
 import me.timetabler.parsers.SchoolDataParser;
 import me.timetabler.ui.Controller;
 import me.util.Log;
+import me.util.LogLevel;
 
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import java.util.Map;
 public class Main extends Application{
     private School school;
     private SchoolDataParser parser;
+    private static ConfigType configType = ConfigType.YAML;
 
     /**
      * Entry point to the program and handles command line parameters
@@ -25,9 +27,24 @@ public class Main extends Application{
      */
     public static void main(String[] args) {
         for (int i = 0; i < args.length; i++) {
-            if ("-v".equals(args[i])) {
-                Log.DEBUG = true;
-                i++;
+            if ("-l".equals(args[i])) {
+                String lvl = args[i+1];
+                if ("v".equals(lvl)) {
+                    Log.LEVEL = LogLevel.VERBOSE;
+                } else if ("d".equals(lvl)) {
+                    Log.LEVEL = LogLevel.DEBUG;
+                } else if ("i".equals(lvl)) {
+                    Log.LEVEL = LogLevel.INFO;
+                } else if ("w".equals(lvl)) {
+                    Log.LEVEL = LogLevel.WARNING;
+                } else if ("e".equals(lvl)) {
+                    Log.LEVEL = LogLevel.ERROR;
+                } else if ("n".equals(lvl)) {
+                    Log.error("Log Level [NONE] Is Not Recommended!");
+                    Log.LEVEL = LogLevel.NONE;
+                } else {
+                    Log.error("Unknown Log Level [" + lvl + "] Setting To Default [ERROR]");
+                }
             }
         }
         launch(args);
@@ -39,16 +56,16 @@ public class Main extends Application{
     @Override
     public void init() {
         try {
-            Map<String, Map<String, String>> config = ConfigParser.getParser(ConfigType.YAML).parse();
+            Map<String, Map<String, String>> config = ConfigParser.getParser(configType).parse();
             if (config == null) {
-                Log.err("Unknown config type!");
+                Log.error("Unknown config type!");
                 System.exit(1);
             }
             school = new School(config.get("map"));
-            Log.out("Loaded School Map");
+            Log.info("Loaded School Map");
             parser = SchoolDataParser.getParser(config.get("data"));
             if (parser == null) {
-                Log.err("Unknown data type!");
+                Log.error("Unknown data type!");
             }
             school.staff = parser.readStaff();
             Log.debug("Read " + school.staff.size() + " Staff");
@@ -56,9 +73,9 @@ public class Main extends Application{
             Log.debug("Read " + school.subjects.size() + " Subjects");
             school.classes = parser.readClasses();
             Log.debug("Read " + school.classes.size() + " Classes");
-            Log.out("Loaded School Data");
+            Log.info("Loaded School Data");
         } catch (Exception e) {
-            Log.err(e);
+            Log.error(e);
         }
     }
 
@@ -77,7 +94,7 @@ public class Main extends Application{
             primaryStage.setTitle("Timetabler");
             primaryStage.show();
         } catch (Exception e) {
-            Log.err(e);
+            Log.error(e);
         }
     }
 
@@ -93,9 +110,9 @@ public class Main extends Application{
             Log.debug("Wrote " + school.subjects.size() + " Subjects");
             parser.writeClasses(school.classes);
             Log.debug("Wrote " + school.classes.size() + " Classes");
-            Log.out("Saved School Data");
+            Log.info("Saved School Data");
         } catch (Exception e) {
-            Log.err(e);
+            Log.error(e);
         }
     }
 }

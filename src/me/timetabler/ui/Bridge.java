@@ -9,7 +9,7 @@ import me.util.Log;
 import java.util.Map;
 
 /**
- * Created by stuart on 18/09/15.
+ * The bridge between the Javascript and the Java objects.
  */
 public class Bridge {
     private Map<String, Subject> subjects;
@@ -25,11 +25,15 @@ public class Bridge {
     }
 
     public void out(String msg) {
-        Log.out(msg);
+        Log.info(msg);
+    }
+
+    public void debug(String msg) {
+        Log.debug("[JAVASCRIPT] " + msg);
     }
 
     public void err(String msg) {
-        Log.err(msg);
+        Log.error(msg);
     }
 
     public void removeSubject(String id) {
