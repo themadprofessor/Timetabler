@@ -61,7 +61,7 @@ public class SchoolMap {
                 }
             }
         } catch (IOException e) {
-            Log.err(e);
+            Log.error(e);
         }
     }
 

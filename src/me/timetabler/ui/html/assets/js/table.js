@@ -21,7 +21,7 @@ function addSubject() {
     var id = document.getElementById("subjectID").value;
     var name = document.getElementById("subjectName").value;
     var row = addToTable("subjectTable", [id, name]);
-    addRemoveButton(row, function() {removeSubject(id)});
+    addRemoveButton(row, "removeSubject(this)", "subjectTable." + id);
     java.add("Subject", JSON.stringify({"id":id, "name":name}));
 }
 
@@ -43,7 +43,7 @@ function addToTable(tableName, items, id) {
     return row;
 }
 
-function addRemoveButton(row, delFunc) {
+function addRemoveButton(row, delFunc, id) {
     var align = document.createElement('div');
     align.align = "right";
     var icon = document.createElement('span');
@@ -53,6 +53,7 @@ function addRemoveButton(row, delFunc) {
     delBtn.className = "btn btn-noborder"
     delBtn.appendChild(icon);
     delBtn.setAttribute("onclick", delFunc);
+    delBtn.id = id;
     align.appendChild(delBtn);
     row.insertCell(row.cells.length).appendChild(align);
 }
@@ -63,8 +64,8 @@ function addToSelect(selectName, text, value) {
 }
 
 function addToTableJava(tableName, items, id) {
-    var row = addToTable(tableName, items, id);
-    addRemoveButton(row, function() { removeSubject(id); });
+    var row = addToTable(tableName, items, tableName + id);
+    addRemoveButton(row, "removeSubject(this)", id);
 }
 
 function removeFromTable(tableName, ids) {
@@ -76,7 +77,8 @@ function removeFromTable(tableName, ids) {
     java.debug("Removed [" + ids.length + "] Values From [" + tableName + ']')
 }
 
-function removeSubject(id) {
-    removeFromTable("subjectTable", [id]);
-    java.remove("Subject", id);
+function removeSubject(obj) {
+    java.debug("Removing [" + obj.id + "]");
+    removeFromTable("subjectTable", [obj.id]);
+    java.remove("Subject", obj);
 }

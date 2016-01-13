@@ -28,7 +28,8 @@ public class Main extends Application{
     public static void main(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if ("-l".equals(args[i])) {
-                String lvl = args[i+1];
+                i++;
+                String lvl = args[i];
                 if ("v".equals(lvl)) {
                     Log.LEVEL = LogLevel.VERBOSE;
                 } else if ("d".equals(lvl)) {

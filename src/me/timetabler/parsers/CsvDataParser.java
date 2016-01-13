@@ -94,7 +94,7 @@ public class CsvDataParser implements SchoolDataParser {
             out = new FileOutputStream(file);
             out.write(string.getBytes());
         } catch (IOException e) {
-            Log.err(e);
+            Log.error(e);
             result = false;
         } finally {
             assert out != null;
@@ -102,7 +102,7 @@ public class CsvDataParser implements SchoolDataParser {
                 out.flush();
                 out.close();
             } catch (IOException e) {
-                Log.err(e);
+                Log.error(e);
             }
         }
         return result;
@@ -127,7 +127,7 @@ public class CsvDataParser implements SchoolDataParser {
                 staff.put(st.id, st);
             });
         } catch (IOException e) {
-            Log.err(e);
+            Log.error(e);
         }
 
         return staff;
@@ -152,7 +152,7 @@ public class CsvDataParser implements SchoolDataParser {
                 subjects.put(subject.id, subject);
             });
         } catch (IOException e) {
-            Log.err(e);
+            Log.error(e);
         }
         return subjects;
     }
@@ -172,7 +172,7 @@ public class CsvDataParser implements SchoolDataParser {
                 classes.put(clazz.id, clazz);
             });
         } catch (IOException e) {
-            Log.err(e);
+            Log.error(e);
         }
         return classes;
     }

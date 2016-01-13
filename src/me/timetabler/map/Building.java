@@ -42,7 +42,7 @@ public class Building implements ImportantCell {
     public HashMap<CellType, Integer> getDistances() {
         HashMap<CellType, Integer> distances = new HashMap<>();
         important.forEach(cell -> {
-            Log.out(cell);
+            Log.info(cell);
             distances.putAll(cell.getDistances());
         });
         return distances;
