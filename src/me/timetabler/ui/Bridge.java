@@ -25,7 +25,7 @@ public class Bridge {
     }
 
     public void out(String msg) {
-        Log.info(msg);
+        Log.info("[JAVASCRIPT ]" + msg);
     }
 
     public void debug(String msg) {
@@ -33,7 +33,7 @@ public class Bridge {
     }
 
     public void err(String msg) {
-        Log.error(msg);
+        Log.error("[JAVASCRIPT] " + msg);
     }
 
     public void removeSubject(String id) {
