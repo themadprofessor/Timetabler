@@ -6,17 +6,33 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by stuart on 25/08/15.
+ * A type of cell which contains of the important cells within it in its map.<br>
+ * The init method must be called after the full map has been populated inorder to avoid StackOverflowExceptions.
  */
 public class Building implements ImportantCell {
+    /**
+     * The important cells within this building.
+     */
     private ArrayList<ImportantCell> important;
+
+    /**
+     * The unique name of this building.
+     */
     public String name;
 
+    /**
+     * Initialises the building but does not calculate the distances between the internal important cells.
+     * @param name The unique name of the building.
+     */
     public Building(String name) {
         this.name = name;
         important = new ArrayList<>();
     }
 
+    /**
+     * Finishes the initialisation of the building and calculates the distances between the internal important cells.
+     * @param schoolMap The map of this building.
+     */
     public void init(SchoolMap schoolMap) {
         important = schoolMap.getAllImportantCells();
         Walker walker = new Walker(schoolMap);
@@ -33,21 +49,31 @@ public class Building implements ImportantCell {
         }));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isTraversable() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public HashMap<CellType, Integer> getDistances() {
-        HashMap<CellType, Integer> distances = new HashMap<>();
+    public HashMap<ImportantCell, Integer> getDistances() {
+        HashMap<ImportantCell, Integer> distances = new HashMap<>();
         important.forEach(cell -> {
-            Log.out(cell);
+            Log.info(cell);
             distances.putAll(cell.getDistances());
         });
         return distances;
     }
 
+    /**
+     * Returns the name of the building rather than its hash as it is more useful.
+     * @return Returns the name of the building.
+     */
     @Override
     public String toString() {
         return name;

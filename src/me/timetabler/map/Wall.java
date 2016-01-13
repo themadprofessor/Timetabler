@@ -1,7 +1,7 @@
 package me.timetabler.map;
 
 /**
- * A cell representing a non-traversable area on the map
+ * A cell representing a non-traversable area on the map.
  */
 public class Wall implements CellType {
     /**

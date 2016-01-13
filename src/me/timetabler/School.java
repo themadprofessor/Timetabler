@@ -21,6 +21,11 @@ public class School {
     public Map<String, Staff> staff;
     public Map<String, SchoolClass> classes;
 
+    /**
+     * Initialises the school data.
+     * @param config The config about the school data.
+     * @throws FileNotFoundException Thrown if any file specified by the config cannot be found.
+     */
     public School(Map<String, String> config) throws FileNotFoundException {
         File mapFolder = new File(config.get("other_maps"));
         SchoolMap schoolMap = new SchoolMap(new File(config.get("top_map")));

@@ -45,7 +45,7 @@ public class Bridge {
             case "Class":
             case "class":
                 SchoolClass clazz = gson.fromJson(json, SchoolClass.class);
-                this.classes.put(clazz.id, clazz);
+                this.classes.put(clazz.name, clazz);
                 break;
             case "Subject":
             case "subject":

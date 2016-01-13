@@ -17,14 +17,28 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 
+/**
+ * A representation of the map of the school with utility methods to find information about the layout of the school.
+ */
 public class SchoolMap {
+    /**
+     * The width of the map.
+     */
     private int width;
+
+    /**
+     * The height of the map.
+     */
     private int height;
+
+    /**
+     * The map of the school represented in an easy to populate and use form.
+     */
     private CellType[][] schoolGrid;
 
     /**
      * Creates a object which represents the map of a building or school. Any building reference is not created to avoid StackOverflowExceptions.
-     * @param mapFile The file while contains the CSV map
+     * @param mapFile The file while contains the CSV map.
      */
     public SchoolMap(File mapFile) {
         try {
@@ -61,7 +75,7 @@ public class SchoolMap {
                 }
             }
         } catch (IOException e) {
-            Log.err(e);
+            Log.error(e);
         }
     }
 
@@ -128,8 +142,8 @@ public class SchoolMap {
     }
 
     /**
-     * Gets the coordinate of the classroom with the given number/id. If the room does not exist in the map,  the Optional will be empty.
-     * @param number The number/id of the classroom.
+     * Gets the coordinate of the classroom with the given number/name. If the room does not exist in the map,  the Optional will be empty.
+     * @param number The number/name of the classroom.
      * @return The coordinate of the room, if present.
      */
     public Optional<Coordinates> getRoomCoordinates(String number) {

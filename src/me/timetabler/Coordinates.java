@@ -1,11 +1,20 @@
 package me.timetabler;
 
 /**
- * Created by stuart on 24/08/15.
+ * A way of storing an x and y value within one object, to be used with the SchoolMap.
  */
 public class Coordinates {
+    /**
+     * The x and y values of the coordinate.
+     */
     public int x, y;
 
+    /**
+     * Initialises the coordinate.
+     * @param x The x value of the coordinate.
+     * @param y The y value of the coordinate.
+     *
+     */
     public Coordinates(int x, int y) {
         this.x = x;
         this.y = y;

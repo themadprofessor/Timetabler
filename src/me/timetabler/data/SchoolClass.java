@@ -1,9 +1,16 @@
 package me.timetabler.data;
 
 /**
- * Created by stuart on 16/09/15.
+ * A class at the school.
  */
 public class SchoolClass {
+    /**
+     * The unique subject name.
+     */
     public String subjectId;
-    public String id;
+
+    /**
+     * The name of the subject.
+     */
+    public String name;
 }
