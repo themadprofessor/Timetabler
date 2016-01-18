@@ -14,7 +14,7 @@ import me.util.LogLevel;
 import java.util.Map;
 
 /**
- * The entry point of the program. It handles command line parameters
+ * The entry point of the program. It handles command line parameters.
  */
 public class Main extends Application{
     private School school;
@@ -22,8 +22,8 @@ public class Main extends Application{
     private static ConfigType configType = ConfigType.YAML;
 
     /**
-     * Entry point to the program and handles command line parameters
-     * @param args The command line parameters
+     * Entry point to the program and handles command line parameters.
+     * @param args The command line parameters.
      */
     public static void main(String[] args) {
         for (int i = 0; i < args.length; i++) {
@@ -52,7 +52,7 @@ public class Main extends Application{
     }
 
     /**
-     * Called before UI is initialised. Loads and parses all school data and initialises the map
+     * Called before UI is initialised. Loads and parses all school data and initialises the map.
      */
     @Override
     public void init() {
@@ -81,8 +81,8 @@ public class Main extends Application{
     }
 
     /**
-     * Initialises the UI
-     * @param primaryStage The primary JavaFX stage for the Ui to placed in
+     * Initialises the UI.
+     * @param primaryStage The primary JavaFX stage for the Ui to placed in.
      */
     @Override
     public void start(Stage primaryStage) {

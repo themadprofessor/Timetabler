@@ -76,4 +76,8 @@ public class Bridge {
                 break;
         }
     }
+
+    public void genTimetable() {
+
+    }
 }

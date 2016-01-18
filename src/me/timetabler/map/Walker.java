@@ -1,6 +1,7 @@
 package me.timetabler.map;
 
 import me.timetabler.Coordinates;
+import me.util.Log;
 
 /**
  * A recursive method of finding the shortest route between two coordinates. Can cause StackOverflowExceptions if the map is very large.
@@ -67,19 +68,24 @@ public class Walker {
         if (north.equals(destination) || south.equals(destination) || east.equals(destination) || west.equals(destination)) {
             if (finalDistance > distance) {
                 finalDistance = distance;
+                Log.verbose("Found New Shortest Distance [" + finalDistance + ']');
             }
             return;
         }
         if (!last.equals(new Coordinates(start.x, start.y - 1)) && north.isTraversable()) {
+            Log.verbose("Current Coordinate [" + start + "] Moving North");
             move(new Coordinates(start.x, start.y - 1), dest, start, distance);
         }
         if (!last.equals(new Coordinates(start.x, start.y + 1)) && south.isTraversable()) {
+            Log.verbose("Current Coordinate [" + start + "] Moving South");
             move(new Coordinates(start.x, start.y + 1), dest, start, distance);
         }
         if (!last.equals(new Coordinates(start.x + 1, start.y)) && east.isTraversable()) {
+            Log.verbose("Current Coordinate [" + start + "] Moving East");
             move(new Coordinates(start.x + 1, start.y), dest, start, distance);
         }
         if (!last.equals(new Coordinates(start.x - 1, start.y)) && west.isTraversable()) {
+            Log.verbose("Current Coordinate [" + start + "] Moving West");
             move(new Coordinates(start.x - 1, start.y), dest, start, distance);
         }
     }

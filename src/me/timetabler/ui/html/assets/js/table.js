@@ -26,9 +26,11 @@ function addSubject() {
 }
 
 function addClass() {
+    var select = document.getElementById("classSubject");
     var id = document.getElementById("classID").value;
-    var subject = document.getElementById("classSubject").value;
-    addToTable("classTable", [id, subject]);
+    var subject = select.value;
+    var name = select.options[options.selectedIndex].text;
+    addToTable("classTable", [id, name], id);
     java.add("Class", JSON.stringify({"id":id, "subjectId":subject}));
 }
 
@@ -81,4 +83,8 @@ function removeSubject(obj) {
     java.debug("Removing [" + obj.id + "]");
     removeFromTable("subjectTable", [obj.id]);
     java.remove("Subject", obj);
+}
+
+function genTimetable() {
+    java.genTimetable();
 }

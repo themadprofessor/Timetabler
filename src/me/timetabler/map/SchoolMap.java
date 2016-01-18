@@ -52,6 +52,7 @@ public class SchoolMap {
                     width = line.length();
                 }
             });
+            Log.debug("Loaded Map Of Dimensions [" + width + "," + height +']');
 
             schoolGrid = new CellType[width][height];
             //A 2D array is an array of arrays, so each top array must be filled with sub arrays
@@ -60,6 +61,7 @@ public class SchoolMap {
             }
             for (int y = 0; y < lines.size(); y++) {
                 String[] cellsStrings = lines.get(y).split(",");
+                Log.verbose("Found [" + cellsStrings.length + "] Cells");
                 for (int x = 0; x < cellsStrings.length; x++) {
                     if ("".equals(cellsStrings[x])) {
                         //Do nothing as default value is wall
@@ -85,6 +87,7 @@ public class SchoolMap {
      */
     public void init(HashMap<String, SchoolMap> buildings) {
         ArrayList<Building> optionalBuildings = getAllBuildings();
+        Log.verbose("Found [" + optionalBuildings.size() + "] Buildings");
         if (!optionalBuildings.isEmpty()) {
             optionalBuildings.forEach(building -> buildings.forEach((name, map) -> {
                 if (building.name.equals(name)) {
@@ -92,7 +95,7 @@ public class SchoolMap {
                 }
             }));
         } else {
-            throw new IllegalStateException("No Buildings found in map!");
+            Log.warning("No Buildings Found!");
         }
     }
 
@@ -111,6 +114,7 @@ public class SchoolMap {
 
             return (CellType)cell;
         } else {
+            //Removes the need for ArrayOutOfBoundsExceptions and NullPointerExceptions
             return new Wall();
         }
     }
