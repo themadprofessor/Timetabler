@@ -57,7 +57,7 @@ public class Main extends Application{
     @Override
     public void init() {
         try {
-            Map<String, Map<String, String>> config = ConfigParser.getParser(configType).parse();
+            Map<String, Map<String, String>> config = ConfigParser.getParser(configType, "assets/config.yaml").parse();
             if (config == null) {
                 Log.error("Unknown config type!");
                 System.exit(1);
