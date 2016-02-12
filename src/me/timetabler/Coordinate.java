@@ -3,7 +3,7 @@ package me.timetabler;
 /**
  * A way of storing an x and y value within one object, to be used with the SchoolMap.
  */
-public class Coordinates {
+public class Coordinate {
     /**
      * The x and y values of the coordinate.
      */
@@ -15,7 +15,7 @@ public class Coordinates {
      * @param y The y value of the coordinate.
      *
      */
-    public Coordinates(int x, int y) {
+    public Coordinate(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -27,8 +27,8 @@ public class Coordinates {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Coordinates) {
-            return x == ((Coordinates) obj).x && y == ((Coordinates) obj).y;
+        if (obj instanceof Coordinate) {
+            return x == ((Coordinate) obj).x && y == ((Coordinate) obj).y;
         } else {
             return super.equals(obj);
         }

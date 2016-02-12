@@ -1,6 +1,6 @@
 package me.timetabler.map;
 
-import me.timetabler.Coordinates;
+import me.timetabler.Coordinate;
 import me.util.Log;
 
 /**
@@ -31,7 +31,8 @@ public class Walker {
      * @param dest The destination coordinate.
      * @return Returns the shortest distance between the two coordinates.
      */
-    public int walk(Coordinates start, Coordinates dest) {
+    public int walk(Coordinate start, Coordinate dest) {
+        finalDistance = Integer.MAX_VALUE;
         move(start, dest, start, 0);
         return finalDistance;
     }
@@ -56,7 +57,7 @@ public class Walker {
      * @param last The coordinate the walker was at last.
      * @param distance The current distance along the current path.
      */
-    private void move(Coordinates start, Coordinates dest, Coordinates last, int distance) {
+    private void move(Coordinate start, Coordinate dest, Coordinate last, int distance) {
         distance++;
         CellType destination = schoolMap.getCell(dest);
         CellType north, south, east, west;
@@ -72,21 +73,21 @@ public class Walker {
             }
             return;
         }
-        if (!last.equals(new Coordinates(start.x, start.y - 1)) && north.isTraversable()) {
+        if (!last.equals(new Coordinate(start.x, start.y - 1)) && north.isTraversable()) {
             Log.verbose("Current Coordinate [" + start + "] Moving North");
-            move(new Coordinates(start.x, start.y - 1), dest, start, distance);
+            move(new Coordinate(start.x, start.y - 1), dest, start, distance);
         }
-        if (!last.equals(new Coordinates(start.x, start.y + 1)) && south.isTraversable()) {
+        if (!last.equals(new Coordinate(start.x, start.y + 1)) && south.isTraversable()) {
             Log.verbose("Current Coordinate [" + start + "] Moving South");
-            move(new Coordinates(start.x, start.y + 1), dest, start, distance);
+            move(new Coordinate(start.x, start.y + 1), dest, start, distance);
         }
-        if (!last.equals(new Coordinates(start.x + 1, start.y)) && east.isTraversable()) {
+        if (!last.equals(new Coordinate(start.x + 1, start.y)) && east.isTraversable()) {
             Log.verbose("Current Coordinate [" + start + "] Moving East");
-            move(new Coordinates(start.x + 1, start.y), dest, start, distance);
+            move(new Coordinate(start.x + 1, start.y), dest, start, distance);
         }
-        if (!last.equals(new Coordinates(start.x - 1, start.y)) && west.isTraversable()) {
+        if (!last.equals(new Coordinate(start.x - 1, start.y)) && west.isTraversable()) {
             Log.verbose("Current Coordinate [" + start + "] Moving West");
-            move(new Coordinates(start.x - 1, start.y), dest, start, distance);
+            move(new Coordinate(start.x - 1, start.y), dest, start, distance);
         }
     }
 }

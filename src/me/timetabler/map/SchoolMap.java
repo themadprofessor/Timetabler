@@ -5,7 +5,7 @@
 
 package me.timetabler.map;
 
-import me.timetabler.Coordinates;
+import me.timetabler.Coordinate;
 import me.util.Log;
 
 import java.io.File;
@@ -121,11 +121,11 @@ public class SchoolMap {
 
     /**
      * Gets the cell at the given coordinate.
-     * @param coordinates The coordinate to look for.
+     * @param coordinate The coordinate to look for.
      * @return The cell at the given coordinate.
      */
-    public CellType getCell(Coordinates coordinates) {
-        return this.getCell(coordinates.x, coordinates.y);
+    public CellType getCell(Coordinate coordinate) {
+        return this.getCell(coordinate.x, coordinate.y);
     }
 
     /**
@@ -133,12 +133,12 @@ public class SchoolMap {
      * @param cell The cell to look for.
      * @return The coordinate of the cell, if present.
      */
-    public Optional<Coordinates> getCoordinates(CellType cell) {
+    public Optional<Coordinate> getCoordinates(CellType cell) {
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
                 CellType tmpCell = schoolGrid[x][y];
                 if (cell.equals(tmpCell)) {
-                    return Optional.of(new Coordinates(x, y));
+                    return Optional.of(new Coordinate(x, y));
                 }
             }
         }
@@ -150,12 +150,12 @@ public class SchoolMap {
      * @param number The number/name of the classroom.
      * @return The coordinate of the room, if present.
      */
-    public Optional<Coordinates> getRoomCoordinates(String number) {
+    public Optional<Coordinate> getRoomCoordinates(String number) {
         for(int y = 0; y < this.height - 1; ++y) {
             for(int x = 0; x < this.width - 1; ++x) {
                 CellType cell = schoolGrid[x][y];
                 if(cell instanceof ClassRoom && ((ClassRoom)cell).number.equals(number)) {
-                    return Optional.of(new Coordinates(x, y));
+                    return Optional.of(new Coordinate(x, y));
                 }
             }
         }

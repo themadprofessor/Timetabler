@@ -64,7 +64,7 @@ public class Building implements ImportantCell {
     public HashMap<ImportantCell, Integer> getDistances() {
         HashMap<ImportantCell, Integer> distances = new HashMap<>();
         important.forEach(cell -> {
-            Log.info(cell);
+            Log.verbose(cell + " Distances Found By " + name);
             distances.putAll(cell.getDistances());
         });
         return distances;

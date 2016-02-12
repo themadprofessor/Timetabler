@@ -1,7 +1,7 @@
 package me.timetabler.parsers;
 
 /**
- * The file type of the config to be parsed byt an implementaion of ConfigParser.
+ * The file type of the config to be parsed by an implementation of ConfigParser.
  */
 public enum ConfigType {
     /**

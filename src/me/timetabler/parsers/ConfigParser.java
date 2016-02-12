@@ -18,12 +18,12 @@ public interface ConfigParser {
     /**
      * A factory method to get the correct type of ConfigParser for a given file type.
      * @param type The type of ConfigParser
+     * @param file The path to the config file
      * @return The corresponding ConfigParser implementation, or null if the data type is yet to be implemented.
      */
-    static ConfigParser getParser(ConfigType type) {
+    static ConfigParser getParser(ConfigType type, String file) {
         switch (type) {
-            //Make the file dynamic rather than hard coded
-            case YAML: return new YamlConfigParser("assets/config.yaml");
+            case YAML: return new YamlConfigParser(file);
             default: return null;
         }
     }
