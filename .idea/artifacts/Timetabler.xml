@@ -14,7 +14,6 @@
     <root id="root">
       <element id="archive" name="Timetabler.jar">
         <element id="module-output" name="Timetabler" />
-        <element id="library" level="project" name="gson" />
       </element>
     </root>
   </artifact>
