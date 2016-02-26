@@ -10,7 +10,14 @@ import me.timetabler.parsers.SchoolDataParser;
 import me.timetabler.ui.Controller;
 import me.util.Log;
 import me.util.LogLevel;
+import me.util.MultipleOutputStream;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 /**
@@ -26,28 +33,14 @@ public class Main extends Application{
      * @param args The command line parameters.
      */
     public static void main(String[] args) {
+        String lvl = "e";
         for (int i = 0; i < args.length; i++) {
             if ("-l".equals(args[i])) {
                 i++;
-                String lvl = args[i];
-                if ("v".equals(lvl)) {
-                    Log.LEVEL = LogLevel.VERBOSE;
-                } else if ("d".equals(lvl)) {
-                    Log.LEVEL = LogLevel.DEBUG;
-                } else if ("i".equals(lvl)) {
-                    Log.LEVEL = LogLevel.INFO;
-                } else if ("w".equals(lvl)) {
-                    Log.LEVEL = LogLevel.WARNING;
-                } else if ("e".equals(lvl)) {
-                    Log.LEVEL = LogLevel.ERROR;
-                } else if ("n".equals(lvl)) {
-                    Log.error("Log Level [NONE] Is Not Recommended!");
-                    Log.LEVEL = LogLevel.NONE;
-                } else {
-                    Log.error("Unknown Log Level [" + lvl + "] Setting To Default [ERROR]");
-                }
+                lvl = args[i];
             }
         }
+        setupLogging(lvl);
         launch(args);
     }
 
@@ -113,6 +106,43 @@ public class Main extends Application{
             Log.debug("Wrote " + school.classes.size() + " Classes");
             Log.info("Saved School Data");
         } catch (Exception e) {
+            Log.error(e);
+        }
+    }
+
+    private static void setupLogging(String level) {
+        if ("v".equals(level)) {
+            Log.LEVEL = LogLevel.VERBOSE;
+        } else if ("d".equals(level)) {
+            Log.LEVEL = LogLevel.DEBUG;
+        } else if ("i".equals(level)) {
+            Log.LEVEL = LogLevel.INFO;
+        } else if ("w".equals(level)) {
+            Log.LEVEL = LogLevel.WARNING;
+        } else if ("e".equals(level)) {
+            Log.LEVEL = LogLevel.ERROR;
+        } else if ("n".equals(level)) {
+            Log.error("Log Level [NONE] Is Not Recommended!");
+            Log.LEVEL = LogLevel.NONE;
+        } else {
+            Log.error("Unknown Log Level [" + level + "] Setting To Default [ERROR]");
+        }
+
+        try {
+            File outFile = new File("log/" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME).replaceAll(":", "-") + "_out.log");
+            outFile.getParentFile().mkdirs();
+            outFile.createNewFile();
+
+            File errFile = new File("log/" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME).replaceAll(":", "-") + "_err.log");
+            outFile.getParentFile().mkdirs();
+            errFile.createNewFile();
+
+            MultipleOutputStream out = new MultipleOutputStream(System.out, new BufferedOutputStream(new FileOutputStream(outFile)));
+            MultipleOutputStream err = new MultipleOutputStream(System.err, new BufferedOutputStream(new FileOutputStream(errFile)));
+
+            Log.NORMAL_WRITER = new PrintWriter(out);
+            Log.ERROR_WRITER = new PrintWriter(err);
+        } catch (java.io.IOException e) {
             Log.error(e);
         }
     }

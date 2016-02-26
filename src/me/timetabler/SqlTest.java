@@ -1,6 +1,7 @@
 package me.timetabler;
 
-import me.timetabler.sql.DbManager;
+import me.timetabler.sql.Database;
+import me.timetabler.sql.DatabaseException;
 import me.util.Log;
 import me.util.LogLevel;
 
@@ -14,7 +15,7 @@ public class SqlTest {
     public static void main(String[] args) {
         try {
             Log.LEVEL = LogLevel.VERBOSE;
-            DbManager manager = new DbManager("jdbc:mysql://127.0.0.1/school", "root", "root", "org.mariadb.jdbc.Driver");
+            Database manager = new Database("jdbc:mysql://127.0.0.1/school", "root", "root");
             manager.sendSQL("INSERT INTO subject VALUES (0,\"Maths\");");
             Log.info("Connected To Server!");
             ResultSet set = manager.sendSQL("SELECT * FROM subject;").get();
@@ -22,8 +23,8 @@ public class SqlTest {
             while (set.next()) {
                 Log.info("ID [" + set.getInt(1) + "] Name [" + set.getString(2) + ']');
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (DatabaseException | SQLException e) {
+            Log.error(e);
         }
     }
 }
