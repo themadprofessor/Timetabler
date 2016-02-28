@@ -87,6 +87,7 @@ public class Main extends Application{
             primaryStage.setScene(scene);
             primaryStage.setTitle("Timetabler");
             primaryStage.show();
+
         } catch (Exception e) {
             Log.error(e);
         }

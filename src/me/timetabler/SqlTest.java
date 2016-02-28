@@ -15,7 +15,7 @@ public class SqlTest {
     public static void main(String[] args) {
         try {
             Log.LEVEL = LogLevel.VERBOSE;
-            Database manager = new Database("jdbc:mysql://127.0.0.1/school", "root", "root");
+            Database manager = new Database("127.0.0.1", "school", "root", "root");
             manager.sendSQL("INSERT INTO subject VALUES (0,\"Maths\");");
             Log.info("Connected To Server!");
             ResultSet set = manager.sendSQL("SELECT * FROM subject;").get();

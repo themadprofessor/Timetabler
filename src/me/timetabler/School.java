@@ -1,7 +1,6 @@
 package me.timetabler;
 
 import me.timetabler.data.SchoolClass;
-import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
 import me.timetabler.map.SchoolMap;
 import me.util.Log;
@@ -19,7 +18,7 @@ import java.util.Map;
  */
 public class School {
     public Map<String, Subject> subjects;
-    public Map<String, Staff> staff;
+    public Map<K, V> staff;
     public Map<String, SchoolClass> classes;
 
     /**

@@ -7,12 +7,12 @@ public class Staff {
     /**
      * The unique staff id.
      */
-    public String id;
+    public int id;
 
     /**
      * The name of the member of staff.
      */
-    public String name;
+    public int name;
 
     /**
      * Initialises the class, but not its internal variables.
@@ -25,7 +25,7 @@ public class Staff {
      * @param id The unique staff id.
      * @param name The name of the member of staff.
      */
-    public Staff(String id, String name) {
+    public Staff(int id, int name) {
         this.id = id;
         this.name = name;
     }

@@ -1,7 +1,6 @@
 package me.timetabler.parsers;
 
 import me.timetabler.data.SchoolClass;
-import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
 
 import java.io.IOException;
@@ -17,7 +16,7 @@ public interface SchoolDataParser {
      * @return Returns a map containing all the staff defined in the staff file. The key is the name of the staff member which is also defined with the Staff object.
      * @throws IOException Thrown if any IOException occurs.
      */
-    Map<String, Staff> readStaff() throws IOException;
+    Map<Object, Object> readStaff() throws IOException;
 
     /**
      * Reads the subject data from the file specified in the config map. The type of map is determined by the implementation.
@@ -38,7 +37,7 @@ public interface SchoolDataParser {
      * @param staffMap The map the be written.
      * @return Returns true if the data was written successfully, otherwise returns false.
      */
-    boolean writeStaff(Map<String, Staff> staffMap);
+    boolean writeStaff(Map<Object, Object> staffMap);
 
     /**
      * Writes the subject data from the given map to the subject file specified in the config map.

@@ -21,14 +21,14 @@ public class Database {
      * @param username The username of the user on the server.
      * @param password The password of the user.
      */
-    public Database(String addr, String username, String password) {
+    public Database(String addr, String dbName, String username, String password) {
         this.addr = addr;
         this.username = username;
         this.password = password;
 
         Connection connection = null;
         try {
-            MariaDbDataSource dataSource = new MariaDbDataSource(addr);
+            MariaDbDataSource dataSource = new MariaDbDataSource(addr, 3306, dbName);
             dataSource.setUser(username);
             dataSource.setPassword(password);
             source = dataSource;
@@ -39,15 +39,9 @@ public class Database {
             throw new DatabaseConnectionException(addr, e);
         } finally {
             if (connection != null) {
-                try {
-                    closeConn(connection);
-                } catch (SQLException e) {
-                    Log.error(e);
-                }
+                closeConn(connection);
             }
         }
-
-
     }
 
     /**
@@ -68,11 +62,7 @@ public class Database {
             Log.error(e);
         } finally {
             if (connection != null) {
-                try {
-                    closeConn(connection);
-                } catch (SQLException e) {
-                    Log.error(e);
-                }
+                closeConn(connection);
             }
         }
         return resultSet;
@@ -81,7 +71,7 @@ public class Database {
     /**
      * Sends the given list of SQL statements to the server as a batch query which is more optimal than multiple single requests.
      * @param queries The queries to to be sent to the server.
-     * @return Returns an array containing the number of row changes per request, as each element in the order sent to the server.
+     * @return Returns an array containing the number of row changes per request, as each element in the order sent to the server, which can be an empty array.
      */
     public int[] sendSqlBatch(List<String> queries) {
         int[] changes = new int[0];
@@ -105,15 +95,27 @@ public class Database {
             throw new DatabaseUpdateException(e);
         } finally {
             if (connection != null) {
-                try {
-                    closeConn(connection);
-                } catch (SQLException e) {
-                    Log.error(e);
-                }
+                closeConn(connection);
             }
         }
 
         return changes;
+    }
+
+    public PreparedStatement createPrepStatement(String sql) {
+        PreparedStatement statement = null;
+        Connection connection = openConn();
+
+        try {
+            statement = connection.prepareStatement(sql);
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing DatabaseConnectionException!");
+            throw new DatabaseConnectionException(addr, e);
+        } finally {
+            closeConn(connection);
+        }
+
+        return statement;
     }
 
     /**
@@ -133,10 +135,15 @@ public class Database {
     /**
      * Closes the given connection to the server. Currently, just calls the connection's close method.
      * @param connection The connection to to be closed.
-     * @throws SQLException Thrown if a database error occurs.
+     * @throws DatabaseConnectionException Thrown if the connection cannot be closed.
      */
-    private void closeConn(Connection connection) throws SQLException {
-        connection.close();
+    private void closeConn(Connection connection) {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing DatabaseConnectionException!");
+            throw new DatabaseConnectionException(addr, e);
+        }
     }
 }
 

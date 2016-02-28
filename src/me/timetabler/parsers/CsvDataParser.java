@@ -52,7 +52,7 @@ public class CsvDataParser implements SchoolDataParser {
     /**
      * {@inheritDoc}
      */
-    public boolean writeStaff(Map<String, Staff> map) {
+    public boolean writeStaff(Map<Object, Object> map) {
         StringBuilder builder = new StringBuilder();
         String[] names = new String[map.keySet().size()];
         map.keySet().toArray(names);
@@ -60,10 +60,10 @@ public class CsvDataParser implements SchoolDataParser {
             return false;
         }
         for (int i = 0; i < map.size()-1; i++) {
-            Staff staff = map.get(names[i]);
+            Object staff = map.get(names[i]);
             builder.append(staff.id).append(',').append(staff.name).append('\n');
         }
-        Staff staff = map.get(names[names.length-1]);
+        Object staff = map.get(names[names.length-1]);
         builder.append(staff.id).append(',').append(staff.name);
         return write(String.valueOf(config.get("staff_location")), builder.toString());
     }
@@ -117,15 +117,15 @@ public class CsvDataParser implements SchoolDataParser {
     /**
      * {@inheritDoc}
      */
-    public Map<String, Staff> readStaff() throws IOException {
+    public Map<Object, Object> readStaff() throws IOException {
         File file = new File(String.valueOf(config.get("staff_location")));
-        Map<String, Staff> staff = Collections.synchronizedMap(new LinkedHashMap<>());
+        Map<K, V> staff = Collections.synchronizedMap(new LinkedHashMap<>());
         if (!file.exists()) {
             return staff;
         }
             Files.lines(file.toPath()).forEach(line -> {
                 Staff st = new Staff();
-                String[] split = line.split(",");
+                int[] split = line.split(",");
                 st.id = split[0];
                 st.name = split[1];
                 staff.put(st.id, st);

@@ -13,11 +13,11 @@ import java.util.Map;
  */
 public class Bridge {
     private Map<String, Subject> subjects;
-    private Map<String, Staff> staff;
+    private Map<K, V> staff;
     private Map<String, SchoolClass> classes;
     private Gson gson;
 
-    public Bridge(Map<String, Subject> subjects, Map<String, Staff> staff, Map<String, SchoolClass> classes) {
+    public Bridge(Map<String, Subject> subjects, Map<Object, Object> staff, Map<String, SchoolClass> classes) {
         this.subjects = subjects;
         this.staff = staff;
         this.classes = classes;

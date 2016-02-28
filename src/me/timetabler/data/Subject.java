@@ -12,5 +12,5 @@ public class Subject {
     /**
      * The unique subject id.
      */
-    public String id;
+    public int id;
 }
