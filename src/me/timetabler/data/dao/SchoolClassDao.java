@@ -1,4 +1,4 @@
-package me.timetabler.sql.dao;
+package me.timetabler.data.dao;
 
 import me.timetabler.data.SchoolClass;
 import me.timetabler.data.Subject;

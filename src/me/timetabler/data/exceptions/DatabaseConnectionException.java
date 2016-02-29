@@ -1,4 +1,4 @@
-package me.timetabler.sql;
+package me.timetabler.data.exceptions;
 
 /**
  * Created by stuart on 25/02/16.

@@ -1,4 +1,4 @@
-package me.timetabler.parsers;
+package me.timetabler.config;
 
 import java.io.IOException;
 import java.util.Map;

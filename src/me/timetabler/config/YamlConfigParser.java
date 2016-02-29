@@ -1,4 +1,4 @@
-package me.timetabler.parsers;
+package me.timetabler.config;
 
 import me.util.Log;
 

@@ -1,4 +1,4 @@
-package me.timetabler.parsers;
+package me.timetabler.data.flatfiles;
 
 import me.timetabler.data.SchoolClass;
 import me.timetabler.data.Staff;

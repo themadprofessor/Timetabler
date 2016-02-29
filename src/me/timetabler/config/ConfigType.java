@@ -1,4 +1,4 @@
-package me.timetabler.parsers;
+package me.timetabler.config;
 
 /**
  * The file type of the config to be parsed by an implementation of ConfigParser.

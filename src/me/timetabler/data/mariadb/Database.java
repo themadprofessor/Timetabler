@@ -1,5 +1,7 @@
-package me.timetabler.sql;
+package me.timetabler.data.mariadb;
 
+import me.timetabler.data.exceptions.DatabaseConnectionException;
+import me.timetabler.data.exceptions.DatabaseUpdateException;
 import me.util.Log;
 import org.mariadb.jdbc.MariaDbDataSource;
 
@@ -102,31 +104,12 @@ public class Database {
         return changes;
     }
 
-    protected Optional<PreparedStatement> createPrepStatement(String sql) {
-        PreparedStatement preparedStatement;
-        Connection connection = openConn();
-
-        try {
-            preparedStatement = connection.prepareStatement(sql);
-        } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing DatabaseConnectionException!");
-            closeConn(connection);
-            throw new DatabaseConnectionException(addr, e);
-        }
-
-        if (preparedStatement == null) {
-            return Optional.empty();
-        } else {
-            return Optional.of(preparedStatement);
-        }
-    }
-
     /**
      * Opens a connection to the server using the variables addr, username and password.
      * @return The connection to the server. This connection should be closed after it is no longer needed and should not be kept open.
      * @throws DatabaseConnectionException Thrown if the connection cannot be established with the server.
      */
-    private Connection openConn() {
+    protected Connection openConn() {
         try {
             return source.getConnection(username, password);
         } catch (SQLException e) {
