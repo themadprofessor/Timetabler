@@ -1,6 +1,7 @@
 package me.timetabler;
 
 import me.timetabler.data.SchoolClass;
+import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
 import me.timetabler.map.SchoolMap;
 import me.util.Log;
@@ -17,9 +18,9 @@ import java.util.Map;
  * A wrapper to all data related to the school.
  */
 public class School {
-    public Map<String, Subject> subjects;
-    public Map<K, V> staff;
-    public Map<String, SchoolClass> classes;
+    public Map<Integer, Subject> subjects;
+    public Map<Integer, Staff> staff;
+    public Map<Integer, SchoolClass> classes;
 
     /**
      * Initialises the school data.

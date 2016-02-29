@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import me.timetabler.data.SchoolClass;
+import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
 import me.util.Log;
 import me.util.LogLevel;
@@ -29,9 +30,9 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
     @FXML WebView view;
     private WebEngine engine;
-    private Map<String, Subject> subjects;
-    private Map<K, V> staff;
-    private Map<String, SchoolClass> classes;
+    private Map<Integer, Subject> subjects;
+    private Map<Integer, Staff> staff;
+    private Map<Integer, SchoolClass> classes;
 
     /**
      * Initialises the controller. Due to the parameters, the controller must be constructed then given to JavaFX.
@@ -39,7 +40,7 @@ public class Controller implements Initializable {
      * @param staff A map of the staff member's id and the staff object.
      * @param classes A map of the class's id and the class object.
      */
-    public Controller(Map<String, Subject> subjects, Map<Object, Object> staff, Map<String, SchoolClass> classes) {
+    public Controller(Map<Integer, Subject> subjects, Map<Integer, Staff> staff, Map<Integer, SchoolClass> classes) {
         this.subjects = subjects;
         this.staff = staff;
         this.classes = classes;
@@ -60,11 +61,11 @@ public class Controller implements Initializable {
                 JSObject bridge = (JSObject) engine.executeScript("window");
                 bridge.setMember("java", new Bridge(subjects, staff, classes));
                 subjects.forEach((id, subject) -> {
-                    bridge.call("addToTableJava", "subjectTable", new String[]{id, subject.name}, id);
+                    bridge.call("addToTableJava", "subjectTable", new String[]{String.valueOf(id), subject.name}, id);
                     bridge.call("addToSelect", "classSubject", subject.name, subject.id);
                 });
-                staff.forEach((id, staff) -> bridge.call("addToTableJava", "staffTable", new int[]{id, staff.name}, id));
-                classes.forEach((id, clazz) -> bridge.call("addToTableJava", "classTable", new String[]{id, clazz.name}, id));
+                staff.forEach((id, staff) -> bridge.call("addToTableJava", "staffTable", new String[]{String.valueOf(id), staff.name}, id));
+                classes.forEach((id, clazz) -> bridge.call("addToTableJava", "classTable", new String[]{String.valueOf(id), clazz.name}, id));
                 engine.executeScript("console.log = function(msg) {java.out(msg);}");
                 engine.executeScript("console.error = function(msg) {java.err(msg);}");
 

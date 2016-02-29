@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A SchoolDataParser implementation for CSV data.
@@ -33,57 +34,47 @@ public class CsvDataParser implements SchoolDataParser {
     /**
      * {@inheritDoc}
      */
-    public boolean writeSubjects(Map<String, Subject> map) {
+    public boolean writeSubjects(Map<Integer, Subject> map) {
         StringBuilder builder = new StringBuilder();
-        String[] names = new String[map.keySet().size()];
-        map.keySet().toArray(names);
-        if (names.length == 0) {
-            return false;
-        }
-        for (int i = 0; i < map.size()-1; i++) {
-            Subject subject = map.get(names[i]);
+        Set<Map.Entry<Integer, Subject>> entries = map.entrySet();
+
+        entries.forEach(entry -> {
+            Subject subject = entry.getValue();
             builder.append(subject.id).append(',').append(subject.name).append('\n');
-        }
-        Subject subject = map.get(names[names.length-1]);
-        builder.append(subject.id).append(',').append(subject.name);
+        });
+
+        builder.deleteCharAt(builder.length()-1);
         return write(String.valueOf(config.get("subjects_location")), builder.toString());
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean writeStaff(Map<Object, Object> map) {
+    public boolean writeStaff(Map<Integer, Staff> map) {
         StringBuilder builder = new StringBuilder();
-        String[] names = new String[map.keySet().size()];
-        map.keySet().toArray(names);
-        if (names.length == 0) {
-            return false;
-        }
-        for (int i = 0; i < map.size()-1; i++) {
-            Object staff = map.get(names[i]);
+        Set<Map.Entry<Integer, Staff>> entries = map.entrySet();
+
+        entries.forEach(entry -> {
+            Staff staff = entry.getValue();
             builder.append(staff.id).append(',').append(staff.name).append('\n');
-        }
-        Object staff = map.get(names[names.length-1]);
-        builder.append(staff.id).append(',').append(staff.name);
-        return write(String.valueOf(config.get("staff_location")), builder.toString());
+        });
+
+        builder.deleteCharAt(builder.length()-1);
+        return write(config.get("staff_location"), builder.toString());
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean writeClasses(Map<String, SchoolClass> classMap) {
+    public boolean writeClasses(Map<Integer, SchoolClass> map) {
         StringBuilder builder = new StringBuilder();
-        String[] ids = new String[classMap.keySet().size()];
-        classMap.keySet().toArray(ids);
-        if (ids.length == 0) {
-            return false;
-        }
-        for (int i = 0; i< classMap.size()-1; i++) {
-            SchoolClass clazz = classMap.get(ids[i]);
-            builder.append(clazz.name).append(',').append(clazz.subjectId).append('\n');
-        }
-        SchoolClass clazz = classMap.get(ids[ids.length-1]);
-        builder.append(clazz.name).append(',').append(clazz.subjectId);
+        Set<Map.Entry<Integer, SchoolClass>> entries = map.entrySet();
+
+        entries.forEach(entry -> {
+            SchoolClass clazz = entry.getValue();
+            builder.append(clazz.id).append(',').append(clazz.name).append(',').append(clazz.subjectId).append('\n');
+        });
+
         return write(String.valueOf(config.get("classes_location")), builder.toString());
     }
 
@@ -117,16 +108,16 @@ public class CsvDataParser implements SchoolDataParser {
     /**
      * {@inheritDoc}
      */
-    public Map<Object, Object> readStaff() throws IOException {
+    public Map<Integer, Staff> readStaff() throws IOException {
         File file = new File(String.valueOf(config.get("staff_location")));
-        Map<K, V> staff = Collections.synchronizedMap(new LinkedHashMap<>());
+        Map<Integer, Staff> staff = Collections.synchronizedMap(new LinkedHashMap<>());
         if (!file.exists()) {
             return staff;
         }
             Files.lines(file.toPath()).forEach(line -> {
                 Staff st = new Staff();
-                int[] split = line.split(",");
-                st.id = split[0];
+                String[] split = line.split(",");
+                st.id = Integer.parseInt(split[0]);
                 st.name = split[1];
                 staff.put(st.id, st);
             });
@@ -137,16 +128,16 @@ public class CsvDataParser implements SchoolDataParser {
     /**
      * {@inheritDoc}
      */
-    public Map<String, Subject> readSubjects() throws IOException {
+    public Map<Integer, Subject> readSubjects() throws IOException {
         File file = new File(String.valueOf(config.get("subjects_location")));
-        Map<String, Subject> subjects = Collections.synchronizedMap(new LinkedHashMap<>());
+        Map<Integer, Subject> subjects = Collections.synchronizedMap(new LinkedHashMap<>());
         if (!file.exists()) {
             return subjects;
         }
             Files.lines(file.toPath()).forEach(line -> {
                 Subject subject = new Subject();
                 String[] split = line.split(",");
-                subject.id = split[0];
+                subject.id = Integer.parseInt(split[0]);
                 subject.name = split[1];
                 subjects.put(subject.id, subject);
             });
@@ -156,18 +147,19 @@ public class CsvDataParser implements SchoolDataParser {
     /**
      * {@inheritDoc}
      */
-    public Map<String, SchoolClass> readClasses() throws IOException {
+    public Map<Integer, SchoolClass> readClasses() throws IOException {
         File file = new File(String.valueOf(config.get("classes_location")));
-        Map<String, SchoolClass> classes = Collections.synchronizedMap(new LinkedHashMap<>());
+        Map<Integer, SchoolClass> classes = Collections.synchronizedMap(new LinkedHashMap<>());
         if (!file.exists()) {
             return classes;
         }
             Files.lines(file.toPath()).forEach(line -> {
                 SchoolClass clazz = new SchoolClass();
                 String[] split = line.split(",");
-                clazz.name = split[0];
-                clazz.subjectId = split[1];
-                classes.put(clazz.name, clazz);
+                clazz.id = Integer.parseInt(split[0]);
+                clazz.name = split[1];
+                clazz.subjectId = Integer.parseInt(split[2]);
+                classes.put(clazz.id, clazz);
             });
         return classes;
     }

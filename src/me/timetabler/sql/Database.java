@@ -102,20 +102,23 @@ public class Database {
         return changes;
     }
 
-    public PreparedStatement createPrepStatement(String sql) {
-        PreparedStatement statement = null;
+    protected Optional<PreparedStatement> createPrepStatement(String sql) {
+        PreparedStatement preparedStatement;
         Connection connection = openConn();
 
         try {
-            statement = connection.prepareStatement(sql);
+            preparedStatement = connection.prepareStatement(sql);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DatabaseConnectionException!");
-            throw new DatabaseConnectionException(addr, e);
-        } finally {
             closeConn(connection);
+            throw new DatabaseConnectionException(addr, e);
         }
 
-        return statement;
+        if (preparedStatement == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(preparedStatement);
+        }
     }
 
     /**

@@ -1,6 +1,7 @@
 package me.timetabler.parsers;
 
 import me.timetabler.data.SchoolClass;
+import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
 
 import java.io.IOException;
@@ -16,42 +17,42 @@ public interface SchoolDataParser {
      * @return Returns a map containing all the staff defined in the staff file. The key is the name of the staff member which is also defined with the Staff object.
      * @throws IOException Thrown if any IOException occurs.
      */
-    Map<Object, Object> readStaff() throws IOException;
+    Map<Integer, Staff> readStaff() throws IOException;
 
     /**
      * Reads the subject data from the file specified in the config map. The type of map is determined by the implementation.
      * @return Returns a map containing all the subjects defined in the subject file. The key is the name of the subject which is also defined with the Subject object.
      * @throws IOException Thrown if any IOException occurs.
      */
-    Map<String, Subject> readSubjects() throws IOException;
+    Map<Integer, Subject> readSubjects() throws IOException;
 
     /**
      * Reads the class data from the file specified in the config map. The type of map is determined by the implementation.
      * @return Returns a map containing all the classes defined in the class file. The key is the name of the class which is also defined with the SchoolClass object.
      * @throws IOException Thrown if any IOException occurs.
      */
-    Map<String, SchoolClass> readClasses() throws IOException;
+    Map<Integer, SchoolClass> readClasses() throws IOException;
 
     /**
      * Writes the staff data from the given map to the staff file specified in the config map.
      * @param staffMap The map the be written.
      * @return Returns true if the data was written successfully, otherwise returns false.
      */
-    boolean writeStaff(Map<Object, Object> staffMap);
+    boolean writeStaff(Map<Integer, Staff> staffMap);
 
     /**
      * Writes the subject data from the given map to the subject file specified in the config map.
      * @param subjectMap The map the be written.
      * @return Returns true if the data was written successfully, otherwise returns false.
      */
-    boolean writeSubjects(Map<String, Subject> subjectMap);
+    boolean writeSubjects(Map<Integer, Subject> subjectMap);
 
     /**
      * Writes the class data from the given map to the class file specified in the config map.
      * @param classMap The map the be written.
      * @return Returns true if the data was written successfully, otherwise returns false.
      */
-    boolean writeClasses(Map<String, SchoolClass> classMap);
+    boolean writeClasses(Map<Integer, SchoolClass> classMap);
 
     /**
      * A factory method to get the appropriate SchoolDataParser implementation for the file type specified in the given config map, and gives the implementation the given config map.

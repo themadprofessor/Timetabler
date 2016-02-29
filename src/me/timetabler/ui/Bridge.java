@@ -12,12 +12,12 @@ import java.util.Map;
  * The bridge between the Javascript and the Java objects.
  */
 public class Bridge {
-    private Map<String, Subject> subjects;
-    private Map<K, V> staff;
-    private Map<String, SchoolClass> classes;
+    private Map<Integer, Subject> subjects;
+    private Map<Integer, Staff> staff;
+    private Map<Integer, SchoolClass> classes;
     private Gson gson;
 
-    public Bridge(Map<String, Subject> subjects, Map<Object, Object> staff, Map<String, SchoolClass> classes) {
+    public Bridge(Map<Integer, Subject> subjects, Map<Integer, Staff> staff, Map<Integer, SchoolClass> classes) {
         this.subjects = subjects;
         this.staff = staff;
         this.classes = classes;
@@ -45,7 +45,7 @@ public class Bridge {
             case "Class":
             case "class":
                 SchoolClass clazz = gson.fromJson(json, SchoolClass.class);
-                this.classes.put(clazz.name, clazz);
+                this.classes.put(clazz.id, clazz);
                 break;
             case "Subject":
             case "subject":
