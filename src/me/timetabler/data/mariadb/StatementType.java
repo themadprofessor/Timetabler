@@ -1,10 +1,13 @@
 package me.timetabler.data.mariadb;
 
+import java.util.Map;
+
 /**
  * The types of SQL statement which can be used. They are defined only with the SQL commands without values.
  */
 public enum StatementType {
-    SELECT("SELECT %s FROM %s;"), SELECT_ALL("SELECT * FROM %s"), UPDATE("UPDATE %s SET %s WHERE %s;"), DELETE("DELETE FROM %s WHERE %s;"), INSERT("INSERT INTO %s (%s) VALUES (%s)");
+    SELECT_ALL("SELECT %s FROM %s;"), SELECT("SELECT %s FROM %s WHERE %s;"), UPDATE("UPDATE %s SET %s WHERE %s;"),
+    DELETE("DELETE FROM %s WHERE %s;"), INSERT("INSERT INTO %s (%s) VALUES (%s)"), GET_LAST_AUTO_INCRE("SELECT LAST_INSERT_ID();");
 
     /**
      * The sql statement represented by this enum.
@@ -16,32 +19,43 @@ public enum StatementType {
     }
 
     /**
-     * Returns the sql represented by this enum in a form for a PreparedStatement to use. The only required parameter is
-     * table. The others are only required if the sql requires them. For example, SELECT will require table and where,
-     * whereas INSERT will require table, columns and values.
-     * @param table The table which the statement will be executed on. REQUIRED.
-     * @param where The where clause of the statement. For example, DELETE FROM table WHERE where;. The question mark
-     *              SQL replacement character is to used where applicable.
-     * @param set The set clause of the UPDATE statement. The question mark SQL replacement character is to be used
-     *            where applicable.
-     * @param columns The columns to be changed in the INSERT statement. For example, INSERT INTO table (columns) VALUES
-     *                values;. The question mark SQL replacement character is to be used where applicable.
-     * @param values The values to be changed in the the INSERT statement. For example, INSERT INTO table (columns)
-     *               VALUES values;. The question mark SQL replacement character is to be used where applicable.
+     * Returns the sql represented by this enum in a form for a PreparedStatement to use. The values from the map will
+     * replace the required parts from the generic SQL commands. The values from the map should contain '?'s for later
+     * substitution by PreparedStatement, and not to substituted here!</br></br>
+     * The list of keys is:
+     * <ul>
+     *     <li>table</li>
+     *     <li>columns</li>
+     *     <li>set</li>
+     *     <li>where</li>
+     *     <li>values</li>
+     * </ul>
+     * <br>The default commands are:
+     * <ul>
+     *     <li>SELECT columns FROM table;</li>
+     *     <li>SELECT columns FROM table WHERE where;</li>
+     *     <li>UPDATE table SET set WHERE where;</li>
+     *     <li>DELETE FROM table WHERE where;</li>
+     *     <li>INSERT INTO table (columns) VALUES values;</li>
+     * </ul>
+     * @param replace A mpa which contains the text to be replaced in the generic SQL commands. The keys are table, columns,
+     *                set, where, and values.
      * @return Returns the SQL represented by this enum, ready to be used in a PreparedStatement.
      */
-    public String getSql(String table, String where, String set, String columns, String values) {
+    public String getSql(Map<String, String> replace) {
         switch (this) {
-            case SELECT:
-                return String.format(sql, where, table);
             case SELECT_ALL:
-                return String.format(sql, table);
+                return String.format(sql, replace.get("columns"), replace.get("table"));
             case UPDATE:
-                return String.format(sql, table, set, where);
+                return String.format(sql, replace.get("table"), replace.get("set"), replace.get("where"));
             case DELETE:
-                return String.format(sql, table, where);
+                return String.format(sql, replace.get("table"), replace.get("where"));
             case INSERT:
-                return String.format(sql, table, columns, values);
+                return String.format(sql, replace.get("table"), replace.get("columns"), replace.get("values"));
+            case SELECT:
+                return String.format(sql, replace.get("columns"), replace.get("table"), replace.get("where"));
+            case GET_LAST_AUTO_INCRE:
+                return sql;
             default:
                 return null;
         }

@@ -5,30 +5,31 @@ import me.timetabler.data.dao.SubjectDao;
 import me.timetabler.data.exceptions.DatabaseAccessException;
 import me.timetabler.data.exceptions.DatabaseUpdateException;
 import me.util.Log;
+import me.util.MapBuilder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
  * An implementation of SubjectDao which handles a MariaDB data source.
  */
 public class MariaSubjectDao implements SubjectDao {
-    private Database database;
-    private Connection connection;
+    protected Connection connection;
     private PreparedStatement selectAll;
     private PreparedStatement selectId;
     private PreparedStatement insert;
     private PreparedStatement update;
     private PreparedStatement delete;
+    private PreparedStatement getLastId;
 
-    public MariaSubjectDao(Map<String, String> config) {
-        database = new Database(config.get("addr"), config.get("dbname"), config.get("username"), config.get("password"));
+    public MariaSubjectDao(Connection connection) {
+        this.connection = connection;
     }
 
     /**
@@ -89,18 +90,22 @@ public class MariaSubjectDao implements SubjectDao {
      * {@inheritDoc}
      */
     @Override
-    public boolean insertSubject(Subject subject) {
-        boolean success;
+    public int insertSubject(Subject subject) {
+        int success = -1;
 
         try {
             if (insert == null || insert.isClosed()) {
-                initStatement(StatementType.SELECT);
+                initStatement(StatementType.INSERT);
             }
 
-            insert.setInt(1, subject.id);
-            insert.setString(2, subject.name);
+            insert.setString(1, subject.name);
             insert.execute();
-            success = true;
+
+            if (getLastId == null || getLastId.isClosed()) {
+                initStatement(StatementType.GET_LAST_AUTO_INCRE);
+            }
+            ResultSet set = getLastId.executeQuery();
+            success = set.getInt(1);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DatabaseUpdateException!");
             throw new DatabaseUpdateException(e);
@@ -162,31 +167,26 @@ public class MariaSubjectDao implements SubjectDao {
      * @throws DatabaseAccessException Thrown if the database cannot be accessed to open the connection or if the statement cannot be prepared.
      */
     private void initStatement(StatementType type) {
-        try {
-            if (connection == null || connection.isClosed()) {
-                connection = database.openConn();
-            }
-        } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing DatabaseAccessException!");
-            throw new DatabaseAccessException(e);
-        }
-
+        MapBuilder<String, String> builder = new MapBuilder<>(new HashMap<>());
         try {
             switch (type) {
                 case SELECT:
-                    selectId = connection.prepareStatement(type.getSql("subject", "id=?", null, null, null));
-                    break;
-                case SELECT_ALL:
-                    selectAll = connection.prepareStatement(type.getSql("subject", null, null, null, null));
+                    selectId = connection.prepareStatement(type.getSql(builder.put("table", "subject").put("columns", "id,subjectName").build()));
                     break;
                 case UPDATE:
-                    update = connection.prepareStatement(type.getSql("subject", "id=?", "name=?", null, null));
+                    update = connection.prepareStatement(type.getSql(builder.put("table", "subject").put("set", "subjectName=?").put("where", "id=?").build()));
                     break;
                 case INSERT:
-                    insert = connection.prepareStatement(type.getSql("subject", null, null, "id,name", "?,?"));
+                    insert = connection.prepareStatement(type.getSql(builder.put("table", "subject").put("columns", "subjectName").put("values", "?").build()));
                     break;
                 case DELETE:
-                    delete = connection.prepareStatement(type.getSql("subject", "id=?", null, null, null));
+                    delete = connection.prepareStatement(type.getSql(builder.put("table", "subject").put("where", "id=?").build()));
+                    break;
+                case SELECT_ALL:
+                    selectAll = connection.prepareStatement(type.getSql(builder.put("table", "subject").build()));
+                    break;
+                case GET_LAST_AUTO_INCRE:
+                    getLastId = connection.prepareStatement(type.getSql(null));
                     break;
             }
         } catch (SQLException e) {

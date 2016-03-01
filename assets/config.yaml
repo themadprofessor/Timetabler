@@ -9,4 +9,5 @@ data:                                           #Configuration regarding the sch
 data_source:                                    #Configuration regarding the data source
     - type: MARIADB                             #The type of data source. The other entries are dependent on this type value
     - addr: 127.0.0.1                           #The address of the database server
+    - port: 3306
     - database: school                          #The name of the database
