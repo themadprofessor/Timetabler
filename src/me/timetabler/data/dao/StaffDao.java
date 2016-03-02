@@ -12,10 +12,9 @@ import java.util.Optional;
 public interface StaffDao {
     List<Staff> getAllStaff();
     List<Staff> getAllBySubject(Subject subject);
-    Optional<String> getById(int id);
-    Optional<String> getByName(String name);
+    Optional<Staff> getById(int id);
 
-    boolean insertStaff(Staff staff);
+    int insertStaff(Staff staff);
     boolean updateStaff(Staff staff);
     boolean deleteStaff(Staff staff);
 }

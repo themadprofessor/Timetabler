@@ -91,7 +91,7 @@ public class MariaSubjectDao implements SubjectDao {
      */
     @Override
     public int insertSubject(Subject subject) {
-        int success = -1;
+        int id = -1;
 
         try {
             if (insert == null || insert.isClosed()) {
@@ -105,12 +105,13 @@ public class MariaSubjectDao implements SubjectDao {
                 initStatement(StatementType.GET_LAST_AUTO_INCRE);
             }
             ResultSet set = getLastId.executeQuery();
-            success = set.getInt(1);
+            set.next();
+            id = set.getInt(1);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DatabaseUpdateException!");
             throw new DatabaseUpdateException(e);
         }
-        return success;
+        return id;
     }
 
     /**
@@ -152,6 +153,7 @@ public class MariaSubjectDao implements SubjectDao {
             delete.setInt(1, subject.id);
             delete.execute();
             success = true;
+
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DatabaseUpdateException!");
             throw new DatabaseUpdateException(e);
@@ -171,7 +173,7 @@ public class MariaSubjectDao implements SubjectDao {
         try {
             switch (type) {
                 case SELECT:
-                    selectId = connection.prepareStatement(type.getSql(builder.put("table", "subject").put("columns", "id,subjectName").build()));
+                    selectId = connection.prepareStatement(type.getSql(builder.put("table", "subject").put("columns", "id,subjectName").put("where", "id=?").build()));
                     break;
                 case UPDATE:
                     update = connection.prepareStatement(type.getSql(builder.put("table", "subject").put("set", "subjectName=?").put("where", "id=?").build()));
@@ -183,7 +185,7 @@ public class MariaSubjectDao implements SubjectDao {
                     delete = connection.prepareStatement(type.getSql(builder.put("table", "subject").put("where", "id=?").build()));
                     break;
                 case SELECT_ALL:
-                    selectAll = connection.prepareStatement(type.getSql(builder.put("table", "subject").build()));
+                    selectAll = connection.prepareStatement(type.getSql(builder.put("table", "subject").put("columns", "*").build()));
                     break;
                 case GET_LAST_AUTO_INCRE:
                     getLastId = connection.prepareStatement(type.getSql(null));

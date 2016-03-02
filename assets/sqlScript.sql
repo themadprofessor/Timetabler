@@ -10,9 +10,9 @@ CREATE TABLE subject
 CREATE TABLE staff
        (id INT NOT NULL AUTO_INCREMENT,
 	staffName VARCHAR(20) NOT NULL,
-	subjectID INT NOT NULL,
+	subjectId INT NOT NULL,
 	PRIMARY KEY (id),
-	FOREIGN KEY (subjectID) REFERENCES subject(id));
+	FOREIGN KEY (subjectId) REFERENCES subject(id));
 
 CREATE TABLE class
        (id INT NOT NULL AUTO_INCREMENT,
@@ -40,7 +40,7 @@ CREATE TABLE period
 	PRIMARY KEY (id),
 	FOREIGN KEY (dayId) REFERENCES dayOfWeek(id));
 
-CREATE TABLE set
+CREATE TABLE learningSet
        (id INT NOT NULL AUTO_INCREMENT,
     setName VARCHAR(10),
     PRIMARY KEY (id));
@@ -50,20 +50,21 @@ CREATE TABLE subjectSet
     subjectId INT NOT NULL,
     setId INT NOT NULL,
     yearGroupId INT NOT NULL,
+    PRIMARY KEY (id),
     FOREIGN KEY (subjectId) REFERENCES subject(id),
-    FOREIGN KEY (setId) REFERENCES set(id));
+    FOREIGN KEY (setId) REFERENCES learningSet(id));
 
 CREATE TABLE timetable 
        (id INT NOT NULL AUTO_INCREMENT,
-	classID INT NOT NULL,
-	staffID INT NOT NULL,
-	classroomID INT NOT NULL,
-	periodID INT NOT NULL,
+	classId INT NOT NULL,
+	staffId INT NOT NULL,
+	classroomId INT NOT NULL,
+	periodId INT NOT NULL,
 	subjectSetId INT NOT NULL,
 	PRIMARY KEY (id),
-	FOREIGN KEY (classID) REFERENCES class(id),
-	FOREIGN KEY (staffID) REFERENCES staff(id),
-	FOREIGN KEY (classroomID) REFERENCES classroom(id),
+	FOREIGN KEY (classId) REFERENCES class(id),
+	FOREIGN KEY (staffId) REFERENCES staff(id),
+	FOREIGN KEY (classroomId) REFERENCES classroom(id),
 	FOREIGN KEY (subjectSetId) REFERENCES subjectSet(id),
-	FOREIGN KEY (periodID) REFERENCES period(id));
+	FOREIGN KEY (periodId) REFERENCES period(id));
 

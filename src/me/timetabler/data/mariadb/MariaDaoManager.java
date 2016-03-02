@@ -21,6 +21,7 @@ public class MariaDaoManager implements DaoManager {
     private DataSource source;
     private Connection connection;
     private MariaSubjectDao subjectDao;
+    private MariaStaffDao staffDao;
 
     public MariaDaoManager(Map<String, String> config) {
         try {
@@ -36,7 +37,20 @@ public class MariaDaoManager implements DaoManager {
 
     @Override
     public StaffDao getStaffDao() {
-        return null;
+        try {
+            if (connection == null || connection.isClosed()) {
+                connection = source.getConnection();
+            }
+            if (staffDao == null) {
+                staffDao = new MariaStaffDao(connection);
+            } else if (staffDao.connection != connection) {
+                staffDao.connection = connection;
+            }
+            return staffDao;
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing a DatabaseAccessException!");
+            throw new DatabaseAccessException(e);
+        }
     }
 
     @Override
