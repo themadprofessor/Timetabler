@@ -17,9 +17,9 @@ CREATE TABLE staff
 CREATE TABLE class
        (id INT NOT NULL AUTO_INCREMENT,
 	className VARCHAR(20) NOT NULL,
-	subjectID INT NOT NULL,
+	subjectId INT NOT NULL,
 	PRIMARY KEY (id),
-	FOREIGN KEY (subjectID) REFERENCES subject(id));
+	FOREIGN KEY (subjectId) REFERENCES subject(id));
 
 CREATE TABLE dayOfWeek
        (id INT NOT NULL AUTO_INCREMENT,
@@ -57,7 +57,7 @@ CREATE TABLE subjectSet
 CREATE TABLE timetable 
        (id INT NOT NULL AUTO_INCREMENT,
 	classId INT NOT NULL,
-	staffId INT NOT NULL,
+	staffId INT,
 	classroomId INT NOT NULL,
 	periodId INT NOT NULL,
 	subjectSetId INT NOT NULL,

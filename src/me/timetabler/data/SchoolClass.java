@@ -18,4 +18,13 @@ public class SchoolClass {
      * The unique id of this class.
      */
     public int id;
+
+    public SchoolClass() {
+    }
+
+    public SchoolClass(int subjectId, String name, int id) {
+        this.subjectId = subjectId;
+        this.name = name;
+        this.id = id;
+    }
 }

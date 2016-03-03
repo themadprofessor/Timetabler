@@ -13,9 +13,8 @@ public interface SchoolClassDao {
     List<SchoolClass> getAllClasses();
     List<SchoolClass> getAllBySubject(Subject subject);
     Optional<SchoolClass> getById(int id);
-    Optional<SchoolClass> getByName(String name);
 
-    boolean insertClass(SchoolClass schoolClass);
+    int insertClass(SchoolClass schoolClass);
     boolean updateClass(SchoolClass schoolClass);
     boolean deleteClass(SchoolClass schoolClass);
 }

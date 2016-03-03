@@ -2,8 +2,8 @@ package me.timetabler.data.mariadb;
 
 import me.timetabler.data.Subject;
 import me.timetabler.data.dao.SubjectDao;
-import me.timetabler.data.exceptions.DatabaseAccessException;
-import me.timetabler.data.exceptions.DatabaseUpdateException;
+import me.timetabler.data.exceptions.DataAccessException;
+import me.timetabler.data.exceptions.DataUpdateException;
 import me.util.Log;
 import me.util.MapBuilder;
 
@@ -50,8 +50,8 @@ public class MariaSubjectDao implements SubjectDao {
                 subjects.add(subject);
             }
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing DatabaseAccessException");
-            throw new DatabaseAccessException(e);
+            Log.debug("Caught [" + e + "] so throwing DataAccessException");
+            throw new DataAccessException(e);
         }
 
         return subjects;
@@ -75,8 +75,8 @@ public class MariaSubjectDao implements SubjectDao {
             subject = new Subject(set.getInt(1), set.getString(2));
             set.close();
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing DatabaseUpdateException!");
-            throw new DatabaseUpdateException(e);
+            Log.debug("Caught [" + e + "] so throwing DataUpdateException!");
+            throw new DataUpdateException(e);
         }
 
         if (subject == null) {
@@ -108,8 +108,8 @@ public class MariaSubjectDao implements SubjectDao {
             set.next();
             id = set.getInt(1);
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing DatabaseUpdateException!");
-            throw new DatabaseUpdateException(e);
+            Log.debug("Caught [" + e + "] so throwing DataUpdateException!");
+            throw new DataUpdateException(e);
         }
         return id;
     }
@@ -131,8 +131,8 @@ public class MariaSubjectDao implements SubjectDao {
             update.execute();
             success = true;
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing DatabaseUpdateException!");
-            throw new DatabaseUpdateException(e);
+            Log.debug("Caught [" + e + "] so throwing DataUpdateException!");
+            throw new DataUpdateException(e);
         }
 
         return success;
@@ -155,8 +155,8 @@ public class MariaSubjectDao implements SubjectDao {
             success = true;
 
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing DatabaseUpdateException!");
-            throw new DatabaseUpdateException(e);
+            Log.debug("Caught [" + e + "] so throwing DataUpdateException!");
+            throw new DataUpdateException(e);
         }
 
         return success;
@@ -166,7 +166,7 @@ public class MariaSubjectDao implements SubjectDao {
      * If the connection is null or is closed, this will initialise it. It will then initialise the statement which corresponds the
      * given type.
      * @param type The type of statement to be initialised.
-     * @throws DatabaseAccessException Thrown if the database cannot be accessed to open the connection or if the statement cannot be prepared.
+     * @throws DataAccessException Thrown if the database cannot be accessed to open the connection or if the statement cannot be prepared.
      */
     private void initStatement(StatementType type) {
         MapBuilder<String, String> builder = new MapBuilder<>(new HashMap<>());
@@ -192,8 +192,8 @@ public class MariaSubjectDao implements SubjectDao {
                     break;
             }
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing DatabaseAccessException!");
-            throw new DatabaseAccessException(e);
+            Log.debug("Caught [" + e + "] so throwing DataAccessException!");
+            throw new DataAccessException(e);
         }
     }
 

@@ -1,6 +1,6 @@
 package me.timetabler;
 
-import me.timetabler.data.Staff;
+import me.timetabler.data.SchoolClass;
 import me.timetabler.data.Subject;
 import me.timetabler.data.dao.DaoManager;
 import me.timetabler.data.mariadb.MariaDaoManager;
@@ -24,15 +24,16 @@ public class SqlTest {
         maths.name = "Maths";
         maths.id = manager.getSubjectDao().insertSubject(maths);
 
-        Staff ew = new Staff();
-        ew.name = "Mr Smith";
-        ew.subjectId = maths.id;
-        ew.id = manager.getStaffDao().insertStaff(ew);
+        SchoolClass schoolClass = new SchoolClass();
+        schoolClass.name = "7Maths2";
+        schoolClass.subjectId = maths.id;
+        schoolClass.id = manager.getSchoolClassDao().insertClass(schoolClass);
 
-        List<Staff> all = manager.getStaffDao().getAllStaff();
-        List<Staff> allMaths = manager.getStaffDao().getAllBySubject(maths);
-        ew.name = "Mr Joe";
-        manager.getStaffDao().updateStaff(ew);
-        manager.getStaffDao().deleteStaff(ew);
+        List<SchoolClass> all = manager.getSchoolClassDao().getAllClasses();
+        List<SchoolClass> allMaths = manager.getSchoolClassDao().getAllBySubject(maths);
+        schoolClass = manager.getSchoolClassDao().getById(schoolClass.id).get();
+        schoolClass.name = "8Maths2";
+        manager.getSchoolClassDao().updateClass(schoolClass);
+        manager.getSchoolClassDao().deleteClass(schoolClass);
     }
 }

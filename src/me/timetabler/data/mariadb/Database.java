@@ -1,7 +1,7 @@
 package me.timetabler.data.mariadb;
 
-import me.timetabler.data.exceptions.DatabaseConnectionException;
-import me.timetabler.data.exceptions.DatabaseUpdateException;
+import me.timetabler.data.exceptions.DataConnectionException;
+import me.timetabler.data.exceptions.DataUpdateException;
 import me.util.Log;
 import org.mariadb.jdbc.MariaDbDataSource;
 
@@ -18,7 +18,7 @@ public class Database {
     private DataSource source;
 
     /**
-     * Initialises the database interface. Can throw a DatabaseConnectionException if it cannot connect to the database.
+     * Initialises the database interface. Can throw a DataConnectionException if it cannot connect to the database.
      * @param addr The url for the server, which must be in the form <b>jdbc:<i>subprotocol</i>:<i>subname</i></b>
      * @param username The username of the user on the server.
      * @param password The password of the user.
@@ -37,8 +37,8 @@ public class Database {
 
             connection = openConn();
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing DatabaseConnectionException.");
-            throw new DatabaseConnectionException(addr, e);
+            Log.debug("Caught [" + e + "] so throwing DataConnectionException.");
+            throw new DataConnectionException(addr, e);
         } finally {
             if (connection != null) {
                 closeConn(connection);
@@ -93,8 +93,8 @@ public class Database {
             });
             changes = sql.executeBatch();
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing a DatabaseUpdateException");
-            throw new DatabaseUpdateException(e);
+            Log.debug("Caught [" + e + "] so throwing a DataUpdateException");
+            throw new DataUpdateException(e);
         } finally {
             if (connection != null) {
                 closeConn(connection);
@@ -107,28 +107,28 @@ public class Database {
     /**
      * Opens a connection to the server using the variables addr, username and password.
      * @return The connection to the server. This connection should be closed after it is no longer needed and should not be kept open.
-     * @throws DatabaseConnectionException Thrown if the connection cannot be established with the server.
+     * @throws DataConnectionException Thrown if the connection cannot be established with the server.
      */
     protected Connection openConn() {
         try {
             return source.getConnection(username, password);
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so have thrown DatabaseConnectionException.");
-            throw new DatabaseConnectionException(addr, e);
+            Log.debug("Caught [" + e + "] so have thrown DataConnectionException.");
+            throw new DataConnectionException(addr, e);
         }
     }
 
     /**
      * Closes the given connection to the server. Currently, just calls the connection's close method.
      * @param connection The connection to to be closed.
-     * @throws DatabaseConnectionException Thrown if the connection cannot be closed.
+     * @throws DataConnectionException Thrown if the connection cannot be closed.
      */
     private void closeConn(Connection connection) {
         try {
             connection.close();
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing DatabaseConnectionException!");
-            throw new DatabaseConnectionException(addr, e);
+            Log.debug("Caught [" + e + "] so throwing DataConnectionException!");
+            throw new DataConnectionException(addr, e);
         }
     }
 }

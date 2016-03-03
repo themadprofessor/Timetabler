@@ -4,8 +4,8 @@ import me.timetabler.data.dao.DaoManager;
 import me.timetabler.data.dao.SchoolClassDao;
 import me.timetabler.data.dao.StaffDao;
 import me.timetabler.data.dao.SubjectDao;
-import me.timetabler.data.exceptions.DatabaseAccessException;
-import me.timetabler.data.exceptions.DatabaseConnectionException;
+import me.timetabler.data.exceptions.DataAccessException;
+import me.timetabler.data.exceptions.DataConnectionException;
 import me.util.Log;
 import org.mariadb.jdbc.MariaDbDataSource;
 
@@ -22,6 +22,7 @@ public class MariaDaoManager implements DaoManager {
     private Connection connection;
     private MariaSubjectDao subjectDao;
     private MariaStaffDao staffDao;
+    private MariaClassDao classDao;
 
     public MariaDaoManager(Map<String, String> config) {
         try {
@@ -30,8 +31,8 @@ public class MariaDaoManager implements DaoManager {
             source.setPassword("root");
             this.source = source;
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing DatabaseConnectionException!");
-            throw new DatabaseConnectionException(config.get("addr"), e);
+            Log.debug("Caught [" + e + "] so throwing DataConnectionException!");
+            throw new DataConnectionException(config.get("addr"), e);
         }
     }
 
@@ -48,8 +49,8 @@ public class MariaDaoManager implements DaoManager {
             }
             return staffDao;
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing a DatabaseAccessException!");
-            throw new DatabaseAccessException(e);
+            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
+            throw new DataAccessException(e);
         }
     }
 
@@ -66,13 +67,26 @@ public class MariaDaoManager implements DaoManager {
             }
             return subjectDao;
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing a DatabaseAccessException!");
-            throw new DatabaseAccessException(e);
+            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
+            throw new DataAccessException(e);
         }
     }
 
     @Override
     public SchoolClassDao getSchoolClassDao() {
-        return null;
+        try {
+            if (connection == null || connection.isClosed()) {
+                connection = source.getConnection();
+            }
+            if (classDao == null) {
+                classDao = new MariaClassDao(connection);
+            } else if (classDao.connection != connection) {
+                classDao.connection = connection;
+            }
+            return classDao;
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
+            throw new DataAccessException(e);
+        }
     }
 }
