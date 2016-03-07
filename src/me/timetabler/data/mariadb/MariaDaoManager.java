@@ -1,9 +1,6 @@
 package me.timetabler.data.mariadb;
 
-import me.timetabler.data.dao.DaoManager;
-import me.timetabler.data.dao.SchoolClassDao;
-import me.timetabler.data.dao.StaffDao;
-import me.timetabler.data.dao.SubjectDao;
+import me.timetabler.data.dao.*;
 import me.timetabler.data.exceptions.DataAccessException;
 import me.timetabler.data.exceptions.DataConnectionException;
 import me.util.Log;
@@ -23,6 +20,7 @@ public class MariaDaoManager implements DaoManager {
     private MariaSubjectDao subjectDao;
     private MariaStaffDao staffDao;
     private MariaClassDao classDao;
+    private MariaDayDao dayDao;
 
     public MariaDaoManager(Map<String, String> config) {
         try {
@@ -84,6 +82,24 @@ public class MariaDaoManager implements DaoManager {
                 classDao.connection = connection;
             }
             return classDao;
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
+            throw new DataAccessException(e);
+        }
+    }
+
+    @Override
+    public DayDao getDayDao() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                 connection = source.getConnection();
+            }
+            if (dayDao == null) {
+                dayDao = new MariaDayDao(connection);
+            } else if (dayDao.connection != connection) {
+                dayDao.connection = connection;
+            }
+            return dayDao;
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);

@@ -7,7 +7,7 @@ public class SchoolClass {
     /**
      * The unique subject name.
      */
-    public int subjectId;
+    public Subject subject;
 
     /**
      * The name of the subject.
@@ -22,8 +22,8 @@ public class SchoolClass {
     public SchoolClass() {
     }
 
-    public SchoolClass(int subjectId, String name, int id) {
-        this.subjectId = subjectId;
+    public SchoolClass(int id, String name, Subject subject) {
+        this.subject = subject;
         this.name = name;
         this.id = id;
     }

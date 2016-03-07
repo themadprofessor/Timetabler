@@ -68,3 +68,5 @@ CREATE TABLE timetable
 	FOREIGN KEY (subjectSetId) REFERENCES subjectSet(id),
 	FOREIGN KEY (periodId) REFERENCES period(id));
 
+INSERT INTO dayOfWeek (dayOfWeek) VALUES ('Monday'),('Tuesday'),('Wednesday'),('Thursday'),('Friday');
+

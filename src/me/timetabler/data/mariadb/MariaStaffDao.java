@@ -43,7 +43,7 @@ public class MariaStaffDao implements StaffDao {
 
         try {
             if (selectAll == null || selectAll.isClosed()) {
-                initStatement(StatementType.SELECT_ALL, false);
+                initStatement(StatementType.SELECT_ALL);
             }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a a DataAccessException!");
@@ -53,7 +53,7 @@ public class MariaStaffDao implements StaffDao {
         try {
             ResultSet set = selectAll.executeQuery();
             while (set.next()) {
-                Staff s = new Staff(set.getInt(1), set.getString(2), set.getInt(3));
+                Staff s = new Staff(set.getInt(1), set.getString(2), new Subject(set.getInt(3), set.getString(4)));
                 staff.add(s);
             }
             set.close();
@@ -74,7 +74,7 @@ public class MariaStaffDao implements StaffDao {
 
         try {
             if (selectAllSubject == null || selectAllSubject.isClosed()) {
-                initStatement(StatementType.SELECT, true);
+                initStatement(StatementType.SELECT);
             }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
@@ -85,7 +85,7 @@ public class MariaStaffDao implements StaffDao {
             selectAllSubject.setInt(1, subject.id);
             ResultSet set = selectAllSubject.executeQuery();
             while (set.next()) {
-                Staff s = new Staff(set.getInt(1), set.getString(2), set.getInt(3));
+                Staff s = new Staff(set.getInt(1), set.getString(2), subject);
                 staff.add(s);
             }
             set.close();
@@ -106,8 +106,9 @@ public class MariaStaffDao implements StaffDao {
 
         try {
             if (selectId == null || selectId.isClosed()) {
-                initStatement(StatementType.SELECT, false);
+                initStatement(StatementType.SELECT_JOIN);
             }
+            selectId.setInt(1, id);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);
@@ -116,7 +117,8 @@ public class MariaStaffDao implements StaffDao {
         try {
             ResultSet set = selectId.executeQuery();
             set.next();
-            staff = new Staff(set.getInt(1), set.getString(2), set.getInt(3));
+            Subject sub = new Subject(set.getInt(2), set.getString(3));
+            staff = new Staff(id, set.getString(1), sub);
             set.close();
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
@@ -139,10 +141,10 @@ public class MariaStaffDao implements StaffDao {
 
         try {
             if (insert == null || insert.isClosed()) {
-                initStatement(StatementType.INSERT, false);
+                initStatement(StatementType.INSERT);
             }
             if (getLastId == null || insert.isClosed()) {
-                initStatement(StatementType.GET_LAST_AUTO_INCRE, false);
+                initStatement(StatementType.GET_LAST_AUTO_INCRE);
             }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
@@ -151,7 +153,7 @@ public class MariaStaffDao implements StaffDao {
 
         try {
             insert.setString(1, staff.name);
-            insert.setInt(2, staff.subjectId);
+            insert.setInt(2, staff.subject.id);
             insert.executeUpdate();
 
             ResultSet set = getLastId.executeQuery();
@@ -174,7 +176,7 @@ public class MariaStaffDao implements StaffDao {
 
         try {
             if (update == null || update.isClosed()) {
-                initStatement(StatementType.UPDATE, false);
+                initStatement(StatementType.UPDATE);
             }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
@@ -183,7 +185,7 @@ public class MariaStaffDao implements StaffDao {
 
         try {
             update.setString(1, staff.name);
-            update.setInt(2, staff.subjectId);
+            update.setInt(2, staff.subject.id);
             update.setInt(3, staff.id);
             update.executeUpdate();
             success = true;
@@ -204,7 +206,7 @@ public class MariaStaffDao implements StaffDao {
 
         try {
             if (delete == null || delete.isClosed()) {
-                initStatement(StatementType.DELETE, false);
+                initStatement(StatementType.DELETE);
             }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
@@ -223,16 +225,24 @@ public class MariaStaffDao implements StaffDao {
         return success;
     }
 
-    private void initStatement(StatementType type, boolean subject) {
+    /**
+     * Initialises a prepared statement base on the given statement type.
+     * @param type The type of statement to initialise.
+     */
+    private void initStatement(StatementType type) {
         MapBuilder<String, String> builder = new MapBuilder<>(new HashMap<>());
         try {
             switch (type) {
+                case SELECT_JOIN:
+                    selectId = connection.prepareStatement(type.getSql(builder.put("table", "staff")
+                            .put("columns", "staff.staffName,subject.id,subject.subjectName")
+                            .put("where", "staff.id=?")
+                            .put("table2", "subject")
+                            .put("join_key", "staff.subjectId=subject.id")
+                            .build()));
+                    break;
                 case SELECT:
-                    if (!subject) {
-                        selectId = connection.prepareStatement(type.getSql(builder.put("table", "staff").put("columns", "staffName,subjectId").put("where", "id=?").build()));
-                    } else {
-                        selectAllSubject = connection.prepareStatement(type.getSql(builder.put("table", "staff").put("columns", "id,staffName,subjectId").put("where", "subjectId=?").build()));
-                    }
+                    selectAllSubject = connection.prepareStatement(type.getSql(builder.put("table", "staff").put("columns", "id,staffName,subjectId").put("where", "subjectId=?").build()));
                     break;
                 case UPDATE:
                     update = connection.prepareStatement(type.getSql(builder.put("table", "staff").put("set", "staffName=?,subjectId=?").put("where", "id=?").build()));
@@ -243,8 +253,12 @@ public class MariaStaffDao implements StaffDao {
                 case DELETE:
                     delete = connection.prepareStatement(type.getSql(builder.put("table", "staff").put("where", "id=?").build()));
                     break;
-                case SELECT_ALL:
-                    selectAll = connection.prepareStatement(type.getSql(builder.put("table", "staff").put("columns", "id,staffName,subjectId").build()));
+                case SELECT_ALL_JOIN:
+                    selectAll = connection.prepareStatement(type.getSql(builder.put("table", "staff")
+                            .put("columns", "staff.id,staff.staffName,subject.id,subject.subjectName")
+                            .put("table2", "subject")
+                            .put("join_key", "staff.subjectId=subject.id")
+                            .build()));
                     break;
                 case GET_LAST_AUTO_INCRE:
                     getLastId = connection.prepareStatement(type.getSql(null));

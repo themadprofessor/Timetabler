@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The interface between a data source and the program. This dao will manipulate subject data. A static factory method
- * is provided to return the correct implementation based on the config map given.
+ * The interface between a data source and the program. This dao will manipulate subject data.
  */
 public interface SubjectDao extends AutoCloseable {
     /**

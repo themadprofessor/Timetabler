@@ -14,7 +14,7 @@ public class Staff {
      */
     public String name;
 
-    public int subjectId;
+    public Subject subject;
 
     /**
      * Initialises the class, but not its internal variables.
@@ -22,9 +22,9 @@ public class Staff {
     public Staff() {
     }
 
-    public Staff(int id, String name, int subjectId) {
+    public Staff(int id, String name, Subject subject) {
         this.id = id;
         this.name = name;
-        this.subjectId = subjectId;
+        this.subject = subject;
     }
 }

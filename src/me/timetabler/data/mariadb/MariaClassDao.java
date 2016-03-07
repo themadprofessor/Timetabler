@@ -40,7 +40,7 @@ public class MariaClassDao implements SchoolClassDao {
 
         try {
             if (selectAll == null || selectAll.isClosed()) {
-                initStatement(StatementType.SELECT_ALL, false);
+                initStatement(StatementType.SELECT_ALL);
             }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
@@ -50,7 +50,7 @@ public class MariaClassDao implements SchoolClassDao {
         try {
             ResultSet set = selectAll.executeQuery();
             while (set.next()) {
-                SchoolClass schoolClass = new SchoolClass(set.getInt(1), set.getString(2), set.getInt(3));
+                SchoolClass schoolClass = new SchoolClass(set.getInt(1), set.getString(2), new Subject(set.getInt(3), set.getString(4)));
                 classes.add(schoolClass);
             }
             set.close();
@@ -67,7 +67,7 @@ public class MariaClassDao implements SchoolClassDao {
 
         try {
             if (selectAllSubject == null || selectAllSubject.isClosed()) {
-                initStatement(StatementType.SELECT, true);
+                initStatement(StatementType.SELECT);
             }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
@@ -78,7 +78,7 @@ public class MariaClassDao implements SchoolClassDao {
 
             ResultSet set = selectAllSubject.executeQuery();
             while (set.next()) {
-                SchoolClass schoolClass = new SchoolClass(set.getInt(1), set.getString(2), set.getInt(3));
+                SchoolClass schoolClass = new SchoolClass(set.getInt(1), set.getString(2), subject);
                 classes.add(schoolClass);
             }
             set.close();
@@ -96,7 +96,7 @@ public class MariaClassDao implements SchoolClassDao {
 
         try {
             if (selectId == null || selectId.isClosed()) {
-                initStatement(StatementType.SELECT, false);
+                initStatement(StatementType.SELECT);
             }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
@@ -104,11 +104,11 @@ public class MariaClassDao implements SchoolClassDao {
         }
 
         try {
-            selectId.setInt(0, id);
+            selectId.setInt(1, id);
 
             ResultSet set = selectId.executeQuery();
             set.next();
-            schoolClass = new SchoolClass(set.getInt(1), set.getString(2), set.getInt(3));
+            schoolClass = new SchoolClass(id, set.getString(1), new Subject(set.getInt(2), set.getString(3)));
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
             throw new DataUpdateException(e);
@@ -127,11 +127,11 @@ public class MariaClassDao implements SchoolClassDao {
 
         try {
             if (insert == null || insert.isClosed()) {
-                initStatement(StatementType.INSERT, false);
+                initStatement(StatementType.INSERT);
             }
 
             insert.setString(1, schoolClass.name);
-            insert.setInt(2, schoolClass.subjectId);
+            insert.setInt(2, schoolClass.subject.id);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);
@@ -146,7 +146,7 @@ public class MariaClassDao implements SchoolClassDao {
 
         try {
             if (getLastId == null || getLastId.isClosed()) {
-                initStatement(StatementType.GET_LAST_AUTO_INCRE, false);
+                initStatement(StatementType.GET_LAST_AUTO_INCRE);
             }
 
             ResultSet set = getLastId.executeQuery();
@@ -166,12 +166,12 @@ public class MariaClassDao implements SchoolClassDao {
 
         try {
             if (update == null || update.isClosed()) {
-                initStatement(StatementType.UPDATE, false);
+                initStatement(StatementType.UPDATE);
             }
 
             update.setString(1, schoolClass.name);
             update.setInt(2, schoolClass.id);
-            update.setInt(3, schoolClass.subjectId);
+            update.setInt(3, schoolClass.subject.id);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);
@@ -194,10 +194,10 @@ public class MariaClassDao implements SchoolClassDao {
 
         try {
             if (delete == null || delete.isClosed()) {
-                initStatement(StatementType.DELETE, false);
+                initStatement(StatementType.DELETE);
             }
 
-            delete.setInt(0, schoolClass.id);
+            delete.setInt(1, schoolClass.id);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
         }
@@ -213,17 +213,21 @@ public class MariaClassDao implements SchoolClassDao {
         return success;
     }
 
-    private void initStatement(StatementType type, boolean subject) {
+    private void initStatement(StatementType type) {
         MapBuilder<String, String> builder = new MapBuilder<>(new HashMap<>());
 
         try {
             switch (type) {
+                case SELECT_JOIN:
+                    selectId = connection.prepareStatement(type.getSql(builder.put("table", "class")
+                            .put("columns", "class.className,subject.id,subject.subjectName")
+                            .put("where", "id=?")
+                            .put("table2", "subject")
+                            .put("join_key", "class.subjectId=subject.id")
+                            .build()));
+                    break;
                 case SELECT:
-                    if (subject) {
-                        selectAllSubject = connection.prepareStatement(type.getSql(builder.put("table", "class").put("columns", "id,className,subjectId").put("where", "subjectId=?").build()));
-                    } else {
-                        selectId = connection.prepareStatement(type.getSql(builder.put("table", "class").put("columns", "className,subjectId").put("where", "id=?").build()));
-                    }
+                    selectAllSubject = connection.prepareStatement(type.getSql(builder.put("table", "class").put("columns", "id,className,subjectId").put("where", "subjectId=?").build()));
                     break;
                 case UPDATE:
                     update = connection.prepareStatement(type.getSql(builder.put("table", "class").put("set", "className=?,subjectId=?").put("where", "id=?").build()));
@@ -240,6 +244,12 @@ public class MariaClassDao implements SchoolClassDao {
                 case GET_LAST_AUTO_INCRE:
                     getLastId = connection.prepareStatement(type.getSql(null));
                     break;
+                case SELECT_ALL_JOIN:
+                    selectAll = connection.prepareStatement(type.getSql(builder.put("table", "class")
+                            .put("columns", "class.id,class.className,subject.id,subject.name")
+                            .put("table2", "subject")
+                            .put("join_key", "class.subjectId=subject.id")
+                            .build()));
             }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
