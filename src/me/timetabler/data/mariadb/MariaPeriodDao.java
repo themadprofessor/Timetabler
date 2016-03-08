@@ -27,6 +27,9 @@ public class MariaPeriodDao implements PeriodDao {
         this.connection = connection;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     @Override
     public List<Period> getAll() {
         ArrayList<Period> periods = new ArrayList<>();
@@ -49,6 +52,9 @@ public class MariaPeriodDao implements PeriodDao {
         return periods;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     @Override
     public List<Period> getAllByDay(Day day) {
         ArrayList<Period> periods = new ArrayList<>();
@@ -72,6 +78,9 @@ public class MariaPeriodDao implements PeriodDao {
         return periods;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     @Override
     public List<Period> getByStartTime(LocalTime time) {
         ArrayList<Period> periods = new ArrayList<>();
@@ -96,6 +105,10 @@ public class MariaPeriodDao implements PeriodDao {
         return periods;
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
     @Override
     public List<Period> getByEndTime(LocalTime time) {
         ArrayList<Period> periods = new ArrayList<>();

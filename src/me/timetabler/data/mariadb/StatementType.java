@@ -43,7 +43,7 @@ public enum StatementType {
      *     <li>SELECT columns FROM table INNER JOIN table2 ON join_key;</li>
      *     <li>SELECT columns FROM table INNER JOIN table2 ON join_key WHERE where;</li>
      * </ul>
-     * @param replace A mpa which contains the text to be replaced in the generic SQL commands. The keys are table, columns,
+     * @param replace A map which contains the text to be replaced in the generic SQL commands. The keys are table, columns,
      *                set, where, and values.
      * @return Returns the SQL represented by this enum, ready to be used in a PreparedStatement.
      */

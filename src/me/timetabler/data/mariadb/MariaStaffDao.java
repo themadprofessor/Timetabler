@@ -35,7 +35,7 @@ public class MariaStaffDao implements StaffDao {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     @Override
     public List<Staff> getAllStaff() {
@@ -66,7 +66,7 @@ public class MariaStaffDao implements StaffDao {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     @Override
     public List<Staff> getAllBySubject(Subject subject) {
@@ -98,7 +98,7 @@ public class MariaStaffDao implements StaffDao {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     @Override
     public Optional<Staff> getById(int id) {
@@ -133,7 +133,7 @@ public class MariaStaffDao implements StaffDao {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     @Override
     public int insertStaff(Staff staff) {
@@ -168,7 +168,7 @@ public class MariaStaffDao implements StaffDao {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     @Override
     public boolean updateStaff(Staff staff) {
@@ -198,7 +198,7 @@ public class MariaStaffDao implements StaffDao {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     @Override
     public boolean deleteStaff(Staff staff) {

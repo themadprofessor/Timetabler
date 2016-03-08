@@ -33,7 +33,7 @@ public class MariaSubjectDao implements SubjectDao {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     @Override
     public List<Subject> getAllSubjects() {
@@ -58,7 +58,7 @@ public class MariaSubjectDao implements SubjectDao {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     @Override
     public Optional<Subject> getById(int id) {
@@ -87,7 +87,7 @@ public class MariaSubjectDao implements SubjectDao {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     @Override
     public int insertSubject(Subject subject) {
@@ -115,7 +115,7 @@ public class MariaSubjectDao implements SubjectDao {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     @Override
     public boolean updateSubject(Subject subject) {
@@ -139,7 +139,7 @@ public class MariaSubjectDao implements SubjectDao {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     @Override
     public boolean deleteSubject(Subject subject) {
@@ -197,6 +197,9 @@ public class MariaSubjectDao implements SubjectDao {
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     @Override
     public void close() {
         try {

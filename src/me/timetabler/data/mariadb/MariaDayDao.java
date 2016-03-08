@@ -3,7 +3,6 @@ package me.timetabler.data.mariadb;
 import me.timetabler.data.Day;
 import me.timetabler.data.dao.DayDao;
 import me.timetabler.data.exceptions.DataAccessException;
-import me.timetabler.data.exceptions.DataUpdateException;
 import me.util.Log;
 import me.util.MapBuilder;
 
@@ -11,44 +10,70 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by stuart on 04/03/16.
  */
 public class MariaDayDao implements DayDao {
     protected Connection connection;
-    private PreparedStatement getId;
-    private PreparedStatement getName;
+    private PreparedStatement selectId;
+    private PreparedStatement selectName;
+    private PreparedStatement selectAll;
 
     public MariaDayDao(Connection connection) {
         this.connection = connection;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Optional<Day> getById(int id) {
-        Day day = null;
+    public List<Day> getAll() {
+        ArrayList<Day> days = new ArrayList<>(7);
 
         try {
-            if (getId == null || getId.isClosed()) {
+            if (selectAll == null || selectAll.isClosed()) {
                 MapBuilder<String, String> builder = new MapBuilder<>(new HashMap<>());
-                getId = connection.prepareStatement(StatementType.SELECT.getSql(builder.put("table", "dayOfWeek").put("columns", "dayOfWeek").put("where", "id=?").build()));
+                selectAll = connection.prepareStatement(StatementType.SELECT_ALL.getSql(builder.put("table", "dayOfWeek").put("columns", "id,datOfWeek").build()));
             }
-            getId.setInt(1, id);
+
+            ResultSet set = selectAll.executeQuery();
+            while (set.next()) {
+                Day day = new Day(set.getInt(1), set.getString(2));
+                days.add(day);
+            }
+            set.close();
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);
         }
 
+        return Collections.unmodifiableList(days);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    @Override
+    public Optional<Day> getById(int id) {
+        Day day = null;
+
         try {
-            ResultSet set = getId.executeQuery();
+            if (selectId == null || selectId.isClosed()) {
+                MapBuilder<String, String> builder = new MapBuilder<>(new HashMap<>());
+                selectId = connection.prepareStatement(StatementType.SELECT.getSql(builder.put("table", "dayOfWeek").put("columns", "dayOfWeek").put("where", "id=?").build()));
+            }
+            selectId.setInt(1, id);
+
+            ResultSet set = selectId.executeQuery();
             set.next();
             day = new Day(id, set.getString(1));
             set.close();
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
-            throw new DataUpdateException(e);
+            throw new DataAccessException(e);
         }
 
         if (day == null) {
@@ -58,29 +83,28 @@ public class MariaDayDao implements DayDao {
         }
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
     @Override
     public Optional<Day> getByName(String name) {
         Day day = null;
 
         try {
-            if (getName == null || getName.isClosed()) {
+            if (selectName == null || selectName.isClosed()) {
                 MapBuilder<String, String> builder = new MapBuilder<>(new HashMap<>());
-                getName = connection.prepareStatement(StatementType.SELECT.getSql(builder.put("table", "dayOfWeek").put("columns", "id").put("where", "dayOfWeek=?").build()));
+                selectName = connection.prepareStatement(StatementType.SELECT.getSql(builder.put("table", "dayOfWeek").put("columns", "id").put("where", "dayOfWeek=?").build()));
             }
-            getName.setString(1, name);
-        } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
-            throw new DataAccessException(e);
-        }
+            selectName.setString(1, name);
 
-        try {
-            ResultSet set = getName.executeQuery();
+            ResultSet set = selectName.executeQuery();
             set.next();
             day = new Day(set.getInt(1), name);
             set.close();
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
-            throw new DataUpdateException(e);
+            throw new DataAccessException(e);
         }
 
         if (day == null) {

@@ -30,7 +30,9 @@ CREATE TABLE classroom
        (id INT NOT NULL AUTO_INCREMENT,
 	roomName VARCHAR(10) NOT NULL,
 	buildingName VARCHAR(10) NOT NULL,
-	PRIMARY KEY (id));
+	subjectId INT NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (subjectId) REFERENCES subject(id));
 
 CREATE TABLE period
        (id INT NOT NULL AUTO_INCREMENT,
@@ -54,7 +56,7 @@ CREATE TABLE subjectSet
     FOREIGN KEY (subjectId) REFERENCES subject(id),
     FOREIGN KEY (setId) REFERENCES learningSet(id));
 
-CREATE TABLE timetable 
+CREATE TABLE lesson
        (id INT NOT NULL AUTO_INCREMENT,
 	classId INT NOT NULL,
 	staffId INT,

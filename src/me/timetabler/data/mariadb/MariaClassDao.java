@@ -34,6 +34,9 @@ public class MariaClassDao implements SchoolClassDao {
         this.connection = connection;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     @Override
     public List<SchoolClass> getAllClasses() {
         ArrayList<SchoolClass> classes = new ArrayList<>();
@@ -61,6 +64,9 @@ public class MariaClassDao implements SchoolClassDao {
         return classes;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     @Override
     public List<SchoolClass> getAllBySubject(Subject subject) {
         ArrayList<SchoolClass> classes = new ArrayList<>();
@@ -90,6 +96,9 @@ public class MariaClassDao implements SchoolClassDao {
         return classes;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     @Override
     public Optional<SchoolClass> getById(int id) {
         SchoolClass schoolClass;
@@ -121,6 +130,9 @@ public class MariaClassDao implements SchoolClassDao {
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     @Override
     public int insertClass(SchoolClass schoolClass) {
         int id = -1;
@@ -160,6 +172,10 @@ public class MariaClassDao implements SchoolClassDao {
         return id;
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
     @Override
     public boolean updateClass(SchoolClass schoolClass) {
         boolean success;
@@ -188,6 +204,9 @@ public class MariaClassDao implements SchoolClassDao {
         return success;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     @Override
     public boolean deleteClass(SchoolClass schoolClass) {
         boolean success;

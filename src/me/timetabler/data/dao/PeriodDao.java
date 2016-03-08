@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 /**
- * The interface between a data source and the program. This dao will manipulate period data. All list implementations
+ * The interface between a data source and the program. This dao will return period data. All list implementations
  * are to be determined by the implementation.
  */
 public interface PeriodDao {
