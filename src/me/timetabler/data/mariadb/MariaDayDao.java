@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * Created by stuart on 04/03/16.
+ * {@inheritDoc}
  */
 public class MariaDayDao implements DayDao {
     protected Connection connection;
@@ -30,7 +30,7 @@ public class MariaDayDao implements DayDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Day> getAll() {
+    public List<Day> getAll() throws DataAccessException {
         ArrayList<Day> days = new ArrayList<>(7);
 
         try {
@@ -54,10 +54,10 @@ public class MariaDayDao implements DayDao {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public Optional<Day> getById(int id) {
+    public Optional<Day> getById(int id) throws DataAccessException {
         Day day = null;
 
         try {
@@ -85,10 +85,10 @@ public class MariaDayDao implements DayDao {
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public Optional<Day> getByName(String name) {
+    public Optional<Day> getByName(String name) throws DataAccessException {
         Day day = null;
 
         try {

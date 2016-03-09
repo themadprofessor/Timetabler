@@ -8,17 +8,14 @@ import me.timetabler.data.exceptions.DataUpdateException;
 import me.util.Log;
 import me.util.MapBuilder;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * An implementation of StaffDao which handles a MariaDB data source.
+ * {@inheritDoc}
  */
 public class MariaStaffDao implements StaffDao {
     protected Connection connection;
@@ -35,10 +32,10 @@ public class MariaStaffDao implements StaffDao {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public List<Staff> getAllStaff() {
+    public List<Staff> getAllStaff() throws DataAccessException, DataUpdateException {
         ArrayList<Staff> staff = new ArrayList<>();
 
         try {
@@ -66,10 +63,10 @@ public class MariaStaffDao implements StaffDao {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public List<Staff> getAllBySubject(Subject subject) {
+    public List<Staff> getAllBySubject(Subject subject) throws DataAccessException, DataUpdateException {
         ArrayList<Staff> staff = new ArrayList<>();
 
         try {
@@ -98,10 +95,10 @@ public class MariaStaffDao implements StaffDao {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public Optional<Staff> getById(int id) {
+    public Optional<Staff> getById(int id) throws DataAccessException, DataUpdateException {
         Staff staff = null;
 
         try {
@@ -133,18 +130,15 @@ public class MariaStaffDao implements StaffDao {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public int insertStaff(Staff staff) {
+    public int insertStaff(Staff staff) throws DataAccessException, DataUpdateException {
         int id = -1;
 
         try {
             if (insert == null || insert.isClosed()) {
                 initStatement(StatementType.INSERT);
-            }
-            if (getLastId == null || insert.isClosed()) {
-                initStatement(StatementType.GET_LAST_AUTO_INCRE);
             }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
@@ -156,22 +150,28 @@ public class MariaStaffDao implements StaffDao {
             insert.setInt(2, staff.subject.id);
             insert.executeUpdate();
 
-            ResultSet set = getLastId.executeQuery();
-            set.next();
-            id = set.getInt(1);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
             throw new DataUpdateException(e);
+        }
+
+        try {
+            ResultSet set = insert.getGeneratedKeys();
+            set.next();
+            id = set.getInt(1);
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
+            throw new DataAccessException(e);
         }
 
         return id;
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public boolean updateStaff(Staff staff) {
+    public boolean updateStaff(Staff staff) throws DataAccessException, DataUpdateException {
         boolean success = false;
 
         try {
@@ -198,10 +198,10 @@ public class MariaStaffDao implements StaffDao {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public boolean deleteStaff(Staff staff) {
+    public boolean deleteStaff(Staff staff) throws DataAccessException, DataUpdateException {
         boolean success = false;
 
         try {
@@ -229,7 +229,7 @@ public class MariaStaffDao implements StaffDao {
      * Initialises a prepared statement base on the given statement type.
      * @param type The type of statement to initialise.
      */
-    private void initStatement(StatementType type) {
+    private void initStatement(StatementType type) throws DataAccessException {
         MapBuilder<String, String> builder = new MapBuilder<>(new HashMap<>());
         try {
             switch (type) {
@@ -248,7 +248,7 @@ public class MariaStaffDao implements StaffDao {
                     update = connection.prepareStatement(type.getSql(builder.put("table", "staff").put("set", "staffName=?,subjectId=?").put("where", "id=?").build()));
                     break;
                 case INSERT:
-                    insert = connection.prepareStatement(type.getSql(builder.put("table", "staff").put("columns", "staffName,subjectId").put("values", "?,?").build()));
+                    insert = connection.prepareStatement(type.getSql(builder.put("table", "staff").put("columns", "staffName,subjectId").put("values", "?,?").build()), Statement.RETURN_GENERATED_KEYS);
                     break;
                 case DELETE:
                     delete = connection.prepareStatement(type.getSql(builder.put("table", "staff").put("where", "id=?").build()));
@@ -259,9 +259,6 @@ public class MariaStaffDao implements StaffDao {
                             .put("table2", "subject")
                             .put("join_key", "staff.subjectId=subject.id")
                             .build()));
-                    break;
-                case GET_LAST_AUTO_INCRE:
-                    getLastId = connection.prepareStatement(type.getSql(null));
                     break;
             }
         } catch (SQLException e) {

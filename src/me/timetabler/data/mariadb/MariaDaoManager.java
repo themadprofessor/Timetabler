@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.Map;
 
 /**
- * Created by stuart on 29/02/16.
+ * {@inheritDoc}
  */
 public class MariaDaoManager implements DaoManager {
     private DataSource source;
@@ -22,7 +22,7 @@ public class MariaDaoManager implements DaoManager {
     private MariaDayDao dayDao;
     private MariaClassroomDao classroomDao;
 
-    public MariaDaoManager(Map<String, String> config) {
+    public MariaDaoManager(Map<String, String> config) throws DataConnectionException {
         try {
             MariaDbDataSource source = new MariaDbDataSource(config.get("addr"), Integer.parseInt(config.get("port")), config.get("database"));
             source.setUser("root");
@@ -35,10 +35,10 @@ public class MariaDaoManager implements DaoManager {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public StaffDao getStaffDao() {
+    public StaffDao getStaffDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
                 connection = source.getConnection();
@@ -56,10 +56,10 @@ public class MariaDaoManager implements DaoManager {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public SubjectDao getSubjectDao() {
+    public SubjectDao getSubjectDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
                 connection = source.getConnection();
@@ -78,10 +78,10 @@ public class MariaDaoManager implements DaoManager {
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public SchoolClassDao getSchoolClassDao() {
+    public SchoolClassDao getSchoolClassDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
                 connection = source.getConnection();
@@ -99,10 +99,10 @@ public class MariaDaoManager implements DaoManager {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public DayDao getDayDao() {
+    public DayDao getDayDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
                  connection = source.getConnection();
@@ -120,10 +120,10 @@ public class MariaDaoManager implements DaoManager {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public ClassroomDao getClassroomDao() {
+    public ClassroomDao getClassroomDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
                 connection = source.getConnection();

@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by stuart on 07/03/16.
+ * {@inheritDoc}
  */
 public class MariaPeriodDao implements PeriodDao {
     protected Connection connection;
@@ -28,10 +28,10 @@ public class MariaPeriodDao implements PeriodDao {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public List<Period> getAll() {
+    public List<Period> getAll() throws DataAccessException {
         ArrayList<Period> periods = new ArrayList<>();
 
         try {
@@ -53,10 +53,10 @@ public class MariaPeriodDao implements PeriodDao {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public List<Period> getAllByDay(Day day) {
+    public List<Period> getAllByDay(Day day) throws DataAccessException {
         ArrayList<Period> periods = new ArrayList<>();
 
         try {
@@ -79,10 +79,10 @@ public class MariaPeriodDao implements PeriodDao {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public List<Period> getByStartTime(LocalTime time) {
+    public List<Period> getByStartTime(LocalTime time) throws DataAccessException {
         ArrayList<Period> periods = new ArrayList<>();
 
         try {
@@ -107,10 +107,10 @@ public class MariaPeriodDao implements PeriodDao {
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public List<Period> getByEndTime(LocalTime time) {
+    public List<Period> getByEndTime(LocalTime time) throws DataAccessException {
         ArrayList<Period> periods = new ArrayList<>();
 
         try {
@@ -133,7 +133,7 @@ public class MariaPeriodDao implements PeriodDao {
         return periods;
     }
 
-    private void initStatement(StatementType type, boolean start) {
+    private void initStatement(StatementType type, boolean start) throws DataAccessException {
         MapBuilder<String, String> builder = new MapBuilder<>(new HashMap<>());
         try {
             switch (type) {

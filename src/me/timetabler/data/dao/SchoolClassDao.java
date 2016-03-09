@@ -2,6 +2,8 @@ package me.timetabler.data.dao;
 
 import me.timetabler.data.SchoolClass;
 import me.timetabler.data.Subject;
+import me.timetabler.data.exceptions.DataAccessException;
+import me.timetabler.data.exceptions.DataUpdateException;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +19,7 @@ public interface SchoolClassDao {
      * @return A list of all the classes, which can be empty.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<SchoolClass> getAllClasses();
+    List<SchoolClass> getAllClasses() throws DataAccessException;
 
     /**
      * Returns a list of all the classes of the given subject. If there are no classes of the given subject, an empty
@@ -27,7 +29,7 @@ public interface SchoolClassDao {
      * @return A list of all the classes of the give subject, which can be empty.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<SchoolClass> getAllBySubject(Subject subject);
+    List<SchoolClass> getAllBySubject(Subject subject) throws DataUpdateException, DataAccessException;
 
     /**
      * Returns the school class which has the given id. The optional will be empty if the id does not reference any
@@ -37,7 +39,7 @@ public interface SchoolClassDao {
      * @return An optional containing the school class if it exists, or empty if it does not.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    Optional<SchoolClass> getById(int id);
+    Optional<SchoolClass> getById(int id) throws DataUpdateException, DataAccessException;
 
     /**
      * Inserts the given school class in to the data store. If the school class was successfully entered in to the data
@@ -48,7 +50,7 @@ public interface SchoolClassDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    int insertClass(SchoolClass schoolClass);
+    int insertClass(SchoolClass schoolClass) throws DataAccessException, DataUpdateException;
 
     /**
      * Updates the given school class in the data store. The id of the given school class will be the entry in the store
@@ -61,7 +63,7 @@ public interface SchoolClassDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    boolean updateClass(SchoolClass schoolClass);
+    boolean updateClass(SchoolClass schoolClass) throws DataUpdateException, DataAccessException;
 
     /**
      * Deletes the given school class from the data source. This returns true if the entry as successfully removed from the
@@ -72,5 +74,5 @@ public interface SchoolClassDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    boolean deleteClass(SchoolClass schoolClass);
+    boolean deleteClass(SchoolClass schoolClass) throws DataUpdateException, DataAccessException;
 }

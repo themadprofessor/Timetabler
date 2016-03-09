@@ -1,6 +1,8 @@
 package me.timetabler.data.dao;
 
 import me.timetabler.data.Subject;
+import me.timetabler.data.exceptions.DataAccessException;
+import me.timetabler.data.exceptions.DataUpdateException;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,7 +10,7 @@ import java.util.Optional;
 /**
  * The interface between a data source and the program. This dao will manipulate subject data.
  */
-public interface SubjectDao extends AutoCloseable {
+public interface SubjectDao {
     /**
      * Returns a list of all the subjects. If there are no subjects, an empty list will be returned. The type of list
      * is to be determined by the implementation.
@@ -16,7 +18,7 @@ public interface SubjectDao extends AutoCloseable {
      * @return A list of all the subjects, which can be empty.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<Subject> getAllSubjects();
+    List<Subject> getAllSubjects() throws DataAccessException;
 
     /**
      * Returns the subject which has the given id. The optional will be empty if the id does not reference any subjects.
@@ -25,7 +27,7 @@ public interface SubjectDao extends AutoCloseable {
      * @return An optional containing the subject if it exists, or empty if it does not.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    Optional<Subject> getById(int id);
+    Optional<Subject> getById(int id) throws DataUpdateException, DataAccessException;
 
     /**
      * Inserts the given subject in to the data store. If the subject was successfully entered in to the data store, it
@@ -36,7 +38,7 @@ public interface SubjectDao extends AutoCloseable {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    int insertSubject(Subject subject);
+    int insertSubject(Subject subject) throws DataUpdateException, DataAccessException;
 
     /**
      * Updates the given subject in the data store. The id of the given subject will be the entry in the store to be
@@ -49,7 +51,7 @@ public interface SubjectDao extends AutoCloseable {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    boolean updateSubject(Subject subject);
+    boolean updateSubject(Subject subject) throws DataUpdateException, DataAccessException;
 
     /**
      * Deletes the given subject from the data source. This returns true if the subject was successfully removed from the
@@ -60,5 +62,5 @@ public interface SubjectDao extends AutoCloseable {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    boolean deleteSubject(Subject subject);
+    boolean deleteSubject(Subject subject) throws DataUpdateException, DataAccessException;
 }

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Created by stuart on 07/03/16.
+ * {@inheritDoc}
  */
 public class MariaLearningSetDao implements LearningSetDao {
     protected Connection connection;
@@ -25,7 +25,7 @@ public class MariaLearningSetDao implements LearningSetDao {
     private PreparedStatement delete;
 
     @Override
-    public List<LearningSet> getAll() {
+    public List<LearningSet> getAll() throws DataAccessException {
         ArrayList<LearningSet> sets = new ArrayList<>();
 
         try {
@@ -48,7 +48,7 @@ public class MariaLearningSetDao implements LearningSetDao {
     }
 
     @Override
-    public Optional<LearningSet> getById(int id) {
+    public Optional<LearningSet> getById(int id) throws DataAccessException {
         LearningSet set = null;
 
         try {
@@ -73,7 +73,7 @@ public class MariaLearningSetDao implements LearningSetDao {
     }
 
     @Override
-    public int insert(LearningSet set) {
+    public int insert(LearningSet set) throws DataAccessException, DataUpdateException {
         int id = -1;
 
         try {
@@ -107,7 +107,7 @@ public class MariaLearningSetDao implements LearningSetDao {
     }
 
     @Override
-    public boolean update(LearningSet set) {
+    public boolean update(LearningSet set) throws DataAccessException, DataUpdateException {
         boolean success = false;
 
         try {
@@ -133,7 +133,7 @@ public class MariaLearningSetDao implements LearningSetDao {
     }
 
     @Override
-    public boolean delete(LearningSet set) {
+    public boolean delete(LearningSet set) throws DataAccessException {
         boolean success = false;
 
         try {
@@ -157,7 +157,7 @@ public class MariaLearningSetDao implements LearningSetDao {
         return success;
     }
 
-    private void initStatement(StatementType type) {
+    private void initStatement(StatementType type) throws DataAccessException {
         assert connection != null;
         MapBuilder<String, String>  builder = new MapBuilder<>(new HashMap<>());
 

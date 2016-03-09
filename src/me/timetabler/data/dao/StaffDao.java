@@ -2,6 +2,8 @@ package me.timetabler.data.dao;
 
 import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
+import me.timetabler.data.exceptions.DataAccessException;
+import me.timetabler.data.exceptions.DataUpdateException;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +19,7 @@ public interface StaffDao {
      * @return A list of all the staff, which can be empty.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<Staff> getAllStaff();
+    List<Staff> getAllStaff() throws DataAccessException, DataUpdateException;
 
     /**
      * Returns a list of all the staff who teach the give subject. If there are no staff who teach the given subject, an
@@ -27,7 +29,7 @@ public interface StaffDao {
      * @return A list of all the staff who teach the given subject, which can be empty.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<Staff> getAllBySubject(Subject subject);
+    List<Staff> getAllBySubject(Subject subject) throws DataAccessException, DataUpdateException;
 
     /**
      * Returns the staff which has the given id. The optional will be empty if the id does not reference any staffs.
@@ -36,7 +38,7 @@ public interface StaffDao {
      * @return An optional containing the staff if it exists, or empty if it does not.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    Optional<Staff> getById(int id);
+    Optional<Staff> getById(int id) throws DataAccessException, DataUpdateException;
 
     /**
      * Inserts the given staff in to the data store. If the staff was successfully entered in to the data store, it
@@ -47,7 +49,7 @@ public interface StaffDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    int insertStaff(Staff staff);
+    int insertStaff(Staff staff) throws DataAccessException, DataUpdateException;
 
     /**
      * Updates the given staff in the data store. The id of the given staff will be the entry in the store to be
@@ -60,7 +62,7 @@ public interface StaffDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    boolean updateStaff(Staff staff);
+    boolean updateStaff(Staff staff) throws DataAccessException, DataUpdateException;
 
     /**
      * Deletes the given staff from the data source. This returns true if the subject was successfully removed from the
@@ -71,5 +73,5 @@ public interface StaffDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    boolean deleteStaff(Staff staff);
+    boolean deleteStaff(Staff staff) throws DataAccessException, DataUpdateException;
 }

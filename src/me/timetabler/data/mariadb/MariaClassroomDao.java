@@ -8,17 +8,14 @@ import me.timetabler.data.exceptions.DataUpdateException;
 import me.util.Log;
 import me.util.MapBuilder;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Created by stuart on 07/03/16.
+ * {@inheritDoc}
  */
 public class MariaClassroomDao implements ClassroomDao {
     protected Connection connection;
@@ -26,7 +23,6 @@ public class MariaClassroomDao implements ClassroomDao {
     private PreparedStatement selectSubject;
     private PreparedStatement selectBuilding;
     private PreparedStatement selectId;
-    private PreparedStatement getLastId;
     private PreparedStatement insert;
     private PreparedStatement update;
     private PreparedStatement delete;
@@ -37,10 +33,10 @@ public class MariaClassroomDao implements ClassroomDao {
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public List<Classroom> getAll() {
+    public List<Classroom> getAll() throws DataAccessException {
         ArrayList<Classroom> classrooms = new ArrayList<>();
 
         try {
@@ -64,10 +60,10 @@ public class MariaClassroomDao implements ClassroomDao {
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public List<Classroom> getBySubject(Subject subject) {
+    public List<Classroom> getBySubject(Subject subject) throws DataAccessException {
         ArrayList<Classroom> classrooms = new ArrayList<>();
 
         try {
@@ -92,10 +88,10 @@ public class MariaClassroomDao implements ClassroomDao {
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public List<Classroom> getByBuilding(String building) {
+    public List<Classroom> getByBuilding(String building) throws DataAccessException {
         ArrayList<Classroom> classrooms = new ArrayList<>();
 
         try {
@@ -120,10 +116,10 @@ public class MariaClassroomDao implements ClassroomDao {
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public Optional<Classroom> getById(int id) {
+    public Optional<Classroom> getById(int id) throws DataAccessException {
         Classroom classroom = null;
 
         try {
@@ -150,18 +146,15 @@ public class MariaClassroomDao implements ClassroomDao {
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public int insert(Classroom classroom) {
+    public int insert(Classroom classroom) throws DataAccessException, DataUpdateException {
         int id = -1;
 
         try {
             if (insert == null || insert.isClosed()) {
                 initStatement(StatementType.INSERT, false);
-            }
-            if (getLastId == null || getLastId.isClosed()) {
-                initStatement(StatementType.GET_LAST_AUTO_INCRE, false);
             }
 
             insert.setString(1, classroom.name);
@@ -180,7 +173,7 @@ public class MariaClassroomDao implements ClassroomDao {
         }
 
         try {
-            ResultSet set = getLastId.executeQuery();
+            ResultSet set = insert.getGeneratedKeys();
             set.next();
             id = set.getInt(1);
             set.close();
@@ -194,10 +187,10 @@ public class MariaClassroomDao implements ClassroomDao {
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public boolean update(Classroom classroom) {
+    public boolean update(Classroom classroom) throws DataAccessException, DataUpdateException {
         boolean success = false;
 
         try {
@@ -227,10 +220,10 @@ public class MariaClassroomDao implements ClassroomDao {
 
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public boolean delete(Classroom classroom) {
+    public boolean delete(Classroom classroom) throws DataAccessException, DataUpdateException {
         boolean success = false;
 
         try {
@@ -252,10 +245,10 @@ public class MariaClassroomDao implements ClassroomDao {
             throw new DataUpdateException(e);
         }
 
-        return false;
+        return success;
     }
 
-    private void initStatement(StatementType type, boolean building) {
+    private void initStatement(StatementType type, boolean building) throws DataAccessException {
         assert type != null;
 
         MapBuilder<String, String> builder = new MapBuilder<>(new HashMap<>());
@@ -294,7 +287,7 @@ public class MariaClassroomDao implements ClassroomDao {
                 case INSERT:
                     insert = connection.prepareStatement(type.getSql(builder.put("table", "classroom")
                             .put("columns", "roomName,buildingName,subjectId")
-                            .put("values", "?,?,?").build()));
+                            .put("values", "?,?,?").build()), Statement.RETURN_GENERATED_KEYS);
                     break;
                 case UPDATE:
                     update = connection.prepareStatement(type.getSql(builder.put("table", "classroom")
@@ -307,8 +300,6 @@ public class MariaClassroomDao implements ClassroomDao {
                             .put("where", "id=?")
                             .build()));
                     break;
-                case GET_LAST_AUTO_INCRE:
-                    getLastId = connection.prepareStatement(type.getSql(null));
             }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");

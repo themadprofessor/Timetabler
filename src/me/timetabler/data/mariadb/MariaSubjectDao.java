@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * An implementation of SubjectDao which handles a MariaDB data source.
+ * {@inheritDoc}
  */
 public class MariaSubjectDao implements SubjectDao {
     protected Connection connection;
@@ -26,17 +26,16 @@ public class MariaSubjectDao implements SubjectDao {
     private PreparedStatement insert;
     private PreparedStatement update;
     private PreparedStatement delete;
-    private PreparedStatement getLastId;
 
     public MariaSubjectDao(Connection connection) {
         this.connection = connection;
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public List<Subject> getAllSubjects() {
+    public List<Subject> getAllSubjects() throws DataAccessException {
         ArrayList<Subject> subjects = new ArrayList<>();
 
         try {
@@ -58,10 +57,10 @@ public class MariaSubjectDao implements SubjectDao {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public Optional<Subject> getById(int id) {
+    public Optional<Subject> getById(int id) throws DataUpdateException, DataAccessException {
         Subject subject;
 
         try {
@@ -75,8 +74,8 @@ public class MariaSubjectDao implements SubjectDao {
             subject = new Subject(set.getInt(1), set.getString(2));
             set.close();
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing DataUpdateException!");
-            throw new DataUpdateException(e);
+            Log.debug("Caught [" + e + "] so throwing DataAccessException!");
+            throw new DataAccessException(e);
         }
 
         if (subject == null) {
@@ -87,10 +86,10 @@ public class MariaSubjectDao implements SubjectDao {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public int insertSubject(Subject subject) {
+    public int insertSubject(Subject subject) throws DataUpdateException, DataAccessException {
         int id = -1;
 
         try {
@@ -99,26 +98,35 @@ public class MariaSubjectDao implements SubjectDao {
             }
 
             insert.setString(1, subject.name);
-            insert.execute();
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
+            throw new DataAccessException(e);
+        }
 
-            if (getLastId == null || getLastId.isClosed()) {
-                initStatement(StatementType.GET_LAST_AUTO_INCRE);
-            }
-            ResultSet set = getLastId.executeQuery();
-            set.next();
-            id = set.getInt(1);
+        try {
+            insert.executeUpdate();
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DataUpdateException!");
             throw new DataUpdateException(e);
         }
+
+        try {
+            ResultSet set = insert.getGeneratedKeys();
+            set.next();
+            id = set.getInt(1);
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
+            throw new DataAccessException(e);
+        }
+
         return id;
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public boolean updateSubject(Subject subject) {
+    public boolean updateSubject(Subject subject) throws DataUpdateException, DataAccessException {
         boolean success;
 
         try {
@@ -128,6 +136,12 @@ public class MariaSubjectDao implements SubjectDao {
 
             update.setInt(1, subject.id);
             update.setString(2, subject.name);
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing DataAccessException!");
+            throw new DataAccessException(e);
+        }
+
+        try {
             update.execute();
             success = true;
         } catch (SQLException e) {
@@ -139,10 +153,10 @@ public class MariaSubjectDao implements SubjectDao {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     @Override
-    public boolean deleteSubject(Subject subject) {
+    public boolean deleteSubject(Subject subject) throws DataUpdateException, DataAccessException {
         boolean success;
 
         try {
@@ -151,9 +165,14 @@ public class MariaSubjectDao implements SubjectDao {
             }
 
             delete.setInt(1, subject.id);
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing DataAccessException!");
+            throw new DataAccessException(e);
+        }
+
+        try {
             delete.execute();
             success = true;
-
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DataUpdateException!");
             throw new DataUpdateException(e);
@@ -168,7 +187,7 @@ public class MariaSubjectDao implements SubjectDao {
      * @param type The type of statement to be initialised.
      * @throws DataAccessException Thrown if the database cannot be accessed to open the connection or if the statement cannot be prepared.
      */
-    private void initStatement(StatementType type) {
+    private void initStatement(StatementType type) throws DataAccessException {
         MapBuilder<String, String> builder = new MapBuilder<>(new HashMap<>());
         try {
             switch (type) {
@@ -187,30 +206,10 @@ public class MariaSubjectDao implements SubjectDao {
                 case SELECT_ALL:
                     selectAll = connection.prepareStatement(type.getSql(builder.put("table", "subject").put("columns", "*").build()));
                     break;
-                case GET_LAST_AUTO_INCRE:
-                    getLastId = connection.prepareStatement(type.getSql(null));
-                    break;
             }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DataAccessException!");
             throw new DataAccessException(e);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    @Override
-    public void close() {
-        try {
-            selectId.close();
-            selectAll.close();
-            insert.close();
-            delete.close();
-            update.close();
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 }

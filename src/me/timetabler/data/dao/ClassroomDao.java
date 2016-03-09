@@ -2,6 +2,8 @@ package me.timetabler.data.dao;
 
 import me.timetabler.data.Classroom;
 import me.timetabler.data.Subject;
+import me.timetabler.data.exceptions.DataAccessException;
+import me.timetabler.data.exceptions.DataUpdateException;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,12 +12,12 @@ import java.util.Optional;
  * Created by stuart on 07/03/16.
  */
 public interface ClassroomDao {
-    List<Classroom> getAll();
-    List<Classroom> getBySubject(Subject subject);
-    List<Classroom> getByBuilding(String building);
-    Optional<Classroom> getById(int id);
+    List<Classroom> getAll() throws DataAccessException;
+    List<Classroom> getBySubject(Subject subject) throws DataAccessException;
+    List<Classroom> getByBuilding(String building) throws DataAccessException;
+    Optional<Classroom> getById(int id) throws DataAccessException;
 
-    int insert(Classroom classroom);
-    boolean update(Classroom classroom);
-    boolean delete(Classroom classroom);
+    int insert(Classroom classroom) throws DataAccessException, DataUpdateException;
+    boolean update(Classroom classroom) throws DataAccessException, DataUpdateException;
+    boolean delete(Classroom classroom) throws DataAccessException, DataUpdateException;
 }

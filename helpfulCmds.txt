@@ -1,1 +1,1 @@
-for f in *.java; do sed -i 's#@Override#/**\n     * {@inheritdoc}\n     */\n    @Override#g' StatementType.java; done
+for f in *.java; do sed -i 's#@Override#/**\n     * {@inheritDoc}\n     */\n    @Override#g' $f; done

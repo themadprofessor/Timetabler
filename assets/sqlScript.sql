@@ -26,12 +26,18 @@ CREATE TABLE dayOfWeek
 	dayOfWeek CHAR(9) NOT NULL,
 	PRIMARY KEY (id));
 
+CREATE TABLE building
+       (id INT NOT NULL AUTO_INCREMENT,
+    buildingName VARCHAR(10) NOT NULL,
+    PRIMARY KEY (id));
+
 CREATE TABLE classroom
        (id INT NOT NULL AUTO_INCREMENT,
 	roomName VARCHAR(10) NOT NULL,
-	buildingName VARCHAR(10) NOT NULL,
+	buildingId INT NOT NULL,
 	subjectId INT NOT NULL,
 	PRIMARY KEY (id),
+	FOREIGN KEY (buildingId) REFERENCES building(id),
 	FOREIGN KEY (subjectId) REFERENCES subject(id));
 
 CREATE TABLE period
@@ -44,7 +50,12 @@ CREATE TABLE period
 
 CREATE TABLE learningSet
        (id INT NOT NULL AUTO_INCREMENT,
-    setName VARCHAR(10),
+    setName VARCHAR(10) NOT NULL,
+    PRIMARY KEY (id));
+
+CREATE TABLE yearGroup
+       (id INT NOT NULL AUTO_INCREMENT,
+    yearGroupName VARCHAR(8) NOT NULL
     PRIMARY KEY (id));
 
 CREATE TABLE subjectSet

@@ -6,16 +6,16 @@ package me.timetabler.data;
 public class Classroom {
     public int id;
     public String name;
-    public String buildingName;
+    public Building building;
     public Subject subject;
 
     public Classroom() {
     }
 
-    public Classroom(int id, String name, String buildingName, Subject subject) {
+    public Classroom(int id, String name, Building building, Subject subject) {
         this.id = id;
         this.name = name;
-        this.buildingName = buildingName;
+        this.building = building;
         this.subject = subject;
     }
 }

@@ -3,7 +3,7 @@ package me.timetabler.data.exceptions;
 /**
  * Created by stuart on 25/02/16.
  */
-public class DataException extends RuntimeException {
+public class DataException extends Exception{
     public DataException() {
         super();
     }

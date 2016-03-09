@@ -2,6 +2,7 @@ package me.timetabler.data.dao;
 
 import me.timetabler.data.Day;
 import me.timetabler.data.Period;
+import me.timetabler.data.exceptions.DataAccessException;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -17,7 +18,7 @@ public interface PeriodDao {
      * @return A list of all periods.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<Period> getAll();
+    List<Period> getAll() throws DataAccessException;
 
     /**
      * Returns a list containing all the periods in a given day. The list implementation is to be determined by the
@@ -26,7 +27,7 @@ public interface PeriodDao {
      * @return A list of all periods on the given day.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<Period> getAllByDay(Day day);
+    List<Period> getAllByDay(Day day) throws DataAccessException;
 
     /**
      * Returns a list of a periods which starts at the given time. The list implementation is to be determined by the
@@ -35,7 +36,7 @@ public interface PeriodDao {
      * @return A list of all periods which starts at the given time.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<Period> getByStartTime(LocalTime time);
+    List<Period> getByStartTime(LocalTime time) throws DataAccessException;
 
     /**
      * Returns a list of a periods which ends at the given time. The list implementation is to be determined by the
@@ -44,5 +45,5 @@ public interface PeriodDao {
      * @return A list of all periods which ends at the given time.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<Period> getByEndTime(LocalTime time);
+    List<Period> getByEndTime(LocalTime time) throws DataAccessException;
 }

@@ -7,8 +7,9 @@ import java.util.Map;
  */
 public enum StatementType {
     SELECT_ALL("SELECT %s FROM %s;"), SELECT("SELECT %s FROM %s WHERE %s;"), UPDATE("UPDATE %s SET %s WHERE %s;"),
-    DELETE("DELETE FROM %s WHERE %s;"), INSERT("INSERT INTO %s (%s) VALUES (%s)"), GET_LAST_AUTO_INCRE("SELECT LAST_INSERT_ID();"),
-    SELECT_ALL_JOIN("SELECT %s FROM %s INNER JOIN %s ON %s;"), SELECT_JOIN("SELECT %s FROM %s INNER JOIN %s ON %s WHERE %s;");
+    DELETE("DELETE FROM %s WHERE %s;"), INSERT("INSERT INTO %s (%s) VALUES (%s)"),
+    GET_LAST_AUTO_INCRE("SELECT LAST_INSERT_ID();"), SELECT_ALL_JOIN("SELECT %s FROM %s INNER JOIN %s ON %s;"),
+    SELECT_JOIN("SELECT %s FROM %s INNER JOIN %s ON %s WHERE %s;");
 
     /**
      * The sql statement represented by this enum.

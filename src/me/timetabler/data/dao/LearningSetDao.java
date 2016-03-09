@@ -1,6 +1,8 @@
 package me.timetabler.data.dao;
 
 import me.timetabler.data.LearningSet;
+import me.timetabler.data.exceptions.DataAccessException;
+import me.timetabler.data.exceptions.DataUpdateException;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +17,7 @@ public interface LearningSetDao {
      *
      * @return A list of all the learning sets, which can be empty.
      */
-    List<LearningSet> getAll();
+    List<LearningSet> getAll() throws DataAccessException;
 
     /**
      * Returns the learning set which has the given id. The optional will be empty if the id does not reference any
@@ -25,7 +27,7 @@ public interface LearningSetDao {
      * @return An optional containing the learning set if it exists, or empty if it does not.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    Optional<LearningSet> getById(int id);
+    Optional<LearningSet> getById(int id) throws DataAccessException;
 
     /**
      * Inserts the given learning set in to the data store. If the learning set was successfully entered in to the data
@@ -36,7 +38,7 @@ public interface LearningSetDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    int insert(LearningSet set);
+    int insert(LearningSet set) throws DataAccessException, DataUpdateException;
 
     /**
      * Updates the given learning set in the data store. The id of the given learning set will be the entry in the
@@ -49,7 +51,7 @@ public interface LearningSetDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    boolean update(LearningSet set);
+    boolean update(LearningSet set) throws DataAccessException, DataUpdateException;
 
     /**
      * Deletes the given entry from the data source. This returns true if the entry as successfully removed from the
@@ -60,5 +62,5 @@ public interface LearningSetDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    boolean delete(LearningSet set);
+    boolean delete(LearningSet set) throws DataAccessException;
 }
