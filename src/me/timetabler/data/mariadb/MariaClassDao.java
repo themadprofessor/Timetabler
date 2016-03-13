@@ -5,15 +5,14 @@ import me.timetabler.data.Subject;
 import me.timetabler.data.dao.SchoolClassDao;
 import me.timetabler.data.exceptions.DataAccessException;
 import me.timetabler.data.exceptions.DataUpdateException;
+import me.timetabler.data.sql.JoinClause;
+import me.timetabler.data.sql.JoinType;
+import me.timetabler.data.sql.SqlBuilder;
+import me.timetabler.data.sql.StatementType;
 import me.util.Log;
-import me.util.MapBuilder;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +24,6 @@ public class MariaClassDao implements SchoolClassDao {
     private PreparedStatement selectAll;
     private PreparedStatement selectAllSubject;
     private PreparedStatement selectId;
-    private PreparedStatement getLastId;
     private PreparedStatement insert;
     private PreparedStatement update;
     private PreparedStatement delete;
@@ -43,7 +41,10 @@ public class MariaClassDao implements SchoolClassDao {
 
         try {
             if (selectAll == null || selectAll.isClosed()) {
-                initStatement(StatementType.SELECT_ALL);
+                SqlBuilder builder = new SqlBuilder("class", StatementType.SELECT)
+                        .addColumns("class.id,class.className,subject.id,subject.subjectName")
+                        .addJoinClause(new JoinClause(JoinType.INNER, "subject", "class.subjectId=subject.id"));
+                selectAll = connection.prepareStatement(builder.build());
             }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
@@ -73,7 +74,10 @@ public class MariaClassDao implements SchoolClassDao {
 
         try {
             if (selectAllSubject == null || selectAllSubject.isClosed()) {
-                initStatement(StatementType.SELECT);
+                SqlBuilder builder = new SqlBuilder("class", StatementType.SELECT)
+                        .addColumns("id,className")
+                        .addWhereClause("subjectId=?");
+                selectAllSubject = connection.prepareStatement(builder.build());
             }
 
             selectAllSubject.setInt(1, subject.id);
@@ -106,7 +110,11 @@ public class MariaClassDao implements SchoolClassDao {
 
         try {
             if (selectId == null || selectId.isClosed()) {
-                initStatement(StatementType.SELECT);
+                SqlBuilder builder = new SqlBuilder("class", StatementType.SELECT)
+                        .addColumns("class.className,subject.id,subject.subjectName")
+                        .addWhereClause("class.id=?")
+                        .addJoinClause(new JoinClause(JoinType.INNER, "subject", "class.subjectId=subject.id"));
+                selectId = connection.prepareStatement(builder.build());
             }
 
             selectId.setInt(1, id);
@@ -140,7 +148,10 @@ public class MariaClassDao implements SchoolClassDao {
 
         try {
             if (insert == null || insert.isClosed()) {
-                initStatement(StatementType.INSERT);
+                SqlBuilder builder = new SqlBuilder("class", StatementType.INSERT)
+                        .addColumns("className,subjectId")
+                        .addValues("?", "?");
+                insert = connection.prepareStatement(builder.build(), Statement.RETURN_GENERATED_KEYS);
             }
 
             insert.setString(1, schoolClass.name);
@@ -158,11 +169,7 @@ public class MariaClassDao implements SchoolClassDao {
         }
 
         try {
-            if (getLastId == null || getLastId.isClosed()) {
-                initStatement(StatementType.GET_LAST_AUTO_INCRE);
-            }
-
-            ResultSet set = getLastId.executeQuery();
+            ResultSet set = insert.getGeneratedKeys();
             set.next();
             id = set.getInt(1);
         } catch (SQLException e) {
@@ -183,12 +190,15 @@ public class MariaClassDao implements SchoolClassDao {
 
         try {
             if (update == null || update.isClosed()) {
-                initStatement(StatementType.UPDATE);
+                SqlBuilder builder = new SqlBuilder("class", StatementType.UPDATE)
+                        .addSetClauses("className=?", "subjectId=?")
+                        .addWhereClause("id=?");
+                update = connection.prepareStatement(builder.build());
             }
 
             update.setString(1, schoolClass.name);
-            update.setInt(2, schoolClass.id);
-            update.setInt(3, schoolClass.subject.id);
+            update.setInt(2, schoolClass.subject.id);
+            update.setInt(3, schoolClass.id);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);
@@ -214,7 +224,9 @@ public class MariaClassDao implements SchoolClassDao {
 
         try {
             if (delete == null || delete.isClosed()) {
-                initStatement(StatementType.DELETE);
+                SqlBuilder builder = new SqlBuilder("class", StatementType.DELETE)
+                        .addWhereClause("id=?");
+                delete = connection.prepareStatement(builder.build());
             }
 
             delete.setInt(1, schoolClass.id);
@@ -233,47 +245,5 @@ public class MariaClassDao implements SchoolClassDao {
         return success;
     }
 
-    private void initStatement(StatementType type) throws DataAccessException {
-        MapBuilder<String, String> builder = new MapBuilder<>(new HashMap<>());
 
-        try {
-            switch (type) {
-                case SELECT_JOIN:
-                    selectId = connection.prepareStatement(type.getSql(builder.put("table", "class")
-                            .put("columns", "class.className,subject.id,subject.subjectName")
-                            .put("where", "id=?")
-                            .put("table2", "subject")
-                            .put("join_key", "class.subjectId=subject.id")
-                            .build()));
-                    break;
-                case SELECT:
-                    selectAllSubject = connection.prepareStatement(type.getSql(builder.put("table", "class").put("columns", "id,className,subjectId").put("where", "subjectId=?").build()));
-                    break;
-                case UPDATE:
-                    update = connection.prepareStatement(type.getSql(builder.put("table", "class").put("set", "className=?,subjectId=?").put("where", "id=?").build()));
-                    break;
-                case INSERT:
-                    insert = connection.prepareStatement(type.getSql(builder.put("table", "class").put("columns", "className,subjectId").put("values", "?,?").build()));
-                    break;
-                case DELETE:
-                    delete = connection.prepareStatement(type.getSql(builder.put("table", "class").put("where", "id=?").build()));
-                    break;
-                case SELECT_ALL:
-                    selectAll = connection.prepareStatement(type.getSql(builder.put("table", "class").put("columns", "id,className,subjectId").build()));
-                    break;
-                case GET_LAST_AUTO_INCRE:
-                    getLastId = connection.prepareStatement(type.getSql(null));
-                    break;
-                case SELECT_ALL_JOIN:
-                    selectAll = connection.prepareStatement(type.getSql(builder.put("table", "class")
-                            .put("columns", "class.id,class.className,subject.id,subject.name")
-                            .put("table2", "subject")
-                            .put("join_key", "class.subjectId=subject.id")
-                            .build()));
-            }
-        } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
-            throw new DataAccessException(e);
-        }
-    }
 }

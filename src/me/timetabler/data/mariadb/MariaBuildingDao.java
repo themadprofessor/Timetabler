@@ -1,7 +1,7 @@
 package me.timetabler.data.mariadb;
 
-import me.timetabler.data.Subject;
-import me.timetabler.data.dao.SubjectDao;
+import me.timetabler.data.Building;
+import me.timetabler.data.dao.BuildingDao;
 import me.timetabler.data.exceptions.DataAccessException;
 import me.timetabler.data.exceptions.DataUpdateException;
 import me.timetabler.data.sql.SqlBuilder;
@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * {@inheritDoc}
+ * Created by stuart on 13/03/16.
  */
-public class MariaSubjectDao implements SubjectDao {
+public class MariaBuildingDao implements BuildingDao {
     protected Connection connection;
     private PreparedStatement selectAll;
     private PreparedStatement selectId;
@@ -24,47 +24,43 @@ public class MariaSubjectDao implements SubjectDao {
     private PreparedStatement update;
     private PreparedStatement delete;
 
-    public MariaSubjectDao(Connection connection) {
-        this.connection = connection;
-    }
-
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Subject> getAllSubjects() throws DataAccessException {
-        ArrayList<Subject> subjects = new ArrayList<>();
+    public List<Building> getAllBuildings() throws DataAccessException {
+        ArrayList<Building> buildings = new ArrayList<>();
 
         try {
             if (selectAll == null || selectAll.isClosed()) {
-                SqlBuilder builder = new SqlBuilder("subject", StatementType.SELECT);
+                SqlBuilder builder = new SqlBuilder("building", StatementType.SELECT);
                 selectAll = connection.prepareStatement(builder.build());
             }
 
             ResultSet set = selectAll.executeQuery();
             while (set.next()) {
-                Subject subject = new Subject(set.getInt(1), set.getString(2));
-                subjects.add(subject);
+                Building building = new Building(set.getInt(1), set.getString(2));
+                buildings.add(building);
             }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DataAccessException");
             throw new DataAccessException(e);
         }
 
-        return subjects;
+        return buildings;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<Subject> getById(int id) throws DataAccessException {
-        Subject subject;
+    public Optional<Building> getById(int id) throws DataUpdateException, DataAccessException {
+        Building building;
 
         try {
             if (selectId == null || selectId.isClosed()) {
-                SqlBuilder builder = new SqlBuilder("subject", StatementType.SELECT)
-                        .addColumn("subjectName")
+                SqlBuilder builder = new SqlBuilder("building", StatementType.SELECT)
+                        .addColumn("buildingName")
                         .addWhereClause("id=?");
                 selectId = connection.prepareStatement(builder.build());
             }
@@ -72,17 +68,17 @@ public class MariaSubjectDao implements SubjectDao {
             selectId.setInt(1, id);
             ResultSet set = selectId.executeQuery();
             set.next();
-            subject = new Subject(id, set.getString(1));
+            building = new Building(id, set.getString(1));
             set.close();
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DataAccessException!");
             throw new DataAccessException(e);
         }
 
-        if (subject == null) {
+        if (building == null) {
             return Optional.empty();
         } else {
-            return Optional.of(subject);
+            return Optional.of(building);
         }
     }
 
@@ -90,18 +86,18 @@ public class MariaSubjectDao implements SubjectDao {
      * {@inheritDoc}
      */
     @Override
-    public int insertSubject(Subject subject) throws DataUpdateException, DataAccessException {
+    public int insertBuilding(Building building) throws DataUpdateException, DataAccessException {
         int id = -1;
 
         try {
             if (insert == null || insert.isClosed()) {
-                SqlBuilder builder = new SqlBuilder("subject", StatementType.INSERT)
-                        .addColumn("subjectName")
+                SqlBuilder builder = new SqlBuilder("building", StatementType.INSERT)
+                        .addColumn("buildingName")
                         .addValue("?");
                 insert = connection.prepareStatement(builder.build(), Statement.RETURN_GENERATED_KEYS);
             }
 
-            insert.setString(1, subject.name);
+            insert.setString(1, building.buildingName);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);
@@ -130,19 +126,19 @@ public class MariaSubjectDao implements SubjectDao {
      * {@inheritDoc}
      */
     @Override
-    public boolean updateSubject(Subject subject) throws DataUpdateException, DataAccessException {
+    public boolean updateBuilding(Building building) throws DataUpdateException, DataAccessException {
         boolean success;
 
         try {
             if (update == null || update.isClosed()) {
-                SqlBuilder builder = new SqlBuilder("subject", StatementType.UPDATE)
-                        .addSetClause("subject=?")
+                SqlBuilder builder = new SqlBuilder("building", StatementType.UPDATE)
+                        .addSetClause("building=?")
                         .addWhereClause("id=?");
                 update = connection.prepareStatement(builder.build());
             }
 
-            update.setInt(2, subject.id);
-            update.setString(1, subject.name);
+            update.setInt(2, building.id);
+            update.setString(1, building.buildingName);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DataAccessException!");
             throw new DataAccessException(e);
@@ -163,17 +159,17 @@ public class MariaSubjectDao implements SubjectDao {
      * {@inheritDoc}
      */
     @Override
-    public boolean deleteSubject(Subject subject) throws DataUpdateException, DataAccessException {
+    public boolean deleteBuilding(Building building) throws DataUpdateException, DataAccessException {
         boolean success;
 
         try {
             if (delete == null || delete.isClosed()) {
-                SqlBuilder builder = new SqlBuilder("subject", StatementType.DELETE)
+                SqlBuilder builder = new SqlBuilder("building", StatementType.DELETE)
                         .addWhereClause("is=?");
                 delete = connection.prepareStatement(builder.build());
             }
 
-            delete.setInt(1, subject.id);
+            delete.setInt(1, building.id);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DataAccessException!");
             throw new DataAccessException(e);

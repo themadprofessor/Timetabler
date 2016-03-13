@@ -4,12 +4,12 @@ import me.timetabler.data.LearningSet;
 import me.timetabler.data.dao.LearningSetDao;
 import me.timetabler.data.exceptions.DataAccessException;
 import me.timetabler.data.exceptions.DataUpdateException;
+import me.timetabler.data.sql.SqlBuilder;
+import me.timetabler.data.sql.StatementType;
 import me.util.Log;
-import me.util.MapBuilder;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +30,9 @@ public class MariaLearningSetDao implements LearningSetDao {
 
         try {
             if (selectAll == null || selectAll.isClosed()) {
-                initStatement(StatementType.SELECT_ALL);
+                SqlBuilder builder = new SqlBuilder("learningSet", StatementType.SELECT)
+                        .addColumns("id", "setName");
+                selectAll = connection.prepareStatement(builder.build());
             }
 
             ResultSet results = selectAll.executeQuery();
@@ -53,7 +55,10 @@ public class MariaLearningSetDao implements LearningSetDao {
 
         try {
             if (selectId == null || selectId.isClosed()) {
-                initStatement(StatementType.SELECT);
+                SqlBuilder builder = new SqlBuilder("learningSet", StatementType.SELECT)
+                        .addColumn("setName")
+                        .addWhereClause("id=?");
+                selectId = connection.prepareStatement(builder.build());
             }
 
             selectId.setInt(1, id);
@@ -78,7 +83,9 @@ public class MariaLearningSetDao implements LearningSetDao {
 
         try {
             if (insert == null || insert.isClosed()) {
-                initStatement(StatementType.INSERT);
+                SqlBuilder builder = new SqlBuilder("learningSet", StatementType.INSERT)
+                        .addColumn("setName");
+                insert = connection.prepareStatement(builder.build(), Statement.RETURN_GENERATED_KEYS);
             }
             insert.setString(1, set.name);
         } catch (SQLException e) {
@@ -112,7 +119,10 @@ public class MariaLearningSetDao implements LearningSetDao {
 
         try {
             if (update == null || update.isClosed()) {
-                initStatement(StatementType.UPDATE);
+                SqlBuilder builder = new SqlBuilder("learningSet", StatementType.UPDATE)
+                        .addSetClause("setName=?")
+                        .addWhereClause("id=?");
+                update = connection.prepareStatement(builder.build());
             }
             update.setString(1, set.name);
             update.setInt(2, set.id);
@@ -138,7 +148,9 @@ public class MariaLearningSetDao implements LearningSetDao {
 
         try {
             if (delete == null || delete.isClosed()) {
-                initStatement(StatementType.DELETE);
+                SqlBuilder builder = new SqlBuilder("learningSet", StatementType.DELETE)
+                        .addWhereClause("id=?");
+                delete = connection.prepareStatement(builder.build());
             }
 
             delete.setInt(1, set.id);
@@ -155,47 +167,5 @@ public class MariaLearningSetDao implements LearningSetDao {
         }
 
         return success;
-    }
-
-    private void initStatement(StatementType type) throws DataAccessException {
-        assert connection != null;
-        MapBuilder<String, String>  builder = new MapBuilder<>(new HashMap<>());
-
-        try {
-            switch (type) {
-                case SELECT_ALL:
-                    selectAll = connection.prepareStatement(type.getSql(builder.put("table", "learningSet")
-                            .put("columns", "id,setName")
-                            .build()));
-                    break;
-                case SELECT:
-                    selectId = connection.prepareStatement(type.getSql(builder.put("table", "learningSet")
-                            .put("columns", "setName")
-                            .put("where", "id=?")
-                            .build()));
-                    break;
-                case INSERT:
-                    insert = connection.prepareStatement(type.getSql(builder.put("table", "learningSet")
-                            .put("columns", "setName")
-                            .put("values", "?")
-                            .build()), Statement.RETURN_GENERATED_KEYS);
-                    break;
-                case UPDATE:
-                    update = connection.prepareStatement(type.getSql(builder.put("table", "learningSet")
-                            .put("set", "setName=?")
-                            .put("where", "id=?")
-                            .build()));
-                    break;
-                case DELETE:
-                    delete = connection.prepareStatement(type.getSql(builder.put("table", "learningSet")
-                            .put("where", "id=?")
-                            .build()));
-                    break;
-                default: throw new AssertionError("Unsupported StatementType [" + type + ']');
-            }
-        } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing DataAccessException!");
-            throw new DataAccessException(e);
-        }
     }
 }

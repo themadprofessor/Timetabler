@@ -164,8 +164,8 @@ public class SchoolMap {
     }
 
     /**
-     * Gets a list of all classrooms in the map.
-     * @return The list of classrooms in the map, which can be empty.
+     * Gets a list of all classrooms.csv in the map.
+     * @return The list of classrooms.csv in the map, which can be empty.
      */
     public ArrayList<ClassRoom> getAllClassrooms() {
         ArrayList<ClassRoom> classrooms = new ArrayList<>();
@@ -199,7 +199,7 @@ public class SchoolMap {
     }
 
     /**
-     * Gets a list of all the ImportantCells(ClassRoom, Building, Entrance in the map.
+     * Gets a list of all the ImportantCells(ClassRoom, Building, Entrance) in the map.
      * @return The list of the ImportantCells in the map which can be empty.
      */
     public ArrayList<ImportantCell> getAllImportantCells() {

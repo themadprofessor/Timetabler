@@ -3,14 +3,18 @@ package me.timetabler.data.mariadb;
 import me.timetabler.data.Day;
 import me.timetabler.data.dao.DayDao;
 import me.timetabler.data.exceptions.DataAccessException;
+import me.timetabler.data.sql.SqlBuilder;
+import me.timetabler.data.sql.StatementType;
 import me.util.Log;
-import me.util.MapBuilder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * {@inheritDoc}
@@ -35,8 +39,9 @@ public class MariaDayDao implements DayDao {
 
         try {
             if (selectAll == null || selectAll.isClosed()) {
-                MapBuilder<String, String> builder = new MapBuilder<>(new HashMap<>());
-                selectAll = connection.prepareStatement(StatementType.SELECT_ALL.getSql(builder.put("table", "dayOfWeek").put("columns", "id,datOfWeek").build()));
+                SqlBuilder builder = new SqlBuilder("dayOfWeek", StatementType.SELECT)
+                        .addColumns("id", "dayOfWeek");
+                selectAll = connection.prepareStatement(builder.build());
             }
 
             ResultSet set = selectAll.executeQuery();
@@ -62,8 +67,10 @@ public class MariaDayDao implements DayDao {
 
         try {
             if (selectId == null || selectId.isClosed()) {
-                MapBuilder<String, String> builder = new MapBuilder<>(new HashMap<>());
-                selectId = connection.prepareStatement(StatementType.SELECT.getSql(builder.put("table", "dayOfWeek").put("columns", "dayOfWeek").put("where", "id=?").build()));
+                SqlBuilder builder = new SqlBuilder("dayOfWeek", StatementType.SELECT)
+                        .addColumn("dayOfWeek")
+                        .addWhereClause("id=?");
+                selectId = connection.prepareStatement(builder.build());
             }
             selectId.setInt(1, id);
 
@@ -93,8 +100,10 @@ public class MariaDayDao implements DayDao {
 
         try {
             if (selectName == null || selectName.isClosed()) {
-                MapBuilder<String, String> builder = new MapBuilder<>(new HashMap<>());
-                selectName = connection.prepareStatement(StatementType.SELECT.getSql(builder.put("table", "dayOfWeek").put("columns", "id").put("where", "dayOfWeek=?").build()));
+                SqlBuilder builder = new SqlBuilder("dayOfWeek", StatementType.SELECT)
+                        .addColumn("id")
+                        .addWhereClause("dayOfWeek=?");
+                selectName = connection.prepareStatement(builder.build());
             }
             selectName.setString(1, name);
 

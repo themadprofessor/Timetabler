@@ -27,7 +27,7 @@ public interface SubjectDao {
      * @return An optional containing the subject if it exists, or empty if it does not.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    Optional<Subject> getById(int id) throws DataUpdateException, DataAccessException;
+    Optional<Subject> getById(int id) throws DataAccessException;
 
     /**
      * Inserts the given subject in to the data store. If the subject was successfully entered in to the data store, it

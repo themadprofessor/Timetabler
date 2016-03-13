@@ -1,5 +1,6 @@
 package me.timetabler.data.dao;
 
+import me.timetabler.data.Building;
 import me.timetabler.data.Classroom;
 import me.timetabler.data.Subject;
 import me.timetabler.data.exceptions.DataAccessException;
@@ -14,7 +15,7 @@ import java.util.Optional;
 public interface ClassroomDao {
     List<Classroom> getAll() throws DataAccessException;
     List<Classroom> getBySubject(Subject subject) throws DataAccessException;
-    List<Classroom> getByBuilding(String building) throws DataAccessException;
+    List<Classroom> getByBuilding(Building building) throws DataAccessException;
     Optional<Classroom> getById(int id) throws DataAccessException;
 
     int insert(Classroom classroom) throws DataAccessException, DataUpdateException;
