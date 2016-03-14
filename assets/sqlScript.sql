@@ -93,7 +93,8 @@ CREATE TABLE lessonPlan
 	FOREIGN KEY (periodId) REFERENCES period(id));
 
 INSERT INTO dayOfWeek (id,dayOfWeek) VALUES (1,'Monday'),(2,'Tuesday'),(3,'Wednesday'),(4,'Thursday'),(5,'Friday');
-INSERT INTO period (id,dayId,startTime,endTime) VALUES (1,1,'9:10 AM','10:10 AM'),(2,1,'10:10 AM','11:10 AM'),(3,1,'11:30 AM','12:30 AM'),(4,1,'1:30 PM','2:30 PM'),(5,1,'2:30 PM','3:30 PM'),(6,1,'3:30 PM','4:30PM'),
+INSERT INTO period (id,dayId,startTime,endTime) VALUES
+    (1,1,'9:10 AM','10:10 AM'),(2,1,'10:10 AM','11:10 AM'),(3,1,'11:30 AM','12:30 AM'),(4,1,'1:30 PM','2:30 PM'),(5,1,'2:30 PM','3:30 PM'),(6,1,'3:30 PM','4:30PM'),
     (7,2,'9:10 AM','10:10 AM'),(8,2,'10:10 AM','11:10 AM'),(9,2,'11:30 AM','12:30 AM'),(10,2,'1:30 PM','2:30 PM'),(11,2,'2:30 PM','3:30 PM'),(12,2,'3:30 PM','4:30PM'),
     (13,3,'9:10 AM','10:10 AM'),(14,3,'10:10 AM','11:10 AM'),(15,3,'11:30 AM','12:30 AM'),(16,3,'1:30 PM','2:30 PM'),(17,3,'2:30 PM','3:30 PM'),(18,3,'3:30 PM','4:30PM'),
     (19,4,'9:10 AM','10:10 AM'),(20,4,'10:10 AM','11:10 AM'),(21,4,'11:30 AM','12:30 AM'),(22,4,'1:30 PM','2:30 PM'),(23,4,'2:30 PM','3:30 PM'),(24,4,'3:30 PM','4:30PM'),
