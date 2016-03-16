@@ -169,7 +169,7 @@ public class MariaSubjectDao implements SubjectDao {
         try {
             if (delete == null || delete.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("subject", StatementType.DELETE)
-                        .addWhereClause("is=?");
+                        .addWhereClause("id=?");
                 delete = connection.prepareStatement(builder.build());
             }
 

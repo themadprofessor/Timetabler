@@ -11,18 +11,16 @@ $('#subjectModal').on('shown.bs.modal', function () {
 });*/
 
 function addStaff() {
-    var id = document.getElementById("staffID").value;
     var name = document.getElementById("staffName").value;
-    addToTable("staffTable", [id, name]);
-    java.add("Staff", JSON.stringify({"id":id, "name":name}))
+    var subject = document.getElementById("").value;
+    var id = java.add("Staff", "[" + name + ',' + subject + "]");
+    addToTable("staffTable", [id, name, subject]);
 }
 
 function addSubject() {
-    var id = document.getElementById("subjectID").value;
     var name = document.getElementById("subjectName").value;
-    var row = addToTable("subjectTable", [id, name]);
-    addRemoveButton(row, "removeSubject(this)", "subjectTable." + id);
-    java.add("Subject", JSON.stringify({"id":id, "name":name}));
+    var id = java.add("Subject", "[" + name + "]"));
+    addToTable("subjectTable", [id, name]);
 }
 
 function addClass() {
@@ -41,18 +39,41 @@ function addToTable(tableName, items, id) {
         row.insertCell(i).innerHTML = items[i];
     }
 
+    var span = document.createElement("span");
+    span.className = "glyphicon glyphicon-remove";
+
     var rmBut = document.createElement("button");
     rmBut.type = "button";
+    rmBut.name = tableName.replace("Table", "");
     rmBut.value = "Remove";
-    rmBut.class = "btn btn-noborder";
+    rmBut.className = "btn btn-noborder";
+    rmBut.appendChild(span);
     rmBut.onclick = function() {
-        alert("Whoop");
-    }
+        removeRow(this);
+    };
 
     row.insertCell(row.cells.length).appendChild(rmBut);
     row.id = id;
     java.debug("Added [" + id + "] To [" + tableName + ']')
     return row;
+}
+
+function removeRow(button) {
+    java.out("Removing Row.");
+    var row = button.parentNode.parentNode;
+    var cells = row.cells;
+    var type = button.name;
+    var data = [];
+
+    for (i = 0; i < cells.length-1; i++) {
+        data.push(cells[i].innerHTML);
+    }
+
+    java.remove(type, data);
+    if (java.success) {
+        var table = row.parentNode;
+        table.removeChild(row);
+    }
 }
 
 function addToSelect(selectName, text, value) {

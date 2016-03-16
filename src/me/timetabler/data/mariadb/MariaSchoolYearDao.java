@@ -24,6 +24,10 @@ public class MariaSchoolYearDao implements SchoolYearDao {
     private PreparedStatement update;
     private PreparedStatement delete;
 
+    public MariaSchoolYearDao(Connection connection) {
+        this.connection = connection;
+    }
+
     /**
      * {@inheritDoc}
      */

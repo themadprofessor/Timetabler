@@ -24,6 +24,10 @@ public class MariaLearningSetDao implements LearningSetDao {
     private PreparedStatement update;
     private PreparedStatement delete;
 
+    public MariaLearningSetDao(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public List<LearningSet> getAll() throws DataAccessException {
         ArrayList<LearningSet> sets = new ArrayList<>();

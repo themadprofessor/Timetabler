@@ -119,6 +119,7 @@ public class Main extends Application{
             MultipleWriter out = new MultipleWriter(new PrintWriter(System.out, true), new FileWriter(outFile, true));
             MultipleWriter err = new MultipleWriter(new PrintWriter(System.err, true), new FileWriter(errFile, true));
 
+            Log.NORMAL_WRITER = new PrintWriter(out, true);
             Log.ERROR_WRITER = new PrintWriter(err, true);
         } catch (java.io.IOException e) {
             Log.error(e);

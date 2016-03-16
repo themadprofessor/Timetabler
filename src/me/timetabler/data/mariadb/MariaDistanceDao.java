@@ -32,6 +32,10 @@ public class MariaDistanceDao implements DistanceDao {
     private PreparedStatement update;
     private PreparedStatement delete;
 
+    public MariaDistanceDao(Connection connection) {
+        this.connection = connection;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -302,6 +306,7 @@ public class MariaDistanceDao implements DistanceDao {
             if (delete == null || delete.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("distance", StatementType.DELETE)
                         .addWhereClause("id=?");
+                delete = connection.prepareStatement(builder.build());
             }
 
             delete.setInt(1, distance.id);

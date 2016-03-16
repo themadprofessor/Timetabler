@@ -29,6 +29,10 @@ public class MariaLessonPlanDao implements LessonPlanDao {
     private PreparedStatement update;
     private PreparedStatement delete;
 
+    public MariaLessonPlanDao(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public List<LessonPlan> getAll() throws DataAccessException {
         ArrayList<LessonPlan> lessonPlans = new ArrayList<>();

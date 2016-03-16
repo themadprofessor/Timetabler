@@ -45,6 +45,55 @@ public interface DaoManager {
     ClassroomDao getClassroomDao() throws DataConnectionException;
 
     /**
+     * Returns an implementation of BuildingDao corresponding with this manager's data source.
+     * @return A BuildingDao implementation.
+     * @throws me.timetabler.data.exceptions.DataConnectionException Thrown if the data source cannot be connected to.
+     */
+    BuildingDao getBuildingDao() throws DataConnectionException;
+
+    /**
+     * Returns an implementation of DistanceDao corresponding with this manager's data source.
+     * @return A DistanceDao implementation.
+     * @throws me.timetabler.data.exceptions.DataConnectionException Thrown if the data source cannot be connected to.
+     */
+    DistanceDao getDistanceDao() throws DataConnectionException;
+
+    /**
+     * Returns an implementation of LearningSetDao corresponding with this manager's data source.
+     * @return A LearningSetDao implementation.
+     * @throws me.timetabler.data.exceptions.DataConnectionException Thrown if the data source cannot be connected to.
+     */
+    LearningSetDao getLearningSetDao() throws DataConnectionException;
+
+    /**
+     * Returns an implementation of LessonPlanDao corresponding with this manager's data source.
+     * @return A LessonPlanDao implementation.
+     * @throws me.timetabler.data.exceptions.DataConnectionException Thrown if the data source cannot be connected to.
+     */
+    LessonPlanDao getLessonPlanDao() throws DataConnectionException;
+
+    /**
+     * Returns an implementation of PeriodDao corresponding with this manager's data source.
+     * @return A PeriodDao implementation.
+     * @throws me.timetabler.data.exceptions.DataConnectionException Thrown if the data source cannot be connected to.
+     */
+    PeriodDao getPeriodDao() throws DataConnectionException;
+
+    /**
+     * Returns an implementation of SchoolYearDao corresponding with this manager's data source.
+     * @return A SchoolYearDao implementation.
+     * @throws me.timetabler.data.exceptions.DataConnectionException Thrown if the data source cannot be connected to.
+     */
+    SchoolYearDao getSchoolYearDao() throws DataConnectionException;
+
+    /**
+     * Returns an implementation of SubjectSetDao corresponding with this manager's data source.
+     * @return A SubjectSetDao implementation.
+     * @throws me.timetabler.data.exceptions.DataConnectionException Thrown if the data source cannot be connected to.
+     */
+    SubjectSetDao getSubjectSetDao() throws DataConnectionException;
+
+    /**
      * Returns a DaoManager to correspond with the given config's entry 'type'. The config will be given to the
      * DaoManager. If the config does not have a 'type' entry, or it does not correspond with the DaoManger
      * implementations, this will return null.

@@ -31,6 +31,10 @@ public class MariaSubjectSetDao implements SubjectSetDao {
     private PreparedStatement update;
     private PreparedStatement delete;
 
+    public MariaSubjectSetDao(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public List<SubjectSet> getAll() throws DataAccessException {
         ArrayList<SubjectSet> sets = new ArrayList<>();

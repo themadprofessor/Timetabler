@@ -24,6 +24,10 @@ public class MariaBuildingDao implements BuildingDao {
     private PreparedStatement update;
     private PreparedStatement delete;
 
+    public MariaBuildingDao(Connection connection) {
+        this.connection = connection;
+    }
+
     /**
      * {@inheritDoc}
      */

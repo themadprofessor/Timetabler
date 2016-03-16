@@ -19,6 +19,7 @@ public class Bridge {
     private DaoManager daoManager;
     private JSObject bridge;
     private Gson gson;
+    public boolean success;
 
     public Bridge(DaoManager daoManager, JSObject bridge) {
         this.daoManager = daoManager;
@@ -27,7 +28,7 @@ public class Bridge {
     }
 
     public void out(String msg) {
-        Log.info("[JAVASCRIPT ]" + msg);
+        Log.info("[JAVASCRIPT] " + msg);
     }
 
     public void debug(String msg) {
@@ -38,18 +39,19 @@ public class Bridge {
         Log.error("[JAVASCRIPT] " + msg);
     }
 
-    public void add(String type, String json) {
+    public int add(String type, String json) {
         switch (type) {
             case "Class":
             case "class":
-                SchoolClass clazz = gson.fromJson(json, SchoolClass.class);
+                SchoolClass clazz = new SchoolClass();
 
                 try {
                     clazz.id = daoManager.getSchoolClassDao().insertClass(clazz);
+                    success = true;
                 } catch (DataAccessException | DataUpdateException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, "class", false);
-                    //TODO: remove from ui
+                    success = false;
                 } catch (DataConnectionException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, null, true);
@@ -62,10 +64,11 @@ public class Bridge {
 
                 try {
                     subject.id = daoManager.getSubjectDao().insertSubject(subject);
+                    success = true;
                 } catch (DataAccessException | DataUpdateException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, "subject", false);
-                    //TODO: remove from ui
+                    success = false;
                 } catch (DataConnectionException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, null, true);
@@ -74,21 +77,29 @@ public class Bridge {
                 break;
             case "Staff":
             case "staff":
-                Staff st = gson.fromJson(json, Staff.class);
+                Staff st = new Staff();
+                Subject sub = new Subject();
+                String[] split = json.replace('[', '\0').replace(']', '\0').split(",");
+                st.name = split[0];
+                sub.id = Integer.parseInt(split[1]);
+                st.subject = sub;
 
                 try {
                     st.id = daoManager.getStaffDao().insertStaff(st);
+                    success = true;
                 } catch (DataAccessException | DataUpdateException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, "staff", false);
-                    //TODO: remove from ui
+                    success = false;
                 } catch (DataConnectionException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, null, true);
                 }
-
-                break;
+                return st.id;
+            default:
+                return -1;
         }
+        return -1;
     }
 
     public void update(String type, String json) {
@@ -100,11 +111,17 @@ public class Bridge {
             case "Class":
             case "class":
                 try {
-                    daoManager.getSchoolClassDao().deleteClass(gson.fromJson(json, SchoolClass.class));
+                    Log.debug("Removing Class.");
+                    Log.verbose("Class JSON [" + json + ']');
+                    SchoolClass schoolClass = new SchoolClass();
+                    schoolClass.id = Integer.parseInt(json.split(",")[0].replace(']', '\0'));
+                    daoManager.getSchoolClassDao().deleteClass(schoolClass);
+                    success = true;
+                    Log.debug("Removed Class.");
                 } catch (DataAccessException | DataUpdateException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, "class", false);
-                    //TODO: remove from ui
+                    success = false;
                 } catch (DataConnectionException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, null, true);
@@ -114,11 +131,16 @@ public class Bridge {
             case "Subject":
             case "subject":
                 try {
-                    daoManager.getSubjectDao().deleteSubject(gson.fromJson(json, Subject.class));
+                    Log.debug("Removing Subject.");
+                    Log.verbose("Subject JSON[" + json + ']');
+                    Subject subject = new Subject();
+                    subject.id = Integer.parseInt(json.split(",")[0].replace(']', '\0'));
+                    daoManager.getSubjectDao().deleteSubject(subject);
+                    success = true;
                 } catch (DataAccessException | DataUpdateException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, "subject", false);
-                    //TODO: remove from ui
+                    success = false;
                 } catch (DataConnectionException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, null, true);
@@ -128,11 +150,16 @@ public class Bridge {
             case "Staff":
             case "staff":
                 try {
-                    daoManager.getStaffDao().deleteStaff(gson.fromJson(json, Staff.class));
+                    Log.debug("Removing Staff.");
+                    Log.verbose("Staff JSON [" + json + ']');
+                    Staff staff = new Staff();
+                    staff.id = Integer.parseInt(json.split(",")[0].replace(']', '\0'));
+                    daoManager.getStaffDao().deleteStaff(staff);
+                    success = true;
                 } catch (DataAccessException | DataUpdateException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, "staff", false);
-                    //TODO: remove from ui
+                    success = false;
                 } catch (DataConnectionException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, null, true);
