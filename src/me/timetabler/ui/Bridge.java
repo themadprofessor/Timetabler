@@ -1,7 +1,6 @@
 package me.timetabler.ui;
 
 import com.google.gson.Gson;
-import me.timetabler.data.SchoolClass;
 import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
 import me.timetabler.data.dao.DaoManager;
@@ -41,23 +40,6 @@ public class Bridge {
 
     public int add(String type, String json) {
         switch (type) {
-            case "Class":
-            case "class":
-                SchoolClass clazz = new SchoolClass();
-
-                try {
-                    clazz.id = daoManager.getSchoolClassDao().insertClass(clazz);
-                    success = true;
-                } catch (DataAccessException | DataUpdateException e) {
-                    Log.error(e);
-                    DataExceptionHandler.handleJavaFx(e, "class", false);
-                    success = false;
-                } catch (DataConnectionException e) {
-                    Log.error(e);
-                    DataExceptionHandler.handleJavaFx(e, null, true);
-                }
-
-                break;
             case "Subject":
             case "subject":
                 Subject subject = gson.fromJson(json, Subject.class);
@@ -108,26 +90,6 @@ public class Bridge {
 
     public void remove(String type, String json) {
         switch (type) {
-            case "Class":
-            case "class":
-                try {
-                    Log.debug("Removing Class.");
-                    Log.verbose("Class JSON [" + json + ']');
-                    SchoolClass schoolClass = new SchoolClass();
-                    schoolClass.id = Integer.parseInt(json.split(",")[0].replace(']', '\0'));
-                    daoManager.getSchoolClassDao().deleteClass(schoolClass);
-                    success = true;
-                    Log.debug("Removed Class.");
-                } catch (DataAccessException | DataUpdateException e) {
-                    Log.error(e);
-                    DataExceptionHandler.handleJavaFx(e, "class", false);
-                    success = false;
-                } catch (DataConnectionException e) {
-                    Log.error(e);
-                    DataExceptionHandler.handleJavaFx(e, null, true);
-                }
-
-                break;
             case "Subject":
             case "subject":
                 try {

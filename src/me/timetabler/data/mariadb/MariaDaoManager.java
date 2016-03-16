@@ -18,7 +18,6 @@ public class MariaDaoManager implements DaoManager {
     private Connection connection;
     private MariaSubjectDao subjectDao;
     private MariaStaffDao staffDao;
-    private MariaClassDao classDao;
     private MariaDayDao dayDao;
     private MariaClassroomDao classroomDao;
     private MariaBuildingDao buildingDao;
@@ -77,28 +76,6 @@ public class MariaDaoManager implements DaoManager {
                 subjectDao.connection = connection;
             }
             return subjectDao;
-        } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing a DataConnectionException!");
-            throw new DataConnectionException("MariaDB", e);
-        }
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public SchoolClassDao getSchoolClassDao() throws DataConnectionException {
-        try {
-            if (connection == null || connection.isClosed()) {
-                connection = source.getConnection();
-            }
-            if (classDao == null) {
-                classDao = new MariaClassDao(connection);
-            } else if (classDao.connection != connection) {
-                classDao.connection = connection;
-            }
-            return classDao;
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataConnectionException!");
             throw new DataConnectionException("MariaDB", e);

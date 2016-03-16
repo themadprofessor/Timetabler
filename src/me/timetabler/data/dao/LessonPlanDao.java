@@ -15,7 +15,6 @@ public interface LessonPlanDao {
     List<LessonPlan> getAllByClassroom(Classroom classroom) throws DataAccessException;
     List<LessonPlan> getAllByPeriod(Period period) throws DataAccessException;
     List<LessonPlan> getAllBySubjectSet(SubjectSet subjectSet) throws DataAccessException;
-    List<LessonPlan> getAllByClass(SchoolClass schoolClass) throws DataAccessException;
 
     int insert(LessonPlan lessonPlan) throws DataUpdateException, DataAccessException;
     boolean update(LessonPlan lessonPlan) throws DataUpdateException, DataAccessException;

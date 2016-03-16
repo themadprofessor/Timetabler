@@ -1,6 +1,5 @@
 package me.timetabler.data.flatfiles;
 
-import me.timetabler.data.SchoolClass;
 import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
 
@@ -27,13 +26,6 @@ public interface SchoolDataParser {
     Map<Integer, Subject> readSubjects() throws IOException;
 
     /**
-     * Reads the class data from the file specified in the config map. The type of map is determined by the implementation.
-     * @return Returns a map containing all the classes defined in the class file. The key is the name of the class which is also defined with the SchoolClass object.
-     * @throws IOException Thrown if any IOException occurs.
-     */
-    Map<Integer, SchoolClass> readClasses() throws IOException;
-
-    /**
      * Writes the staff data from the given map to the staff file specified in the config map.
      * @param staffMap The map the be written.
      * @return Returns true if the data was written successfully, otherwise returns false.
@@ -46,13 +38,6 @@ public interface SchoolDataParser {
      * @return Returns true if the data was written successfully, otherwise returns false.
      */
     boolean writeSubjects(Map<Integer, Subject> subjectMap);
-
-    /**
-     * Writes the class data from the given map to the class file specified in the config map.
-     * @param classMap The map the be written.
-     * @return Returns true if the data was written successfully, otherwise returns false.
-     */
-    boolean writeClasses(Map<Integer, SchoolClass> classMap);
 
     /**
      * A factory method to get the appropriate SchoolDataParser implementation for the file type specified in the given config map, and gives the implementation the given config map.

@@ -24,13 +24,6 @@ public interface DaoManager {
     SubjectDao getSubjectDao() throws DataConnectionException;
 
     /**
-     * Returns an implementation of SchoolClassDao corresponding with this manager's data source.
-     * @return A SchoolClassDao implementation.
-     * @throws me.timetabler.data.exceptions.DataConnectionException Thrown if the data source cannot be connected to.
-     */
-    SchoolClassDao getSchoolClassDao() throws DataConnectionException;
-
-    /**
      * Returns an implementation of DayDao corresponding with this manager's data source.
      * @return A DayDao implementation.
      * @throws me.timetabler.data.exceptions.DataConnectionException Thrown if the data source cannot be connected to.

@@ -27,6 +27,5 @@ public class JavaFxBridge {
 
     public static void close() {
         Platform.exit();
-        System.exit(0);
     }
 }

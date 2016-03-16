@@ -14,13 +14,6 @@ CREATE TABLE staff
 	PRIMARY KEY (id),
 	FOREIGN KEY (subjectId) REFERENCES subject(id));
 
-CREATE TABLE class
-       (id INT NOT NULL AUTO_INCREMENT,
-	className VARCHAR(20) NOT NULL,
-	subjectId INT NOT NULL,
-	PRIMARY KEY (id),
-	FOREIGN KEY (subjectId) REFERENCES subject(id));
-
 CREATE TABLE dayOfWeek
        (id INT NOT NULL,
 	dayOfWeek CHAR(9) NOT NULL,
@@ -80,7 +73,6 @@ CREATE TABLE distance
 
 CREATE TABLE lessonPlan
        (id INT NOT NULL AUTO_INCREMENT,
-	classId INT NOT NULL,
 	staffId INT NULL,
 	classroomId INT NOT NULL,
 	periodId INT NOT NULL,

@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import me.timetabler.data.SchoolClass;
 import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
 import me.timetabler.data.dao.DaoManager;
@@ -38,7 +37,6 @@ public class Controller implements Initializable {
 
     private List<Subject> subjects = null;
     private List<Staff> staff = null;
-    private List<SchoolClass> classes = null;
 
     /**
      * Initialises the controller. Due to the parameters, the controller must be constructed then given to JavaFX.
@@ -74,8 +72,6 @@ public class Controller implements Initializable {
 
                 staff.forEach(staff1 -> bridge.call("addToTableJava", "staffTable",
                         new String[]{String.valueOf(staff1.id), staff1.name, String.valueOf(staff1.subject.id)}, staff1.id));
-                classes.forEach(schoolClass -> bridge.call("addToTableJava", "classTable",
-                        new String[]{String.valueOf(schoolClass.id), schoolClass.name, String.valueOf(schoolClass.subject.id)}, schoolClass.id));
 
                 engine.executeScript("console.log = function(msg) {java.out(msg);}");
                 engine.executeScript("console.error = function(msg) {java.err(msg);}");
@@ -114,14 +110,6 @@ public class Controller implements Initializable {
             staff = daoManager.getStaffDao().getAllStaff();
         } catch (DataAccessException e) {
             DataExceptionHandler.handleJavaFx(e, "staff", false);
-        } catch (DataConnectionException e) {
-            DataExceptionHandler.handleJavaFx(e, null, true);
-        }
-
-        try {
-            classes = daoManager.getSchoolClassDao().getAllClasses();
-        } catch (DataAccessException e) {
-            DataExceptionHandler.handleJavaFx(e, "class", false);
         } catch (DataConnectionException e) {
             DataExceptionHandler.handleJavaFx(e, null, true);
         }

@@ -5,7 +5,6 @@ package me.timetabler.data;
  */
 public class LessonPlan {
     public int id;
-    public SchoolClass schoolClass;
     public Staff staff;
     public Classroom classroom;
     public Period period;
@@ -14,9 +13,8 @@ public class LessonPlan {
     public LessonPlan() {
     }
 
-    public LessonPlan(int id, SchoolClass schoolClass, Staff staff, Classroom classroom, Period period, SubjectSet subjectSet) {
+    public LessonPlan(int id, Staff staff, Classroom classroom, Period period, SubjectSet subjectSet) {
         this.id = id;
-        this.schoolClass = schoolClass;
         this.staff = staff;
         this.classroom = classroom;
         this.period = period;

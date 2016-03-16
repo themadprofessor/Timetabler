@@ -1,6 +1,5 @@
 package me.timetabler.data.flatfiles;
 
-import me.timetabler.data.SchoolClass;
 import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
 import me.util.Log;
@@ -61,21 +60,6 @@ public class CsvDataParser implements SchoolDataParser {
 
         builder.deleteCharAt(builder.length()-1);
         return write(config.get("staff_location"), builder.toString());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean writeClasses(Map<Integer, SchoolClass> map) {
-        StringBuilder builder = new StringBuilder();
-        Set<Map.Entry<Integer, SchoolClass>> entries = map.entrySet();
-
-        entries.forEach(entry -> {
-            SchoolClass clazz = entry.getValue();
-            builder.append(clazz.id).append(',').append(clazz.name).append(',').append(clazz.subject.id).append('\n');
-        });
-
-        return write(String.valueOf(config.get("classes_location")), builder.toString());
     }
 
     /**
@@ -142,25 +126,5 @@ public class CsvDataParser implements SchoolDataParser {
                 subjects.put(subject.id, subject);
             });
         return subjects;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Map<Integer, SchoolClass> readClasses() throws IOException {
-        File file = new File(String.valueOf(config.get("classes_location")));
-        Map<Integer, SchoolClass> classes = Collections.synchronizedMap(new LinkedHashMap<>());
-        if (!file.exists()) {
-            return classes;
-        }
-            Files.lines(file.toPath()).forEach(line -> {
-                SchoolClass clazz = new SchoolClass();
-                String[] split = line.split(",");
-                clazz.id = Integer.parseInt(split[0]);
-                clazz.name = split[1];
-                clazz.subject.id = Integer.parseInt(split[2]);
-                classes.put(clazz.id, clazz);
-            });
-        return classes;
     }
 }
