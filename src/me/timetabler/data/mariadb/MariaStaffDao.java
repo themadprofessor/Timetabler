@@ -37,7 +37,7 @@ public class MariaStaffDao implements StaffDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Staff> getAllStaff() throws DataAccessException, DataUpdateException {
+    public List<Staff> getAllStaff() throws DataAccessException {
         ArrayList<Staff> staff = new ArrayList<>();
 
         try {
@@ -66,7 +66,7 @@ public class MariaStaffDao implements StaffDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Staff> getAllBySubject(Subject subject) throws DataAccessException, DataUpdateException {
+    public List<Staff> getAllBySubject(Subject subject) throws DataAccessException {
         ArrayList<Staff> staff = new ArrayList<>();
 
         try {
@@ -76,12 +76,7 @@ public class MariaStaffDao implements StaffDao {
                         .addWhereClause("subjectId=?");
                 selectAllSubject = connection.prepareStatement(builder.build());
             }
-        } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
-            throw new DataAccessException(e);
-        }
 
-        try {
             selectAllSubject.setInt(1, subject.id);
             ResultSet set = selectAllSubject.executeQuery();
             while (set.next()) {
@@ -90,8 +85,8 @@ public class MariaStaffDao implements StaffDao {
             }
             set.close();
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing a a DataUpdateException!");
-            throw new DataUpdateException(e);
+            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
+            throw new DataAccessException(e);
         }
 
         return staff;
@@ -101,7 +96,7 @@ public class MariaStaffDao implements StaffDao {
      * {@inheritDoc}
      */
     @Override
-    public Optional<Staff> getById(int id) throws DataAccessException, DataUpdateException {
+    public Optional<Staff> getById(int id) throws DataAccessException {
         Staff staff = null;
 
         try {
@@ -113,20 +108,15 @@ public class MariaStaffDao implements StaffDao {
                 selectId = connection.prepareStatement(builder.build());
             }
             selectId.setInt(1, id);
-        } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
-            throw new DataAccessException(e);
-        }
 
-        try {
             ResultSet set = selectId.executeQuery();
             set.next();
             Subject sub = new Subject(set.getInt(2), set.getString(3));
             staff = new Staff(id, set.getString(1), sub);
             set.close();
         } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
-            throw new DataUpdateException(e);
+            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
+            throw new DataAccessException(e);
         }
 
         if (staff == null) {

@@ -19,7 +19,7 @@ public interface StaffDao {
      * @return A list of all the staff, which can be empty.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<Staff> getAllStaff() throws DataAccessException, DataUpdateException;
+    List<Staff> getAllStaff() throws DataAccessException;
 
     /**
      * Returns a list of all the staff who teach the give subject. If there are no staff who teach the given subject, an
@@ -29,7 +29,7 @@ public interface StaffDao {
      * @return A list of all the staff who teach the given subject, which can be empty.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<Staff> getAllBySubject(Subject subject) throws DataAccessException, DataUpdateException;
+    List<Staff> getAllBySubject(Subject subject) throws DataAccessException;
 
     /**
      * Returns the staff which has the given id. The optional will be empty if the id does not reference any staffs.
@@ -38,7 +38,7 @@ public interface StaffDao {
      * @return An optional containing the staff if it exists, or empty if it does not.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    Optional<Staff> getById(int id) throws DataAccessException, DataUpdateException;
+    Optional<Staff> getById(int id) throws DataAccessException;
 
     /**
      * Inserts the given staff in to the data store. If the staff was successfully entered in to the data store, it

@@ -34,6 +34,7 @@ public class Building implements ImportantCell {
      * @param schoolMap The map of this building.
      */
     public void init(SchoolMap schoolMap) {
+        Log.debug("Initialising Building [" + name + "]");
         important = schoolMap.getAllImportantCells();
         Walker walker = new Walker(schoolMap);
         if (important.isEmpty()) {

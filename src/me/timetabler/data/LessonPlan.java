@@ -9,4 +9,17 @@ public class LessonPlan {
     public Staff staff;
     public Classroom classroom;
     public Period period;
+    public SubjectSet subjectSet;
+
+    public LessonPlan() {
+    }
+
+    public LessonPlan(int id, SchoolClass schoolClass, Staff staff, Classroom classroom, Period period, SubjectSet subjectSet) {
+        this.id = id;
+        this.schoolClass = schoolClass;
+        this.staff = staff;
+        this.classroom = classroom;
+        this.period = period;
+        this.subjectSet = subjectSet;
+    }
 }

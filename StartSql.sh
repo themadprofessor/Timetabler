@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 sudo systemctl start mysqld.service
 echo Please enter password for MySQL root user.
 mysql -u root -p

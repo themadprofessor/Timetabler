@@ -8,6 +8,10 @@ import javafx.scene.web.WebView;
 import me.timetabler.data.SchoolClass;
 import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
+import me.timetabler.data.dao.DaoManager;
+import me.timetabler.data.exceptions.DataAccessException;
+import me.timetabler.data.exceptions.DataConnectionException;
+import me.timetabler.data.exceptions.DataExceptionHandler;
 import me.util.Log;
 import me.util.LogLevel;
 import netscape.javascript.JSObject;
@@ -21,7 +25,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -30,20 +34,18 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
     @FXML WebView view;
     private WebEngine engine;
-    private Map<Integer, Subject> subjects;
-    private Map<Integer, Staff> staff;
-    private Map<Integer, SchoolClass> classes;
+    private DaoManager daoManager;
+
+    private List<Subject> subjects = null;
+    private List<Staff> staff = null;
+    private List<SchoolClass> classes = null;
 
     /**
      * Initialises the controller. Due to the parameters, the controller must be constructed then given to JavaFX.
-     * @param subjects A map of the school subject's id and the subject object.
-     * @param staff A map of the staff member's id and the staff object.
-     * @param classes A map of the class's id and the class object.
+     * @param daoManager The DaoManager to be used to manipulate data.
      */
-    public Controller(Map<Integer, Subject> subjects, Map<Integer, Staff> staff, Map<Integer, SchoolClass> classes) {
-        this.subjects = subjects;
-        this.staff = staff;
-        this.classes = classes;
+    public Controller(DaoManager daoManager) {
+        this.daoManager = daoManager;
     }
 
     /**
@@ -58,14 +60,23 @@ public class Controller implements Initializable {
         engine.load(String.valueOf(getClass().getResource("html/index.html")));
         engine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == Worker.State.SUCCEEDED) {
+                initData();
+
+
                 JSObject bridge = (JSObject) engine.executeScript("window");
-                bridge.setMember("java", new Bridge(subjects, staff, classes));
-                subjects.forEach((id, subject) -> {
-                    bridge.call("addToTableJava", "subjectTable", new String[]{String.valueOf(id), subject.name}, id);
-                    bridge.call("addToSelect", "classSubject", subject.name, subject.id);
+                bridge.setMember("java", new Bridge(daoManager, bridge));
+
+                subjects.forEach(subject1 -> {
+                    bridge.call("addToTableJava", "subjectTable",
+                            new String[]{String.valueOf(subject1.id), subject1.name}, subject1.id);
+                    bridge.call("addToSelect", "classSubject", subject1.name, subject1.id);
                 });
-                staff.forEach((id, staff) -> bridge.call("addToTableJava", "staffTable", new String[]{String.valueOf(id), staff.name}, id));
-                classes.forEach((id, clazz) -> bridge.call("addToTableJava", "classTable", new String[]{String.valueOf(id), clazz.name}, id));
+
+                staff.forEach(staff1 -> bridge.call("addToTableJava", "staffTable",
+                        new String[]{String.valueOf(staff1.id), staff1.name, String.valueOf(staff1.subject.id)}, staff1.id));
+                classes.forEach(schoolClass -> bridge.call("addToTableJava", "classTable",
+                        new String[]{String.valueOf(schoolClass.id), schoolClass.name, String.valueOf(schoolClass.subject.id)}, schoolClass.id));
+
                 engine.executeScript("console.log = function(msg) {java.out(msg);}");
                 engine.executeScript("console.error = function(msg) {java.err(msg);}");
 
@@ -88,5 +99,31 @@ public class Controller implements Initializable {
                 }
             }
         });
+    }
+
+    private void initData() {
+        try {
+            subjects = daoManager.getSubjectDao().getAllSubjects();
+        } catch (DataAccessException e) {
+            DataExceptionHandler.handleJavaFx(e, "subject", false);
+        } catch (DataConnectionException e) {
+            DataExceptionHandler.handleJavaFx(e, null, true);
+        }
+
+        try {
+            staff = daoManager.getStaffDao().getAllStaff();
+        } catch (DataAccessException e) {
+            DataExceptionHandler.handleJavaFx(e, "staff", false);
+        } catch (DataConnectionException e) {
+            DataExceptionHandler.handleJavaFx(e, null, true);
+        }
+
+        try {
+            classes = daoManager.getSchoolClassDao().getAllClasses();
+        } catch (DataAccessException e) {
+            DataExceptionHandler.handleJavaFx(e, "class", false);
+        } catch (DataConnectionException e) {
+            DataExceptionHandler.handleJavaFx(e, null, true);
+        }
     }
 }

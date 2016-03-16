@@ -6,15 +6,14 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import me.timetabler.config.ConfigParser;
 import me.timetabler.config.ConfigType;
-import me.timetabler.data.flatfiles.SchoolDataParser;
+import me.timetabler.data.dao.DaoManager;
 import me.timetabler.ui.Controller;
 import me.util.Log;
 import me.util.LogLevel;
-import me.util.MultipleOutputStream;
+import me.util.MultipleWriter;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +24,7 @@ import java.util.Map;
  */
 public class Main extends Application{
     private School school;
-    private SchoolDataParser parser;
+    private DaoManager daoManager;
     private static ConfigType configType = ConfigType.YAML;
 
     /**
@@ -57,17 +56,8 @@ public class Main extends Application{
             }
             school = new School(config.get("map"));
             Log.info("Loaded School Map");
-            parser = SchoolDataParser.getParser(config.get("data"));
-            if (parser == null) {
-                Log.error("Unknown data type!");
-            }
-            school.staff = parser.readStaff();
-            Log.debug("Read " + school.staff.size() + " Staff");
-            school.subjects = parser.readSubjects();
-            Log.debug("Read " + school.subjects.size() + " Subjects");
-            school.classes = parser.readClasses();
-            Log.debug("Read " + school.classes.size() + " Classes");
-            Log.info("Loaded School Data");
+            daoManager = DaoManager.getManager(config.get("data_source"));
+            Log.info("Initialised DaoManger");
         } catch (Exception e) {
             Log.error(e);
         }
@@ -81,34 +71,22 @@ public class Main extends Application{
     public void start(Stage primaryStage) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/main.fxml"));
-            Controller controller = new Controller(school.subjects, school.staff, school.classes);
+            Controller controller = new Controller(daoManager);
             loader.setController(controller);
             Scene scene = new Scene(loader.load());
             primaryStage.setScene(scene);
             primaryStage.setTitle("Timetabler");
             primaryStage.show();
-
         } catch (Exception e) {
             Log.error(e);
         }
     }
 
     /**
-     * Called after the UI is closed. Exports school data to CSV.
+     * Called after the UI is closed.
      */
     @Override
     public void stop() {
-        try {
-            parser.writeStaff(school.staff);
-            Log.debug("Wrote " + school.staff.size() + " Staff");
-            parser.writeSubjects(school.subjects);
-            Log.debug("Wrote " + school.subjects.size() + " Subjects");
-            parser.writeClasses(school.classes);
-            Log.debug("Wrote " + school.classes.size() + " Classes");
-            Log.info("Saved School Data");
-        } catch (Exception e) {
-            Log.error(e);
-        }
     }
 
     private static void setupLogging(String level) {
@@ -138,11 +116,10 @@ public class Main extends Application{
             outFile.getParentFile().mkdirs();
             errFile.createNewFile();
 
-            MultipleOutputStream out = new MultipleOutputStream(System.out, new BufferedOutputStream(new FileOutputStream(outFile)));
-            MultipleOutputStream err = new MultipleOutputStream(System.err, new BufferedOutputStream(new FileOutputStream(errFile)));
+            MultipleWriter out = new MultipleWriter(new PrintWriter(System.out, true), new FileWriter(outFile, true));
+            MultipleWriter err = new MultipleWriter(new PrintWriter(System.err, true), new FileWriter(errFile, true));
 
-            Log.NORMAL_WRITER = new PrintWriter(out);
-            Log.ERROR_WRITER = new PrintWriter(err);
+            Log.ERROR_WRITER = new PrintWriter(err, true);
         } catch (java.io.IOException e) {
             Log.error(e);
         }

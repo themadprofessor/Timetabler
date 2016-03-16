@@ -1,27 +1,18 @@
 package me.timetabler;
 
-import me.timetabler.data.SchoolClass;
-import me.timetabler.data.Staff;
-import me.timetabler.data.Subject;
 import me.timetabler.map.SchoolMap;
 import me.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.security.InvalidParameterException;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * A wrapper to all data related to the school.
  */
 public class School {
-    public Map<Integer, Subject> subjects;
-    public Map<Integer, Staff> staff;
-    public Map<Integer, SchoolClass> classes;
-
     /**
      * Initialises the school data.
      * @param config The config about the school data.
@@ -46,9 +37,5 @@ public class School {
         }
         Log.verbose("Loaded [" + files.length + "] Extra Maps");
         schoolMap.init(buildings);
-
-        staff = Collections.synchronizedMap(new LinkedHashMap<>());
-        subjects = Collections.synchronizedMap(new LinkedHashMap<>());
-        classes = Collections.synchronizedMap(new LinkedHashMap<>());
     }
 }

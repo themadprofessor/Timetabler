@@ -40,24 +40,19 @@ function addToTable(tableName, items, id) {
     for (i = 0; i < items.length; i++) {
         row.insertCell(i).innerHTML = items[i];
     }
+
+    var rmBut = document.createElement("button");
+    rmBut.type = "button";
+    rmBut.value = "Remove";
+    rmBut.class = "btn btn-noborder";
+    rmBut.onclick = function() {
+        alert("Whoop");
+    }
+
+    row.insertCell(row.cells.length).appendChild(rmBut);
     row.id = id;
     java.debug("Added [" + id + "] To [" + tableName + ']')
     return row;
-}
-
-function addRemoveButton(row, delFunc, id) {
-    var align = document.createElement('div');
-    align.align = "right";
-    var icon = document.createElement('span');
-    icon.className = "glyphicon glyphicon-remove"
-    var delBtn = document.createElement('button');
-    delBtn.type = "button";
-    delBtn.className = "btn btn-noborder"
-    delBtn.appendChild(icon);
-    delBtn.setAttribute("onclick", delFunc);
-    delBtn.id = id;
-    align.appendChild(delBtn);
-    row.insertCell(row.cells.length).appendChild(align);
 }
 
 function addToSelect(selectName, text, value) {
@@ -67,24 +62,4 @@ function addToSelect(selectName, text, value) {
 
 function addToTableJava(tableName, items, id) {
     var row = addToTable(tableName, items, tableName + id);
-    addRemoveButton(row, "removeSubject(this)", id);
-}
-
-function removeFromTable(tableName, ids) {
-    var table = document.getElementById(tableName);
-    java.debug("Found Table");
-    for (i = 0; i < ids.length; i++) {
-        table.removeChild(document.getElementById(ids[i]));
-    }
-    java.debug("Removed [" + ids.length + "] Values From [" + tableName + ']')
-}
-
-function removeSubject(obj) {
-    java.debug("Removing [" + obj.id + "]");
-    removeFromTable("subjectTable", [obj.id]);
-    java.remove("Subject", obj);
-}
-
-function genTimetable() {
-    java.genTimetable();
 }
