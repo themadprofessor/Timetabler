@@ -24,7 +24,6 @@ public class MariaStaffDao implements StaffDao {
     private PreparedStatement selectAll;
     private PreparedStatement selectAllSubject;
     private PreparedStatement selectId;
-    private PreparedStatement getLastId;
     private PreparedStatement insert;
     private PreparedStatement update;
     private PreparedStatement delete;
@@ -43,14 +42,14 @@ public class MariaStaffDao implements StaffDao {
         try {
             if (selectAll == null || selectAll.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("staff", StatementType.SELECT)
-                        .addColumns("staff.id", "staff.staffName", "subject.id", "subject.subjectName")
+                        .addColumns("staff.id", "staff.staffName", "subject.id", "subject.subjectName", "staff.hoursPerWeek")
                         .addJoinClause(new JoinClause(JoinType.INNER, "subject", "staff.subjectId=subject.id"));
                 selectAll = connection.prepareStatement(builder.build());
             }
 
             ResultSet set = selectAll.executeQuery();
             while (set.next()) {
-                Staff s = new Staff(set.getInt(1), set.getString(2), new Subject(set.getInt(3), set.getString(4)));
+                Staff s = new Staff(set.getInt(1), set.getString(2), new Subject(set.getInt(3), set.getString(4)), set.getInt(5));
                 staff.add(s);
             }
             set.close();
@@ -72,7 +71,7 @@ public class MariaStaffDao implements StaffDao {
         try {
             if (selectAllSubject == null || selectAllSubject.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("staff", StatementType.SELECT)
-                        .addColumns("id", "staffName")
+                        .addColumns("id", "staffName", "hoursPerWeek")
                         .addWhereClause("subjectId=?");
                 selectAllSubject = connection.prepareStatement(builder.build());
             }
@@ -80,7 +79,7 @@ public class MariaStaffDao implements StaffDao {
             selectAllSubject.setInt(1, subject.id);
             ResultSet set = selectAllSubject.executeQuery();
             while (set.next()) {
-                Staff s = new Staff(set.getInt(1), set.getString(2), subject);
+                Staff s = new Staff(set.getInt(1), set.getString(2), subject, set.getInt(3));
                 staff.add(s);
             }
             set.close();
@@ -102,7 +101,7 @@ public class MariaStaffDao implements StaffDao {
         try {
             if (selectId == null || selectId.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("staff", StatementType.SELECT)
-                        .addColumns("staff.staffName", "subject.id", "subject.subjectName")
+                        .addColumns("staff.staffName", "subject.id", "subject.subjectName", "staff.hoursPerWeek")
                         .addWhereClause("staff.id=?")
                         .addJoinClause(new JoinClause(JoinType.INNER, "subject", "staff.subjectId=subject.id"));
                 selectId = connection.prepareStatement(builder.build());
@@ -112,7 +111,7 @@ public class MariaStaffDao implements StaffDao {
             ResultSet set = selectId.executeQuery();
             set.next();
             Subject sub = new Subject(set.getInt(2), set.getString(3));
-            staff = new Staff(id, set.getString(1), sub);
+            staff = new Staff(id, set.getString(1), sub, set.getInt(4));
             set.close();
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
@@ -136,8 +135,8 @@ public class MariaStaffDao implements StaffDao {
         try {
             if (insert == null || insert.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("staff", StatementType.INSERT)
-                        .addColumns("staffName", "subjectId")
-                        .addValues("?", "?");
+                        .addColumns("staffName", "subjectId", "hoursPerWeek")
+                        .addValues("?", "?", "?");
                 insert = connection.prepareStatement(builder.build(), Statement.RETURN_GENERATED_KEYS);
             }
         } catch (SQLException e) {
@@ -148,6 +147,7 @@ public class MariaStaffDao implements StaffDao {
         try {
             insert.setString(1, staff.name);
             insert.setInt(2, staff.subject.id);
+            insert.setInt(3, staff.hoursPerWeek);
             insert.executeUpdate();
 
         } catch (SQLException e) {
@@ -177,7 +177,7 @@ public class MariaStaffDao implements StaffDao {
         try {
             if (update == null || update.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("staff", StatementType.UPDATE)
-                        .addSetClauses("staffName=?", "subjectId=?")
+                        .addSetClauses("staffName=?", "subjectId=?", "hoursPerWeek=?")
                         .addWhereClause("id=?");
                 update = connection.prepareStatement(builder.build());
             }
@@ -189,7 +189,8 @@ public class MariaStaffDao implements StaffDao {
         try {
             update.setString(1, staff.name);
             update.setInt(2, staff.subject.id);
-            update.setInt(3, staff.id);
+            update.setInt(3, staff.hoursPerWeek);
+            update.setInt(4, staff.id);
             update.executeUpdate();
             success = true;
         } catch (SQLException e) {

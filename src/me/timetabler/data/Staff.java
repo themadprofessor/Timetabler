@@ -16,15 +16,18 @@ public class Staff {
 
     public Subject subject;
 
+    public int hoursPerWeek;
+
     /**
      * Initialises the class, but not its internal variables.
      */
     public Staff() {
     }
 
-    public Staff(int id, String name, Subject subject) {
+    public Staff(int id, String name, Subject subject, int hoursPerWeek) {
         this.id = id;
         this.name = name;
         this.subject = subject;
+        this.hoursPerWeek = hoursPerWeek;
     }
 }

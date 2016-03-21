@@ -59,19 +59,21 @@ public class Controller implements Initializable {
         engine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == Worker.State.SUCCEEDED) {
                 initData();
-
+                Log.debug("Adding [" + subjects.size() + "] rows to the subject table");
+                Log.debug("Adding [" + staff.size() + "] rows to the staff table");
 
                 JSObject bridge = (JSObject) engine.executeScript("window");
                 bridge.setMember("java", new Bridge(daoManager, bridge));
 
                 subjects.forEach(subject1 -> {
                     bridge.call("addToTableJava", "subjectTable",
-                            new String[]{String.valueOf(subject1.id), subject1.name}, subject1.id);
+                            new String[]{String.valueOf(subject1.id), subject1.name});
                     bridge.call("addToSelect", "classSubject", subject1.name, subject1.id);
+                    bridge.call("addToSelect", "staffSubject", subject1.name, subject1.id);
                 });
 
                 staff.forEach(staff1 -> bridge.call("addToTableJava", "staffTable",
-                        new String[]{String.valueOf(staff1.id), staff1.name, String.valueOf(staff1.subject.id)}, staff1.id));
+                        new String[]{String.valueOf(staff1.id), staff1.name, String.valueOf(staff1.subject.id), String.valueOf(staff1.hoursPerWeek)}));
 
                 engine.executeScript("console.log = function(msg) {java.out(msg);}");
                 engine.executeScript("console.error = function(msg) {java.err(msg);}");

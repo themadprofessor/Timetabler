@@ -43,7 +43,7 @@ public class MariaSubjectSetDao implements SubjectSetDao {
             if (selectAll == null || selectAll.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("subjectSet", StatementType.SELECT)
                         .addColumns("subjectSet.id", "subject.id", "subject.subjectName", "learningSet.id",
-                                "learningSet.setName", "schoolYear.id", "schoolYear.schoolYearName", "subjectSet.hoursPerWeek")
+                                "learningSet.setName", "schoolYear.id", "schoolYear.schoolYearName")
                         .addJoinClause(new JoinClause(JoinType.INNER, "subject", "subjectSet.subjectId=subject.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "learningSet", "subjectSet.setId=learningSet.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "schoolYear", "subjectSet.yearGroupId=schoolYear.id"));
@@ -53,7 +53,7 @@ public class MariaSubjectSetDao implements SubjectSetDao {
             ResultSet set = selectAll.executeQuery();
             while (set.next()) {
                 SubjectSet subjectSet = new SubjectSet(set.getInt(1), new Subject(set.getInt(2), set.getString(3)),
-                        new LearningSet(set.getInt(4), set.getString(5)), new SchoolYear(set.getInt(6), set.getString(7)), set.getInt(8));
+                        new LearningSet(set.getInt(4), set.getString(5)), new SchoolYear(set.getInt(6), set.getString(7)));
                 sets.add(subjectSet);
             }
             set.close();
@@ -73,7 +73,7 @@ public class MariaSubjectSetDao implements SubjectSetDao {
             if (selectAllSubject == null || selectAllSubject.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("subjectSet", StatementType.SELECT)
                         .addColumns("subjectSet.id", "learningSet.id", "learningSet.setName", "schoolYear.id",
-                                "schoolYear.schoolYearName", "subjectSet.hoursPerWeek")
+                                "schoolYear.schoolYearName")
                         .addJoinClause(new JoinClause(JoinType.INNER, "learningSet", "subjectSet.setId=learningSet.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "schoolYear", "subjectSet.yearGroupId=schoolYear.id"))
                         .addWhereClause("subjectSet.subjectId=?");
@@ -84,7 +84,7 @@ public class MariaSubjectSetDao implements SubjectSetDao {
             ResultSet set = selectAllSubject.executeQuery();
             while (set.next()) {
                 SubjectSet subjectSet = new SubjectSet(set.getInt(1), subject, new LearningSet(set.getInt(2),
-                        set.getString(3)), new SchoolYear(set.getInt(4), set.getString(5)), set.getInt(6));
+                        set.getString(3)), new SchoolYear(set.getInt(4), set.getString(5)));
                 sets.add(subjectSet);
             }
             set.close();
@@ -104,7 +104,7 @@ public class MariaSubjectSetDao implements SubjectSetDao {
             if (selectAllYear == null || selectAllYear.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("subjectSet", StatementType.SELECT)
                         .addColumns("subjectSet.id", "subject.id", "subject.subjectName", "learningSet.id",
-                                "learningSet.setName", "subjectSet.hoursPerWeek")
+                                "learningSet.setName")
                         .addJoinClause(new JoinClause(JoinType.INNER, "learningSet", "subjectSet.setId=learningSet.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "subject", "subjectSet.subjectId=subject.id"))
                         .addWhereClause("subjectSet.yearGroupId=?");
@@ -115,7 +115,7 @@ public class MariaSubjectSetDao implements SubjectSetDao {
             ResultSet set = selectAllYear.executeQuery();
             while (set.next()) {
                 SubjectSet subjectSet = new SubjectSet(set.getInt(1), new Subject(set.getInt(2), set.getString(3)),
-                        new LearningSet(set.getInt(4), set.getString(5)), schoolYear, set.getInt(6));
+                        new LearningSet(set.getInt(4), set.getString(5)), schoolYear);
                 sets.add(subjectSet);
             }
             set.close();
@@ -135,7 +135,7 @@ public class MariaSubjectSetDao implements SubjectSetDao {
             if (selectId == null || selectId.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("subjectSet", StatementType.SELECT)
                         .addColumns("subject.id", "subject.subjectName", "learningSet.id",
-                                "learningSet.setName", "schoolYear.id", "schoolYear.schoolYearName", "subjectSet.hoursPerWeek")
+                                "learningSet.setName", "schoolYear.id", "schoolYear.schoolYearName")
                         .addJoinClause(new JoinClause(JoinType.INNER, "subject", "subjectSet.subjectId=subject.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "learningSet", "subjectSet.setId=learningSet.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "schoolYear", "subjectSet.yearGroupId=schoolYear.id"))
@@ -147,7 +147,7 @@ public class MariaSubjectSetDao implements SubjectSetDao {
             ResultSet set = selectId.executeQuery();
             set.next();
             subjectSet = new SubjectSet(id, new Subject(set.getInt(1), set.getString(2)),
-                    new LearningSet(set.getInt(3), set.getString(4)), new SchoolYear(set.getInt(5), set.getString(6)), set.getInt(7));
+                    new LearningSet(set.getInt(3), set.getString(4)), new SchoolYear(set.getInt(5), set.getString(6)));
             set.close();
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
@@ -168,7 +168,7 @@ public class MariaSubjectSetDao implements SubjectSetDao {
         try {
             if (insert == null || insert.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("subjectSet", StatementType.INSERT)
-                        .addColumns("subjectId", "learningSetId", "yearGroupId", "hoursPerWeek")
+                        .addColumns("subjectId", "learningSetId", "yearGroupId")
                         .addValues("?", "?", "?");
                 insert = connection.prepareStatement(builder.build(), Statement.RETURN_GENERATED_KEYS);
             }
@@ -176,7 +176,6 @@ public class MariaSubjectSetDao implements SubjectSetDao {
             insert.setInt(1, set.subject.id);
             insert.setInt(2, set.learningSet.id);
             insert.setInt(3, set.schoolYear.id);
-            insert.setInt(4, set.hoursPerWeek);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);
@@ -208,7 +207,7 @@ public class MariaSubjectSetDao implements SubjectSetDao {
         try {
             if (update == null || update.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("subjectSet", StatementType.UPDATE)
-                        .addSetClauses("subjectId=?", "learningSetId=?", "yearGroupId=?", "hoursPerWeek=?")
+                        .addSetClauses("subjectId=?", "learningSetId=?", "yearGroupId=?")
                         .addWhereClause("id=?");
                 update = connection.prepareStatement(builder.build());
             }
@@ -216,8 +215,7 @@ public class MariaSubjectSetDao implements SubjectSetDao {
             update.setInt(1, set.subject.id);
             update.setInt(2, set.learningSet.id);
             update.setInt(3, set.schoolYear.id);
-            update.setInt(4, set.hoursPerWeek);
-            update.setInt(5, set.id);
+            update.setInt(4, set.id);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);
@@ -257,6 +255,6 @@ public class MariaSubjectSetDao implements SubjectSetDao {
             throw new DataUpdateException(e);
         }
 
-        return false;
+        return success;
     }
 }

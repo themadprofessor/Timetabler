@@ -67,6 +67,7 @@ public class MariaSubjectDao implements SubjectDao {
                         .addColumn("subjectName")
                         .addWhereClause("id=?");
                 selectId = connection.prepareStatement(builder.build());
+                Log.verbose(builder);
             }
 
             selectId.setInt(1, id);

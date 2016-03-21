@@ -1,6 +1,5 @@
 package me.timetabler.ui;
 
-import com.google.gson.Gson;
 import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
 import me.timetabler.data.dao.DaoManager;
@@ -17,12 +16,9 @@ import netscape.javascript.JSObject;
 public class Bridge {
     private DaoManager daoManager;
     private JSObject bridge;
-    private Gson gson;
-    public boolean success;
 
     public Bridge(DaoManager daoManager, JSObject bridge) {
         this.daoManager = daoManager;
-        gson = new Gson();
         this.bridge = bridge;
     }
 
@@ -38,41 +34,46 @@ public class Bridge {
         Log.error("[JAVASCRIPT] " + msg);
     }
 
-    public int add(String type, String json) {
+    public void verbose(String msg) {
+        Log.verbose("[JAVASCRIPT] " + msg);
+    }
+
+    public int add(String type, String data) {
         switch (type) {
             case "Subject":
             case "subject":
-                Subject subject = gson.fromJson(json, Subject.class);
+                Subject subject = new Subject();
+                subject.name = data;
 
                 try {
                     subject.id = daoManager.getSubjectDao().insertSubject(subject);
-                    success = true;
+                    bridge.call("window.success = true;");
                 } catch (DataAccessException | DataUpdateException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, "subject", false);
-                    success = false;
+                    bridge.call("window.success = false;");
                 } catch (DataConnectionException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, null, true);
                 }
 
-                break;
+                return subject.id;
             case "Staff":
             case "staff":
                 Staff st = new Staff();
-                Subject sub = new Subject();
-                String[] split = json.replace('[', '\0').replace(']', '\0').split(",");
-                st.name = split[0];
-                sub.id = Integer.parseInt(split[1]);
-                st.subject = sub;
-
                 try {
+                    String[] split = data.replace("[", "").replace("]", "").split(",");
+                    st.name = split[0];
+
+                    st.subject = daoManager.getSubjectDao().getById(Integer.parseInt(split[1])).get();
+                    st.hoursPerWeek = Integer.parseInt(split[2]);
                     st.id = daoManager.getStaffDao().insertStaff(st);
-                    success = true;
+                    Log.debug("Added Staff Member [" + st.name + ']');
+                    bridge.call("setSuccess", true);
                 } catch (DataAccessException | DataUpdateException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, "staff", false);
-                    success = false;
+                    bridge.call("window.success = false");
                 } catch (DataConnectionException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, null, true);
@@ -81,7 +82,6 @@ public class Bridge {
             default:
                 return -1;
         }
-        return -1;
     }
 
     public void update(String type, String json) {
@@ -98,11 +98,11 @@ public class Bridge {
                     Subject subject = new Subject();
                     subject.id = Integer.parseInt(json.split(",")[0].replace(']', '\0'));
                     daoManager.getSubjectDao().deleteSubject(subject);
-                    success = true;
+                    bridge.setMember("success", true);
                 } catch (DataAccessException | DataUpdateException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, "subject", false);
-                    success = false;
+                    bridge.setMember("success", false);
                 } catch (DataConnectionException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, null, true);
@@ -117,11 +117,11 @@ public class Bridge {
                     Staff staff = new Staff();
                     staff.id = Integer.parseInt(json.split(",")[0].replace(']', '\0'));
                     daoManager.getStaffDao().deleteStaff(staff);
-                    success = true;
+                    bridge.setMember("success", true);
                 } catch (DataAccessException | DataUpdateException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, "staff", false);
-                    success = false;
+                    bridge.setMember("success", false);
                 } catch (DataConnectionException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, null, true);

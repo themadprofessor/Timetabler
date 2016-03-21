@@ -11,6 +11,7 @@ CREATE TABLE staff
        (id INT NOT NULL AUTO_INCREMENT,
 	staffName VARCHAR(20) NOT NULL,
 	subjectId INT NOT NULL,
+	hoursPerWeek INT NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (subjectId) REFERENCES subject(id));
 
@@ -27,8 +28,8 @@ CREATE TABLE building
 CREATE TABLE classroom
        (id INT NOT NULL AUTO_INCREMENT,
 	roomName VARCHAR(10) NOT NULL,
-	buildingId INT NOT NULL,
-	subjectId INT NOT NULL,
+	buildingId INT NULL,
+	subjectId INT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (buildingId) REFERENCES building(id),
 	FOREIGN KEY (subjectId) REFERENCES subject(id));
@@ -56,7 +57,6 @@ CREATE TABLE subjectSet
     subjectId INT NOT NULL,
     setId INT NOT NULL,
     schoolYearId INT NOT NULL,
-    hoursPerWeek INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (subjectId) REFERENCES subject(id),
     FOREIGN KEY (setId) REFERENCES learningSet(id),
@@ -78,7 +78,6 @@ CREATE TABLE lessonPlan
 	periodId INT NOT NULL,
 	subjectSetId INT NOT NULL,
 	PRIMARY KEY (id),
-	FOREIGN KEY (classId) REFERENCES class(id),
 	FOREIGN KEY (staffId) REFERENCES staff(id),
 	FOREIGN KEY (classroomId) REFERENCES classroom(id),
 	FOREIGN KEY (subjectSetId) REFERENCES subjectSet(id),
@@ -86,9 +85,9 @@ CREATE TABLE lessonPlan
 
 INSERT INTO dayOfWeek (id,dayOfWeek) VALUES (1,'Monday'),(2,'Tuesday'),(3,'Wednesday'),(4,'Thursday'),(5,'Friday');
 INSERT INTO period (id,dayId,startTime,endTime) VALUES
-    (1,1,'9:10 AM','10:10 AM'),(2,1,'10:10 AM','11:10 AM'),(3,1,'11:30 AM','12:30 AM'),(4,1,'1:30 PM','2:30 PM'),(5,1,'2:30 PM','3:30 PM'),(6,1,'3:30 PM','4:30PM'),
-    (7,2,'9:10 AM','10:10 AM'),(8,2,'10:10 AM','11:10 AM'),(9,2,'11:30 AM','12:30 AM'),(10,2,'1:30 PM','2:30 PM'),(11,2,'2:30 PM','3:30 PM'),(12,2,'3:30 PM','4:30PM'),
-    (13,3,'9:10 AM','10:10 AM'),(14,3,'10:10 AM','11:10 AM'),(15,3,'11:30 AM','12:30 AM'),(16,3,'1:30 PM','2:30 PM'),(17,3,'2:30 PM','3:30 PM'),(18,3,'3:30 PM','4:30PM'),
-    (19,4,'9:10 AM','10:10 AM'),(20,4,'10:10 AM','11:10 AM'),(21,4,'11:30 AM','12:30 AM'),(22,4,'1:30 PM','2:30 PM'),(23,4,'2:30 PM','3:30 PM'),(24,4,'3:30 PM','4:30PM'),
-    (25,5,'9:10 AM','10:10 AM'),(26,5,'10:10 AM','11:10 AM'),(27,5,'11:30 AM','12:30 AM'),(28,5,'1:30 PM','2:30 PM'),(29,5,'2:30 PM','3:30 PM'),(30,5,'3:30 PM','4:30PM');
+    (1,1,'9:10:00','10:10:00'),(2,1,'10:10:00','11:10:00'),(3,1,'11:30:00','12:30:00'),(4,1,'1:30 PM','2:30 PM'),(5,1,'2:30 PM','3:30 PM'),(6,1,'3:30 PM','4:30PM'),
+    (7,2,'9:10:00','10:10:00'),(8,2,'10:10:00','11:10:00'),(9,2,'11:30:00','12:30:00'),(10,2,'1:30 PM','2:30 PM'),(11,2,'2:30 PM','3:30 PM'),(12,2,'3:30 PM','4:30PM'),
+    (13,3,'9:10:00','10:10:00'),(14,3,'10:10:00','11:10:00'),(15,3,'11:30:00','12:30:00'),(16,3,'1:30 PM','2:30 PM'),(17,3,'2:30 PM','3:30 PM'),(18,3,'3:30 PM','4:30PM'),
+    (19,4,'9:10:00','10:10:00'),(20,4,'10:10:00','11:10:00'),(21,4,'11:30:00','12:30:00'),(22,4,'1:30 PM','2:30 PM'),(23,4,'2:30 PM','3:30 PM'),(24,4,'3:30 PM','4:30PM'),
+    (25,5,'9:10:00','10:10:00'),(26,5,'10:10:00','11:10:00'),(27,5,'11:30:00','12:30:00'),(28,5,'1:30 PM','2:30 PM'),(29,5,'2:30 PM','3:30 PM'),(30,5,'3:30 PM','4:30PM');
 

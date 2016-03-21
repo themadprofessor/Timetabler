@@ -12,30 +12,31 @@ $('#subjectModal').on('shown.bs.modal', function () {
 
 function addStaff() {
     var name = document.getElementById("staffName").value;
-    var subject = document.getElementById("").value;
-    var id = java.add("Staff", "[" + name + ',' + subject + "]");
-    addToTable("staffTable", [id, name, subject]);
+    var subjectSelect = document.getElementById("staffSubject");
+    var subject = subjectSelect.options[subjectSelect.selectedIndex].value;
+    var hours = document.getElementById("staffHours").value;
+    java.debug("Adding Staff [" + name + ',' + subject + ',' + hours + ']');
+    var id = java.add("Staff", "[" + name + ',' + subject + ',' + hours + "]");
+    if (success == true) {
+        addToTable("staffTable", [id, name, subject, hours]);
+    } else {
+        $("#staffModal").modal("hide");
+    }
 }
 
 function addSubject() {
     var name = document.getElementById("subjectName").value;
-    var id = java.add("Subject", "[" + name + "]"));
+    var id = java.add("Subject", name);
     addToTable("subjectTable", [id, name]);
 }
 
-function addClass() {
-    var select = document.getElementById("classSubject");
-    var id = document.getElementById("classID").value;
-    var subject = select.value;
-    var name = select.options[options.selectedIndex].text;
-    addToTable("classTable", [id, name], id);
-    java.add("Class", JSON.stringify({"id":id, "subjectId":subject}));
-}
+function addToTable(tableName, items) {
+    java.debug("Adding row to [" + tableName + "]");
 
-function addToTable(tableName, items, id) {
     var table = document.getElementById(tableName);
     var row = table.insertRow(table.rows.length);
     for (i = 0; i < items.length; i++) {
+        java.verbose("Adding cell with the contents [" + items[i] + "]");
         row.insertCell(i).innerHTML = items[i];
     }
 
@@ -53,13 +54,12 @@ function addToTable(tableName, items, id) {
     };
 
     row.insertCell(row.cells.length).appendChild(rmBut);
-    row.id = id;
-    java.debug("Added [" + id + "] To [" + tableName + ']')
+    java.debug("Added Row To [" + tableName + ']')
     return row;
 }
 
 function removeRow(button) {
-    java.out("Removing Row.");
+    java.debug("Removing Row.");
     var row = button.parentNode.parentNode;
     var cells = row.cells;
     var type = button.name;
@@ -70,10 +70,8 @@ function removeRow(button) {
     }
 
     java.remove(type, data);
-    if (java.success) {
-        var table = row.parentNode;
-        table.removeChild(row);
-    }
+    var table = row.parentNode;
+    table.removeChild(row);
 }
 
 function addToSelect(selectName, text, value) {
@@ -81,6 +79,10 @@ function addToSelect(selectName, text, value) {
     options[options.length] = new Option(text, value);
 }
 
-function addToTableJava(tableName, items, id) {
-    var row = addToTable(tableName, items, tableName + id);
+function addToTableJava(tableName, items) {
+    var row = addToTable(tableName, items);
+}
+
+function setSuccess(value) {
+    success = true;
 }

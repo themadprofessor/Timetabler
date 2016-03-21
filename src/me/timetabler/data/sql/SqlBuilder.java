@@ -248,9 +248,9 @@ public class SqlBuilder {
                     builder.deleteCharAt(builder.length() - 1).append(") ");
                 }
 
-                builder.append("VALUES ");
+                builder.append("VALUES (");
                 values.forEach(value -> builder.append(value).append(','));
-                builder.deleteCharAt(builder.length()-1).append(';');
+                builder.deleteCharAt(builder.length()-1).append(");");
                 break;
             case UPDATE:
                 builder.append("UPDATE ").append(fromTable).append(" SET ");

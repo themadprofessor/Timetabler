@@ -21,7 +21,7 @@ public class JavaFxBridge {
             if (closeOnExit) {
                 alert.setOnCloseRequest(value -> close());
             }
-            alert.showAndWait();
+            alert.show();
         });
     }
 

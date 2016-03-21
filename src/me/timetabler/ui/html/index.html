@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Free Bootstrap Theme for Developers</title>
+    <title>Timetabler</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,10 +46,11 @@
                         <ul class="dropdown-menu">
                             <li><a class="scrollto" href="#staff">Staff</a></li>
                             <li><a class="scrollto" href="#subjects">Subjects</a></li>
-                            <li><a class="scrollto" href="#classes">Classes</a></li>
                             <li><a class="scrollto" href="#years">Year Groups</a></li>
                             <li><a class="scrollto" href="#buildings">Buildings</a></li>
                             <li><a class="scrollto" href="#classrooms">Classrooms</a></li>
+                            <li><a class="scrollto" href="#learningSets">Sets</a></li>
+                            <li><a class="scrollto" href="#classes">Classes</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -81,6 +82,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Subject ID</th>
+            <th>Hours Per Week</th>
             </thead>
         </table>
     </div>
@@ -102,24 +104,7 @@
     </div>
 </section>
 
-<section id="classes" class="docs section">
-    <div class="container">
-        <h2 class="title text-center">Class Information</h2>
-        <p class="intro text-center">View and edit class information</p>
-        <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#classModal" id="classAddButton">
-            <i class="fa fa-plus fa-2x"></i>
-        </button>
-        <table id="classTable" class="table table-hover">
-            <thead>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Subject ID</th>
-            </thead>
-        </table>
-    </div>
-</section>
-
-<section id="years" class="contact section has-pattern">
+<section id="years" class="about section has-pattern">
     <div class="container">
         <div class="contact-inner">
             <h2 class="title text-center">School Year</h2>
@@ -137,13 +122,13 @@
     </div>
 </section>
 
-<section id="buildings" class="contact section has-pattern">
+<section id="buildings" class="features section has-pattern">
     <div class="container">
         <div class="contact-inner">
-            <h2 class="title text-center">School Year</h2>
-            <p class="intro text-center">View and edit school building information</p>
+            <h2 class="title text-center">Building</h2>
+            <p class="intro text-center">View school building information and import map data.</p>
             <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#buildingModal" id="buildingAddButton">
-                <i class="fa fa-plus fa-2x"></i>
+                <span class="glyphicon glyphicon-import"></span>
             </button>
             <table id="buildingTable" class="table table-hover">
                 <thead>
@@ -155,18 +140,59 @@
     </div>
 </section>
 
-<section id="classrooms" class="contact section has-pattern">
+<section id="classrooms" class="about section has-pattern">
     <div class="container">
         <div class="contact-inner">
-            <h2 class="title text-center">School Year</h2>
-            <p class="intro text-center">View and edit school classroom information</p>
+            <h2 class="title text-center">Classrooms</h2>
+            <p class="intro text-center">View and edit school classroom information.<br>Each classroom needs a building ID and subject ID before timetabling can begin.</p>
             <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#classroomModal" id="classroomAddButton">
-                <i class="fa fa-plus fa-2x"></i>
+                <span class="glyphicon glyphicon-import"></span>
             </button>
             <table id="classroomTable" class="table table-hover">
                 <thead>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Building ID</th>
+                    <th>Subject ID</th>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+
+<section id="learningSets" class="features section has-pattern">
+    <div class="container">
+        <div class="contact-inner">
+            <h2 class="title text-center">Sets</h2>
+            <p class="intro text-center">View and edit school set information</p>
+            <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#learningSetModal" id="learningSetAddButton">
+                <i class="fa fa-plus fa-2x"></i>
+            </button>
+            <table id="learningSetTable" class="table table-hover">
+                <thead>
+                    <th>ID</th>
+                    <th>Name</th>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+
+<section id="classes" class="about section has-pattern">
+    <div class="container">
+        <div class="contact-inner">
+            <h2 class="title text-center">Classes</h2>
+            <p class="intro text-center">View and edit class information</p>
+            <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#classModal" id="classAddButton">
+                <i class="fa fa-plus fa-2x"></i>
+            </button>
+            <table id="classTable" class="table table-hover">
+                <thead>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Set ID</th>
+                    <th>Subject ID</th>
+                    <th>Year Group ID</th>
                 </thead>
             </table>
         </div>
@@ -192,10 +218,20 @@
                         <input type="text" class="form-control" id="staffName" placeholder="Name">
                         <p class="help-block">The name of the staff member.</p>
                     </div>
+                    <div class="form-group">
+                        <label for="staffSubject">Subject</label>
+                        <select class="from-control" id="staffSubject"></select>
+                        <p class="help-block">The subject taught by the member of staff.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="staffHours">Hours</label>
+                        <input type="number" class="form-control" id="staffHours" placeholder="0">
+                        <p class="help-block">The max number of hours this member of staff can teach.</p>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="addStaff()">Add</button>
+                <button type="button" class="btn btn-default" onclick="addStaff()">Add</button>
             </div>
         </div>
     </div>
@@ -224,30 +260,85 @@
     </div>
 </div>
 
+<div class="modal fade" id="yearModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add Subject</h4>
+            </div>
+            <div class="modal-body">
+                <form class="" action="index.html" method="post">
+                    <div class="form-group">
+                        <label for="yearName">Year Name</label>
+                        <input type="text" class="form-control" id="yearName" placeholder="Name">
+                        <p class="help-block">The name of the year group.</p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="addYear()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="learningSetModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add Set</h4>
+            </div>
+            <div class="modal-body">
+                <form class="" action="index.html" method="post">
+                    <div class="form-group">
+                        <label for="learningSetName">Set Name</label>
+                        <input type="text" class="form-control" id="learningSetName" placeholder="Name">
+                        <p class="help-block">The name of the set.</p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="addYear()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="classModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Add Class</h4>
+                <h4 class="modal-title">Add Subject</h4>
             </div>
             <div class="modal-body">
                 <form class="" action="index.html" method="post">
                     <div class="form-group">
-                        <label for="className">Subject Name</label>
+                        <label for="className">Class Name</label>
                         <input type="text" class="form-control" id="className" placeholder="Name">
-                        <p class="help-block">The name of the subject.</p>
+                        <p class="help-block">The name of the class.</p>
                     </div>
                     <div class="form-group">
                         <label for="classSubject">Subject</label>
-                        <select class="form-control" id="classSubject">
-                        </select>
-                        <p class="help-block">The subject the class is taught.</p>
+                        <select class="from-control" id="classSubject"></select>
+                        <p class="help-block">The subject taught in the class.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="classSet">Set</label>
+                        <select class="from-control" id="classSet"></select>
+                        <p class="help-block">The set of this class.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="classYear">Year Group</label>
+                        <select class="from-control" id="classYear"></select>
+                        <p class="help-block">The year group taught in this class.</p>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="addClass()">Add</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="addYear()">Add</button>
             </div>
         </div>
     </div>
