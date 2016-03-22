@@ -62,5 +62,5 @@ public interface LearningSetDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    boolean delete(LearningSet set) throws DataAccessException;
+    boolean delete(LearningSet set) throws DataAccessException, DataUpdateException;
 }

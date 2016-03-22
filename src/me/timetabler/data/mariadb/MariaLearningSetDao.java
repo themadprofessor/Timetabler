@@ -88,8 +88,10 @@ public class MariaLearningSetDao implements LearningSetDao {
         try {
             if (insert == null || insert.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("learningSet", StatementType.INSERT)
-                        .addColumn("setName");
+                        .addColumn("setName")
+                        .addValue("?");
                 insert = connection.prepareStatement(builder.build(), Statement.RETURN_GENERATED_KEYS);
+                Log.verbose("SQL Insert Statement [" + builder.build() + "] With [" + set.name + "] Parameters");
             }
             insert.setString(1, set.name);
         } catch (SQLException e) {
@@ -147,7 +149,7 @@ public class MariaLearningSetDao implements LearningSetDao {
     }
 
     @Override
-    public boolean delete(LearningSet set) throws DataAccessException {
+    public boolean delete(LearningSet set) throws DataAccessException, DataUpdateException {
         boolean success = false;
 
         try {
@@ -168,6 +170,7 @@ public class MariaLearningSetDao implements LearningSetDao {
             success = true;
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
+            throw new DataUpdateException(e);
         }
 
         return success;

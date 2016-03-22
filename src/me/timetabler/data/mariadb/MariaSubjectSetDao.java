@@ -46,7 +46,7 @@ public class MariaSubjectSetDao implements SubjectSetDao {
                                 "learningSet.setName", "schoolYear.id", "schoolYear.schoolYearName")
                         .addJoinClause(new JoinClause(JoinType.INNER, "subject", "subjectSet.subjectId=subject.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "learningSet", "subjectSet.setId=learningSet.id"))
-                        .addJoinClause(new JoinClause(JoinType.INNER, "schoolYear", "subjectSet.yearGroupId=schoolYear.id"));
+                        .addJoinClause(new JoinClause(JoinType.INNER, "schoolYear", "subjectSet.schoolYearId=schoolYear.id"));
                 selectAll = connection.prepareStatement(builder.build());
             }
 
@@ -168,7 +168,7 @@ public class MariaSubjectSetDao implements SubjectSetDao {
         try {
             if (insert == null || insert.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("subjectSet", StatementType.INSERT)
-                        .addColumns("subjectId", "learningSetId", "yearGroupId")
+                        .addColumns("subjectId", "setId", "schoolYearId")
                         .addValues("?", "?", "?");
                 insert = connection.prepareStatement(builder.build(), Statement.RETURN_GENERATED_KEYS);
             }
@@ -242,6 +242,8 @@ public class MariaSubjectSetDao implements SubjectSetDao {
                         .addWhereClause("id=?");
                 delete = connection.prepareStatement(builder.build());
             }
+
+            delete.setInt(1, set.id);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);

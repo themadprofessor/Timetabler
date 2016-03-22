@@ -3,10 +3,10 @@ package me.timetabler.ui;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import me.timetabler.data.Staff;
-import me.timetabler.data.Subject;
+import me.timetabler.data.*;
 import me.timetabler.data.dao.DaoManager;
 import me.timetabler.data.exceptions.DataAccessException;
 import me.timetabler.data.exceptions.DataConnectionException;
@@ -35,8 +35,6 @@ public class Controller implements Initializable {
     private WebEngine engine;
     private DaoManager daoManager;
 
-    private List<Subject> subjects = null;
-    private List<Staff> staff = null;
 
     /**
      * Initialises the controller. Due to the parameters, the controller must be constructed then given to JavaFX.
@@ -55,25 +53,106 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         engine = view.getEngine();
+        engine.setOnAlert(event -> JavaFxBridge.createAlert(Alert.AlertType.INFORMATION, "Alert!", null, event.getData(), false));
         engine.load(String.valueOf(getClass().getResource("html/index.html")));
         engine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == Worker.State.SUCCEEDED) {
-                initData();
-                Log.debug("Adding [" + subjects.size() + "] rows to the subject table");
-                Log.debug("Adding [" + staff.size() + "] rows to the staff table");
+                List<Subject> subjects = null;
+                List<Staff> staff = null;
+                List<SchoolYear> years = null;
+                List<LearningSet> learningSets = null;
+                List<SubjectSet> subjectSets = null;
+
+                try {
+                    subjects = daoManager.getSubjectDao().getAllSubjects();
+                } catch (DataAccessException e) {
+                    DataExceptionHandler.handleJavaFx(e, "subject", false);
+                } catch (DataConnectionException e) {
+                    DataExceptionHandler.handleJavaFx(e, null, true);
+                }
+
+                try {
+                    staff = daoManager.getStaffDao().getAllStaff();
+                } catch (DataAccessException e) {
+                    Log.warning(e);
+                    DataExceptionHandler.handleJavaFx(e, "staff", false);
+                } catch (DataConnectionException e) {
+                    Log.error(e);
+                    DataExceptionHandler.handleJavaFx(e, null, true);
+                }
+
+                try {
+                    years = daoManager.getSchoolYearDao().getAllSchoolYears();
+                } catch (DataAccessException e) {
+                    Log.warning(e);
+                    DataExceptionHandler.handleJavaFx(e, "staff", false);
+                } catch (DataConnectionException e) {
+                    Log.error(e);
+                    DataExceptionHandler.handleJavaFx(e, null, true);
+                }
+
+                try {
+                    learningSets = daoManager.getLearningSetDao().getAll();
+                } catch (DataAccessException e) {
+                    Log.warning(e);
+                    DataExceptionHandler.handleJavaFx(e, "learningSets", false);
+                } catch (DataConnectionException e) {
+                    Log.error(e);
+                    DataExceptionHandler.handleJavaFx(e, null, true);
+                }
+
+                try {
+                    subjectSets = daoManager.getSubjectSetDao().getAll();
+                } catch (DataAccessException e) {
+                    Log.warning(e);
+                    DataExceptionHandler.handleJavaFx(e, "subjectSets", false);
+                } catch (DataConnectionException e) {
+                    Log.error(e);
+                    DataExceptionHandler.handleJavaFx(e, null, true);
+                }
+
+                Log.debug("Adding [" + (subjects != null ? subjects.size() : 0) + "] rows to the subject table");
+                Log.debug("Adding [" + (staff != null ? staff.size() : 0) + "] rows to the staff table");
+                Log.debug("Adding [" + (years != null ? years.size() : 0) + "] rows to the year table");
+                Log.debug("Adding [" + (learningSets != null ? learningSets.size() : 0) + "] rows to the learningSet table");
 
                 JSObject bridge = (JSObject) engine.executeScript("window");
                 bridge.setMember("java", new Bridge(daoManager, bridge));
 
-                subjects.forEach(subject1 -> {
-                    bridge.call("addToTableJava", "subjectTable",
-                            new String[]{String.valueOf(subject1.id), subject1.name});
-                    bridge.call("addToSelect", "classSubject", subject1.name, subject1.id);
-                    bridge.call("addToSelect", "staffSubject", subject1.name, subject1.id);
-                });
+                if (subjects != null) {
+                    subjects.forEach(subject1 -> {
+                        bridge.call("addToTable", "subjectTable",
+                                new String[]{String.valueOf(subject1.id), subject1.name});
+                        bridge.call("addToSelect", "classSubject", subject1.name, subject1.id);
+                        bridge.call("addToSelect", "staffSubject", subject1.name, subject1.id);
+                    });
+                }
 
-                staff.forEach(staff1 -> bridge.call("addToTableJava", "staffTable",
-                        new String[]{String.valueOf(staff1.id), staff1.name, String.valueOf(staff1.subject.id), String.valueOf(staff1.hoursPerWeek)}));
+                if (staff != null) {
+                    staff.forEach(staff1 -> bridge.call("addToTable", "staffTable",
+                            new String[]{String.valueOf(staff1.id), staff1.name, String.valueOf(staff1.subject.id),
+                                    String.valueOf(staff1.hoursPerWeek)}));
+                }
+
+                if (years != null) {
+                    years.forEach(year -> {
+                        bridge.call("addToTable", "yearTable", new String[]{String.valueOf(year.id), year.schoolYearName});
+                        bridge.call("addToSelect", "classYear", year.schoolYearName, year.id);
+                    });
+                }
+
+                if (learningSets != null) {
+                    learningSets.forEach(learningSet -> {
+                        bridge.call("addToTable", "setTable", new String[]{String.valueOf(learningSet.id), learningSet.name});
+                        bridge.call("addToSelect", "classSet", learningSet.name, learningSet.id);
+                    });
+                }
+
+                if (subjectSets != null) {
+                    subjectSets.forEach(subjectSet -> bridge.call("addToTable", "classTable",
+                            new String[]{String.valueOf(subjectSet.id), String.valueOf(subjectSet.subject.id),
+                                    String.valueOf(subjectSet.learningSet.id), String.valueOf(subjectSet.schoolYear.id)}));
+                }
 
                 engine.executeScript("console.log = function(msg) {java.out(msg);}");
                 engine.executeScript("console.error = function(msg) {java.err(msg);}");
@@ -100,20 +179,6 @@ public class Controller implements Initializable {
     }
 
     private void initData() {
-        try {
-            subjects = daoManager.getSubjectDao().getAllSubjects();
-        } catch (DataAccessException e) {
-            DataExceptionHandler.handleJavaFx(e, "subject", false);
-        } catch (DataConnectionException e) {
-            DataExceptionHandler.handleJavaFx(e, null, true);
-        }
 
-        try {
-            staff = daoManager.getStaffDao().getAllStaff();
-        } catch (DataAccessException e) {
-            DataExceptionHandler.handleJavaFx(e, "staff", false);
-        } catch (DataConnectionException e) {
-            DataExceptionHandler.handleJavaFx(e, null, true);
-        }
     }
 }

@@ -38,7 +38,7 @@ public interface SchoolYearDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    int insertSchoolYear(SchoolYear schoolYear) throws DataUpdateException, DataAccessException;
+    int insert(SchoolYear schoolYear) throws DataUpdateException, DataAccessException;
 
     /**
      * Updates the given schoolYear in the data store. The id of the given schoolYear will be the entry in the store to be
@@ -51,7 +51,7 @@ public interface SchoolYearDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    boolean updateSchoolYear(SchoolYear schoolYear) throws DataUpdateException, DataAccessException;
+    boolean update(SchoolYear schoolYear) throws DataUpdateException, DataAccessException;
 
     /**
      * Deletes the given schoolYear from the data source. This returns true if the schoolYear was successfully removed from the
@@ -62,5 +62,5 @@ public interface SchoolYearDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    boolean deleteSchoolYear(SchoolYear schoolYear) throws DataUpdateException, DataAccessException;
+    boolean delete(SchoolYear schoolYear) throws DataUpdateException, DataAccessException;
 }

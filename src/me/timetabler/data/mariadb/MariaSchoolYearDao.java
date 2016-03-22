@@ -90,7 +90,7 @@ public class MariaSchoolYearDao implements SchoolYearDao {
      * {@inheritDoc}
      */
     @Override
-    public int insertSchoolYear(SchoolYear schoolYear) throws DataUpdateException, DataAccessException {
+    public int insert(SchoolYear schoolYear) throws DataUpdateException, DataAccessException {
         int id = -1;
 
         try {
@@ -130,7 +130,7 @@ public class MariaSchoolYearDao implements SchoolYearDao {
      * {@inheritDoc}
      */
     @Override
-    public boolean updateSchoolYear(SchoolYear schoolYear) throws DataUpdateException, DataAccessException {
+    public boolean update(SchoolYear schoolYear) throws DataUpdateException, DataAccessException {
         boolean success;
 
         try {
@@ -163,13 +163,13 @@ public class MariaSchoolYearDao implements SchoolYearDao {
      * {@inheritDoc}
      */
     @Override
-    public boolean deleteSchoolYear(SchoolYear schoolYear) throws DataUpdateException, DataAccessException {
+    public boolean delete(SchoolYear schoolYear) throws DataUpdateException, DataAccessException {
         boolean success;
 
         try {
             if (delete == null || delete.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("schoolYear", StatementType.DELETE)
-                        .addWhereClause("is=?");
+                        .addWhereClause("id=?");
                 delete = connection.prepareStatement(builder.build());
             }
 

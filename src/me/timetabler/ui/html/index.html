@@ -127,7 +127,7 @@
         <div class="contact-inner">
             <h2 class="title text-center">Building</h2>
             <p class="intro text-center">View school building information and import map data.</p>
-            <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#buildingModal" id="buildingAddButton">
+            <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#mapModal" id="buildingAddButton">
                 <span class="glyphicon glyphicon-import"></span>
             </button>
             <table id="buildingTable" class="table table-hover">
@@ -165,10 +165,10 @@
         <div class="contact-inner">
             <h2 class="title text-center">Sets</h2>
             <p class="intro text-center">View and edit school set information</p>
-            <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#learningSetModal" id="learningSetAddButton">
+            <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#setModal" id="learningSetAddButton">
                 <i class="fa fa-plus fa-2x"></i>
             </button>
-            <table id="learningSetTable" class="table table-hover">
+            <table id="setTable" class="table table-hover">
                 <thead>
                     <th>ID</th>
                     <th>Name</th>
@@ -189,7 +189,6 @@
             <table id="classTable" class="table table-hover">
                 <thead>
                     <th>ID</th>
-                    <th>Name</th>
                     <th>Set ID</th>
                     <th>Subject ID</th>
                     <th>Year Group ID</th>
@@ -241,7 +240,6 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Add Subject</h4>
             </div>
             <div class="modal-body">
@@ -254,7 +252,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="addSubject()">Add</button>
+                <button type="button" class="btn btn-default" onclick="addSubject()">Add</button>
             </div>
         </div>
     </div>
@@ -264,43 +262,41 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Add Subject</h4>
+                <h4 class="modal-title">Add Year Group</h4>
             </div>
             <div class="modal-body">
                 <form class="" action="index.html" method="post">
                     <div class="form-group">
                         <label for="yearName">Year Name</label>
-                        <input type="text" class="form-control" id="yearName" placeholder="Name">
-                        <p class="help-block">The name of the year group.</p>
+                        <input type="text" class="form-control" id="yearName" placeholder="Name" maxlength="8">
+                        <p class="help-block">The name of the year group. The name must be no longer than 8 characters!</p>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="addYear()">Add</button>
+                <button type="button" class="btn btn-default" onclick="addYear()">Add</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="learningSetModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="setModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Add Set</h4>
             </div>
             <div class="modal-body">
                 <form class="" action="index.html" method="post">
                     <div class="form-group">
-                        <label for="learningSetName">Set Name</label>
-                        <input type="text" class="form-control" id="learningSetName" placeholder="Name">
+                        <label for="setName">Set Name</label>
+                        <input type="text" class="form-control" id="setName" placeholder="Name">
                         <p class="help-block">The name of the set.</p>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="addYear()">Add</button>
+                <button type="button" class="btn btn-default" onclick="addSet()">Add</button>
             </div>
         </div>
     </div>
@@ -310,16 +306,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Add Subject</h4>
             </div>
             <div class="modal-body">
                 <form class="" action="index.html" method="post">
-                    <div class="form-group">
-                        <label for="className">Class Name</label>
-                        <input type="text" class="form-control" id="className" placeholder="Name">
-                        <p class="help-block">The name of the class.</p>
-                    </div>
                     <div class="form-group">
                         <label for="classSubject">Subject</label>
                         <select class="from-control" id="classSubject"></select>
@@ -338,7 +328,26 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="addYear()">Add</button>
+                <button type="button" class="btn btn-default" onclick="addClass()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Load Maps</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-group" action="index.html" method="post">
+                    <div class="form-group">
+                        <label for="mapFolder">Main Map File</label>
+                        <input id="mapFolder" type="file">
+
+                    </div>
+                </form>
             </div>
         </div>
     </div>
