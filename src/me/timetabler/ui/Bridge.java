@@ -1,13 +1,26 @@
 package me.timetabler.ui;
 
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import me.timetabler.data.*;
 import me.timetabler.data.dao.DaoManager;
 import me.timetabler.data.exceptions.DataAccessException;
 import me.timetabler.data.exceptions.DataConnectionException;
 import me.timetabler.data.exceptions.DataExceptionHandler;
 import me.timetabler.data.exceptions.DataUpdateException;
+import me.timetabler.map.MapLoader;
 import me.util.Log;
+import me.util.MapBuilder;
 import netscape.javascript.JSObject;
+
+import java.io.File;
+import java.util.HashMap;
 
 /**
  * The bridge between the Javascript and the Java objects.
@@ -257,5 +270,45 @@ public class Bridge {
 
                 break;
         }
+    }
+
+    public void loadMap() {
+        Platform.runLater(() -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Map Files", "*.csv"));
+            fileChooser.setTitle("Select top map file.");
+            File topMap = fileChooser.showOpenDialog(new Stage());
+            Log.debug("Chosen top map file [" + topMap + "]");
+
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setTitle("Select map folder.");
+            File mapFolder = directoryChooser.showDialog(new Stage());
+            Log.debug("Chosen map folder [" + mapFolder + "]");
+
+            MapLoader loader = new MapLoader(new MapBuilder<>(new HashMap<String, String>())
+                    .put("top_map", topMap.getAbsolutePath())
+                    .put("other_maps", mapFolder.getAbsolutePath()).build(), daoManager);
+
+            Stage stage = new Stage();
+            Label label = new Label();
+            VBox vBox = new VBox();
+            ProgressBar progressBar = new ProgressBar();
+            label.textProperty().bind(loader.messageProperty());
+            progressBar.progressProperty().bind(loader.progressProperty());
+            progressBar.prefWidthProperty().bind(vBox.widthProperty());
+
+            vBox.getChildren().add(label);
+            vBox.getChildren().add(progressBar);
+            vBox.setFillWidth(true);
+
+            stage.setScene(new Scene(vBox, 300, 100));
+            stage.show();
+            Log.debug("Opened dialog");
+
+            Thread thread = new Thread(loader, "Map Loader");
+            thread.setDaemon(true);
+            thread.start();
+            Log.debug("Started map loader thread");
+        });
     }
 }

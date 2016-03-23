@@ -20,6 +20,7 @@ public class MariaSubjectDao implements SubjectDao {
     protected Connection connection;
     private PreparedStatement selectAll;
     private PreparedStatement selectId;
+    private PreparedStatement selectName;
     private PreparedStatement insert;
     private PreparedStatement update;
     private PreparedStatement delete;
@@ -74,6 +75,39 @@ public class MariaSubjectDao implements SubjectDao {
             ResultSet set = selectId.executeQuery();
             set.next();
             subject = new Subject(id, set.getString(1));
+            set.close();
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing DataAccessException!");
+            throw new DataAccessException(e);
+        }
+
+        if (subject == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(subject);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<Subject> getByName(String name) throws DataAccessException {
+        Subject subject;
+
+        try {
+            if (selectName == null || selectName.isClosed()) {
+                SqlBuilder builder = new SqlBuilder("subject", StatementType.SELECT)
+                        .addColumn("id")
+                        .addWhereClause("subjectName=?");
+                selectName = connection.prepareStatement(builder.build());
+                Log.verbose(builder);
+            }
+
+            selectName.setString(1, name);
+            ResultSet set = selectName.executeQuery();
+            set.next();
+            subject = new Subject(set.getInt(1), name);
             set.close();
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DataAccessException!");

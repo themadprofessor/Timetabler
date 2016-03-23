@@ -30,6 +30,16 @@ public interface SubjectDao {
     Optional<Subject> getById(int id) throws DataAccessException;
 
     /**
+     * Returns the subject which has the given name. The optional will be empty if the name does not reference any subjects.
+     * Use getById where possible as it is faster to compare and integer than a String.
+     *
+     * @param name The name of the subject to be found.
+     * @return An optional containing the subject if it exists, or empty if it does not.
+     * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
+     */
+    Optional<Subject> getByName(String name) throws DataAccessException;
+
+    /**
      * Inserts the given subject in to the data store. If the subject was successfully entered in to the data store, it
      * will return true, and false if it could not.
      *

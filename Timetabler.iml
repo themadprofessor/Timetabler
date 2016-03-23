@@ -12,5 +12,6 @@
     <orderEntry type="library" name="mariadb-java-client-1.3.5" level="project" />
     <orderEntry type="library" name="jna-4.2.1" level="project" />
     <orderEntry type="library" name="Util" level="application" />
+    <orderEntry type="library" name="mariaDB4j-2.1.3-javadoc" level="project" />
   </component>
 </module>

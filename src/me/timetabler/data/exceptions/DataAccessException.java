@@ -7,4 +7,8 @@ public class DataAccessException extends DataException {
     public DataAccessException(Throwable cause) {
         super("Failed to access database!", cause);
     }
+
+    public DataAccessException() {
+        super();
+    }
 }

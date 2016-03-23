@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -70,7 +70,8 @@ public class SchoolMap {
                     } else if ("Enter".equals(cellsStrings[x])) {
                         schoolGrid[x][y] = new Entrance();
                     } else if (cellsStrings[x].startsWith("C-")) {
-                        schoolGrid[x][y] = new ClassRoom(cellsStrings[x].replace("C-", ""));
+                        String[] split = cellsStrings[x].replace("C-", "").split("-");
+                        schoolGrid[x][y] = new ClassRoom(split[0], split[1]);
                     } else {
                         schoolGrid[x][y] = new Building(cellsStrings[x]);
                     }
@@ -85,7 +86,7 @@ public class SchoolMap {
      * Uses the already created Building objects to populate the map.
      * @param buildings All buildings which exist in the whole map.
      */
-    public void init(HashMap<String, SchoolMap> buildings) {
+    public void init(Map<String, SchoolMap> buildings) {
         ArrayList<Building> optionalBuildings = getAllBuildings();
         Log.verbose("Found [" + optionalBuildings.size() + "] Buildings");
         if (!optionalBuildings.isEmpty()) {

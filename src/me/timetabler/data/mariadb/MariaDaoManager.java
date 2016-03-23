@@ -1,11 +1,13 @@
 package me.timetabler.data.mariadb;
 
+import ch.vorburger.exec.ManagedProcessException;
+import ch.vorburger.mariadb4j.DB;
+import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import me.timetabler.data.dao.*;
 import me.timetabler.data.exceptions.DataConnectionException;
 import me.util.Log;
 import org.mariadb.jdbc.MariaDbDataSource;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
@@ -14,7 +16,7 @@ import java.util.Map;
  * {@inheritDoc}
  */
 public class MariaDaoManager implements DaoManager {
-    private DataSource source;
+    private DB source;
     private Connection connection;
     private MariaSubjectDao subjectDao;
     private MariaStaffDao staffDao;
@@ -33,9 +35,12 @@ public class MariaDaoManager implements DaoManager {
             MariaDbDataSource source = new MariaDbDataSource(config.get("addr"), Integer.parseInt(config.get("port")), config.get("database"));
             source.setUser("root");
             source.setPassword("root");
-            this.source = source;
+            DB.newEmbeddedDB(DBConfigurationBuilder.newBuilder().setPort(Integer.parseInt(config.get("port"))).setBaseDir("db").build());
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DataConnectionException!");
+            throw new DataConnectionException(config.get("addr"), e);
+        } catch (ManagedProcessException e) {
+            Log.error("Caught [" + e + "] so throwing DataConnectionException!");
             throw new DataConnectionException(config.get("addr"), e);
         }
     }
@@ -47,7 +52,7 @@ public class MariaDaoManager implements DaoManager {
     public StaffDao getStaffDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
-                connection = source.getConnection();
+                connection = source.
             }
             if (staffDao == null) {
                 staffDao = new MariaStaffDao(connection);
@@ -269,5 +274,13 @@ public class MariaDaoManager implements DaoManager {
             Log.debug("Caught [" + e + "] so throwing a DataConnectionException!");
             throw new DataConnectionException("MariaDB", e);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+
     }
 }

@@ -127,7 +127,7 @@
         <div class="contact-inner">
             <h2 class="title text-center">Building</h2>
             <p class="intro text-center">View school building information and import map data.</p>
-            <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#mapModal" id="buildingAddButton">
+            <button type="button" class="btn btn-noborder" data-toggle="modal" id="buildingAddButton" onclick="loadMap()">
                 <span class="glyphicon glyphicon-import"></span>
             </button>
             <table id="buildingTable" class="table table-hover">
@@ -329,25 +329,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" onclick="addClass()">Add</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Load Maps</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-group" action="index.html" method="post">
-                    <div class="form-group">
-                        <label for="mapFolder">Main Map File</label>
-                        <input id="mapFolder" type="file">
-
-                    </div>
-                </form>
             </div>
         </div>
     </div>

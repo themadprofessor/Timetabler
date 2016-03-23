@@ -16,6 +16,10 @@ function addStaff() {
         var subjectSelect = document.getElementById("staffSubject");
         var subject = subjectSelect.options[subjectSelect.selectedIndex].value;
         var hours = document.getElementById("staffHours").value;
+        if (!(typeof hours === 'number') || !((hours % 1) === 0)) {
+            java.warning("Hours per week must be a number");
+
+        }
     } catch (err) {
         java.warning(err);
         alert("Failed to add member of staff!\nName, subject and hours fields must be present!\nHours field must be an integer!");
@@ -178,4 +182,8 @@ function addToSelect(selectName, text, value) {
 
 function setSuccess(value) {
     success = value;
+}
+
+function loadMap() {
+    java.loadMap();
 }

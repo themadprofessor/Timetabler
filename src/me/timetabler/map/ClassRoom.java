@@ -11,6 +11,8 @@ public class ClassRoom implements ImportantCell {
      */
     public String number;
 
+    public String subject;
+
     /**
      * A map containing all the distances between all other important cells in the map this classroom is in.
      */
@@ -19,10 +21,12 @@ public class ClassRoom implements ImportantCell {
     /**
      * Creates a cell which represents a class room
      * @param number The room's identifier
+     * @param s
      */
-    public ClassRoom(String number) {
+    public ClassRoom(String number, String subject) {
         this.number = number;
         distances = new HashMap<>();
+        this.subject = subject;
     }
 
     /**

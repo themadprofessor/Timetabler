@@ -23,7 +23,6 @@ import java.util.Map;
  * The entry point of the program. It handles command line parameters.
  */
 public class Main extends Application{
-    private School school;
     private DaoManager daoManager;
     private static ConfigType configType = ConfigType.YAML;
 
@@ -37,6 +36,9 @@ public class Main extends Application{
             if ("-l".equals(args[i])) {
                 i++;
                 lvl = args[i];
+            } else if ("-c".equals(args[i])) {
+                i++;
+                configType = ConfigType.valueOf(args[i]);
             }
         }
         setupLogging(lvl);
@@ -54,8 +56,7 @@ public class Main extends Application{
                 Log.error("Unknown config type!");
                 System.exit(1);
             }
-            school = new School(config.get("map"));
-            Log.info("Loaded School Map");
+
             daoManager = DaoManager.getManager(config.get("data_source"));
             Log.info("Initialised DaoManger");
         } catch (Exception e) {

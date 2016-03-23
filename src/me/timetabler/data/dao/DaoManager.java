@@ -87,6 +87,11 @@ public interface DaoManager {
     SubjectSetDao getSubjectSetDao() throws DataConnectionException;
 
     /**
+     * Closes all the resources required by the program.
+     */
+    void close();
+
+    /**
      * Returns a DaoManager to correspond with the given config's entry 'type'. The config will be given to the
      * DaoManager. If the config does not have a 'type' entry, or it does not correspond with the DaoManger
      * implementations, this will return null.
