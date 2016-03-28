@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Created by stuart on 13/03/16.
+ * {@inheritDoc}
  */
 public class MariaSubjectSetDao implements SubjectSetDao {
     protected Connection connection;
@@ -35,6 +35,9 @@ public class MariaSubjectSetDao implements SubjectSetDao {
         this.connection = connection;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<SubjectSet> getAll() throws DataAccessException {
         ArrayList<SubjectSet> sets = new ArrayList<>();
@@ -65,6 +68,9 @@ public class MariaSubjectSetDao implements SubjectSetDao {
         return sets;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<SubjectSet> getAllBySubject(Subject subject) throws DataAccessException {
         ArrayList<SubjectSet> sets = new ArrayList<>();
@@ -96,6 +102,9 @@ public class MariaSubjectSetDao implements SubjectSetDao {
         return sets;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<SubjectSet> getAllByYearGroup(SchoolYear schoolYear) throws DataAccessException {
         ArrayList<SubjectSet> sets = new ArrayList<>();
@@ -127,6 +136,9 @@ public class MariaSubjectSetDao implements SubjectSetDao {
         return sets;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<SubjectSet> getById(int id) throws DataAccessException {
         SubjectSet subjectSet = null;
@@ -161,6 +173,9 @@ public class MariaSubjectSetDao implements SubjectSetDao {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int insert(SubjectSet set) throws DataAccessException, DataUpdateException {
         int id = -1;
@@ -200,6 +215,9 @@ public class MariaSubjectSetDao implements SubjectSetDao {
         return id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean update(SubjectSet set) throws DataAccessException, DataUpdateException {
         boolean success = false;
@@ -232,6 +250,9 @@ public class MariaSubjectSetDao implements SubjectSetDao {
         return success;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean delete(SubjectSet set) throws DataAccessException, DataUpdateException {
         boolean success = false;

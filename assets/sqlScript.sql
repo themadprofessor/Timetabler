@@ -74,7 +74,7 @@ CREATE TABLE distance
 CREATE TABLE lessonPlan
        (id INT NOT NULL AUTO_INCREMENT,
 	staffId INT NULL,
-	classroomId INT NOT NULL,
+	classroomId INT NULL,
 	periodId INT NOT NULL,
 	subjectSetId INT NOT NULL,
 	PRIMARY KEY (id),

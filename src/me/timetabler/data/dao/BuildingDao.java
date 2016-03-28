@@ -10,15 +10,15 @@ import java.util.Optional;
 /**
  * The interface between a data source and the program. This dao will manipulate building data.
  */
-public interface BuildingDao {
-        /**
+public interface BuildingDao extends Dao {
+    /**
      * Returns a list of all the buildings. If there are no buildings, an empty list will be returned. The type of list
      * is to be determined by the implementation.
      *
      * @return A list of all the buildings, which can be empty.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<Building> getAllBuildings() throws DataAccessException;
+    List<Building> getAll() throws DataAccessException;
 
     /**
      * Returns the building which has the given id. The optional will be empty if the id does not reference any buildings.
@@ -38,7 +38,7 @@ public interface BuildingDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    int insertBuilding(Building building) throws DataUpdateException, DataAccessException;
+    int insert(Building building) throws DataUpdateException, DataAccessException;
 
     /**
      * Updates the given building in the data store. The id of the given building will be the entry in the store to be
@@ -51,7 +51,7 @@ public interface BuildingDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    boolean updateBuilding(Building building) throws DataUpdateException, DataAccessException;
+    boolean update(Building building) throws DataUpdateException, DataAccessException;
 
     /**
      * Deletes the given building from the data source. This returns true if the building was successfully removed from the
@@ -62,5 +62,5 @@ public interface BuildingDao {
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      * @throws me.timetabler.data.exceptions.DataUpdateException Thrown if the data cannot be modified.
      */
-    boolean deleteBuilding(Building building) throws DataUpdateException, DataAccessException;
+    boolean delete(Building building) throws DataUpdateException, DataAccessException;
 }

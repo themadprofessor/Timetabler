@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * The interface between a data source and the program. This dao will manipulate school year data.
  */
-public interface SchoolYearDao {
+public interface SchoolYearDao extends Dao {
         /**
      * Returns a list of all the schoolYears. If there are no schoolYears, an empty list will be returned. The type of list
      * is to be determined by the implementation.
@@ -18,7 +18,7 @@ public interface SchoolYearDao {
      * @return A list of all the schoolYears, which can be empty.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<SchoolYear> getAllSchoolYears() throws DataAccessException;
+    List<SchoolYear> getAll() throws DataAccessException;
 
     /**
      * Returns the schoolYear which has the given id. The optional will be empty if the id does not reference any schoolYears.

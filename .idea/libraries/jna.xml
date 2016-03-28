@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="jna-4.2.1">
+  <library name="jna">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/jna-4.2.1.jar!/" />
     </CLASSES>

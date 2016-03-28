@@ -11,7 +11,7 @@ import java.util.Optional;
 /**
  * The interface between a data source and the program. The dao will manipulate school class data.
  */
-public interface StaffDao {
+public interface StaffDao extends Dao {
     /**
      * Returns a list of all the staff. If there are no staff, an empty list will be returned. The type of list is to be
      * determined by the implementation.
@@ -19,7 +19,7 @@ public interface StaffDao {
      * @return A list of all the staff, which can be empty.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<Staff> getAllStaff() throws DataAccessException;
+    List<Staff> getAll() throws DataAccessException;
 
     /**
      * Returns a list of all the staff who teach the give subject. If there are no staff who teach the given subject, an
@@ -32,7 +32,7 @@ public interface StaffDao {
     List<Staff> getAllBySubject(Subject subject) throws DataAccessException;
 
     /**
-     * Returns the staff which has the given id. The optional will be empty if the id does not reference any staffs.
+     * Returns the staff which has the given id. The optional will be empty if the id does not reference any staff.
      *
      * @param id The id of the staff to be found.
      * @return An optional containing the staff if it exists, or empty if it does not.

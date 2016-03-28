@@ -40,7 +40,7 @@ public class MariaDistanceDao implements DistanceDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Distance> getAllDistances() throws DataAccessException {
+    public List<Distance> getAll() throws DataAccessException {
         ArrayList<Distance> distances = new ArrayList<>();
 
         try {

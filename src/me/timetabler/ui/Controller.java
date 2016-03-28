@@ -62,9 +62,11 @@ public class Controller implements Initializable {
                 List<SchoolYear> years = null;
                 List<LearningSet> learningSets = null;
                 List<SubjectSet> subjectSets = null;
+                List<Building> buildings = null;
+                List<Classroom> classrooms = null;
 
                 try {
-                    subjects = daoManager.getSubjectDao().getAllSubjects();
+                    subjects = daoManager.getSubjectDao().getAll();
                 } catch (DataAccessException e) {
                     DataExceptionHandler.handleJavaFx(e, "subject", false);
                 } catch (DataConnectionException e) {
@@ -72,7 +74,7 @@ public class Controller implements Initializable {
                 }
 
                 try {
-                    staff = daoManager.getStaffDao().getAllStaff();
+                    staff = daoManager.getStaffDao().getAll();
                 } catch (DataAccessException e) {
                     Log.warning(e);
                     DataExceptionHandler.handleJavaFx(e, "staff", false);
@@ -82,7 +84,7 @@ public class Controller implements Initializable {
                 }
 
                 try {
-                    years = daoManager.getSchoolYearDao().getAllSchoolYears();
+                    years = daoManager.getSchoolYearDao().getAll();
                 } catch (DataAccessException e) {
                     Log.warning(e);
                     DataExceptionHandler.handleJavaFx(e, "staff", false);
@@ -106,6 +108,26 @@ public class Controller implements Initializable {
                 } catch (DataAccessException e) {
                     Log.warning(e);
                     DataExceptionHandler.handleJavaFx(e, "subjectSets", false);
+                } catch (DataConnectionException e) {
+                    Log.error(e);
+                    DataExceptionHandler.handleJavaFx(e, null, true);
+                }
+
+                try {
+                    buildings = daoManager.getBuildingDao().getAll();
+                } catch (DataAccessException e) {
+                    Log.warning(e);
+                    DataExceptionHandler.handleJavaFx(e, "buildings", false);
+                } catch (DataConnectionException e) {
+                    Log.error(e);
+                    DataExceptionHandler.handleJavaFx(e, null, true);
+                }
+
+                try {
+                    classrooms = daoManager.getClassroomDao().getAll();
+                } catch (DataAccessException e) {
+                    Log.warning(e);
+                    DataExceptionHandler.handleJavaFx(e, "classrooms", false);
                 } catch (DataConnectionException e) {
                     Log.error(e);
                     DataExceptionHandler.handleJavaFx(e, null, true);
@@ -152,6 +174,16 @@ public class Controller implements Initializable {
                     subjectSets.forEach(subjectSet -> bridge.call("addToTable", "classTable",
                             new String[]{String.valueOf(subjectSet.id), String.valueOf(subjectSet.subject.id),
                                     String.valueOf(subjectSet.learningSet.id), String.valueOf(subjectSet.schoolYear.id)}));
+                }
+
+                if (buildings != null) {
+                    buildings.forEach(building -> bridge.call("addToTable", "buildingTable",
+                            new String[]{String.valueOf(building.id), building.buildingName}));
+                }
+
+                if (classrooms != null) {
+                    classrooms.forEach(classroom -> bridge.call("addToTable", "classroomTable",
+                            new String[]{String.valueOf(classroom.id), classroom.name, String.valueOf(classroom.building.id)}));
                 }
 
                 engine.executeScript("console.log = function(msg) {java.out(msg);}");

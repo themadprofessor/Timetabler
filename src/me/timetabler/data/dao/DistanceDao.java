@@ -11,7 +11,7 @@ import java.util.Optional;
 /**
  * The interface between a data source and the program. This dao will manipulate distance data.
  */
-public interface DistanceDao {
+public interface DistanceDao extends Dao {
     /**
      * Returns a list of all the distances. If there are no distances, an empty list will be returned. The type of list
      * is to be determined by the implementation.
@@ -19,7 +19,7 @@ public interface DistanceDao {
      * @return A list of all the distances, which can be empty.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<Distance> getAllDistances() throws DataAccessException;
+    List<Distance> getAll() throws DataAccessException;
 
     /**
      * Returns the distance which has the given id. The optional will be empty if the id does not reference any distances.

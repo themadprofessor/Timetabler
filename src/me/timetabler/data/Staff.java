@@ -19,6 +19,11 @@ public class Staff {
     public int hoursPerWeek;
 
     /**
+     * The current hours this member fo staff teaches. <b>To be used by TimetableThread only!</b>
+     */
+    protected int currentHoursPerWeek;
+
+    /**
      * Initialises the class, but not its internal variables.
      */
     public Staff() {

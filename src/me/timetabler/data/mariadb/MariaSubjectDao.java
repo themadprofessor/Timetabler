@@ -33,7 +33,7 @@ public class MariaSubjectDao implements SubjectDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Subject> getAllSubjects() throws DataAccessException {
+    public List<Subject> getAll() throws DataAccessException {
         ArrayList<Subject> subjects = new ArrayList<>();
 
         try {

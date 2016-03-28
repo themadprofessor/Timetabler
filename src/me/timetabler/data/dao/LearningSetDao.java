@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * The interface between a data source and the program. This dao will manipulate subject data.
  */
-public interface LearningSetDao {
+public interface LearningSetDao extends Dao {
     /**
      * Returns a list of all the learning sets. If there are no learning sets, an empty list will be returned. The type
      * of list is to be determined by the implementation.

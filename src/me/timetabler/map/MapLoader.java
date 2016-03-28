@@ -65,7 +65,7 @@ public class MapLoader extends Task<Void> {
             try {
                 Building buildingDb = new Building();
                 buildingDb.buildingName = building.name;
-                buildingDb.id = daoManager.getBuildingDao().insertBuilding(buildingDb);
+                buildingDb.id = daoManager.getBuildingDao().insert(buildingDb);
                 buildingsDb.add(buildingDb);
             } catch (DataUpdateException | DataAccessException e) {
                 Log.error(e);
@@ -77,7 +77,7 @@ public class MapLoader extends Task<Void> {
         });
         Building top = new Building();
         top.buildingName = "Top";
-        top.id = daoManager.getBuildingDao().insertBuilding(new Building(-1, "Top"));
+        top.id = daoManager.getBuildingDao().insert(new Building(-1, "Top"));
         buildingsDb.add(top);
 
         updateMessage("Adding Classrooms To Database.");

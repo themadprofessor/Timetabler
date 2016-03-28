@@ -11,7 +11,7 @@ import java.util.List;
  * The interface between a data source and the program. This dao will return period data. All list implementations
  * are to be determined by the implementation.
  */
-public interface PeriodDao {
+public interface PeriodDao extends Dao {
     /**
      * Returns a list containing all periods present in the data source. The list implementation is to be determined by
      * the implementation.

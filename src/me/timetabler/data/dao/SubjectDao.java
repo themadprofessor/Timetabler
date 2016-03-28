@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * The interface between a data source and the program. This dao will manipulate subject data.
  */
-public interface SubjectDao {
+public interface SubjectDao extends Dao {
     /**
      * Returns a list of all the subjects. If there are no subjects, an empty list will be returned. The type of list
      * is to be determined by the implementation.
@@ -18,7 +18,7 @@ public interface SubjectDao {
      * @return A list of all the subjects, which can be empty.
      * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
      */
-    List<Subject> getAllSubjects() throws DataAccessException;
+    List<Subject> getAll() throws DataAccessException;
 
     /**
      * Returns the subject which has the given id. The optional will be empty if the id does not reference any subjects.

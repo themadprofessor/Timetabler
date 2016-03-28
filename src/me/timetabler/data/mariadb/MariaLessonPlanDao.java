@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by stuart on 14/03/16.
+ * {@inheritDoc}
  */
 public class MariaLessonPlanDao implements LessonPlanDao {
     protected Connection connection;
@@ -24,6 +24,7 @@ public class MariaLessonPlanDao implements LessonPlanDao {
     private PreparedStatement selectAllClassroom;
     private PreparedStatement selectAllPeriod;
     private PreparedStatement selectAllSubjectSet;
+    private PreparedStatement selectAllSubject;
     private PreparedStatement insert;
     private PreparedStatement update;
     private PreparedStatement delete;
@@ -32,6 +33,9 @@ public class MariaLessonPlanDao implements LessonPlanDao {
         this.connection = connection;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<LessonPlan> getAll() throws DataAccessException {
         ArrayList<LessonPlan> lessonPlans = new ArrayList<>();
@@ -45,12 +49,12 @@ public class MariaLessonPlanDao implements LessonPlanDao {
                                 "dayOfWeek.dayOfWeek", "period.startTime", "period.endTime", "subjectSet.id",
                                 "learningSet.id", "learningSet.setName", "schoolYear.id", "schoolYear.schoolYearName")
                         .addJoinClause(new JoinClause(JoinType.INNER, "staff", "lessonPlan.staffId=staff.id"))
-                        .addJoinClause(new JoinClause(JoinType.INNER, "subject", "staff.subjectId=subject.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "classroom", "lessonPlan.classroomId=classroom.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "building", "classroom.buildingId=building.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "period", "lessonPlan.periodId=period.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "dayOfWeek", "period.dayId=dayOfWeek.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "subjectSet", "lessonPlan.subjectSetId=subjectSet.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "subject", "subjectSet.subjectId=subject.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "learningSet", "subjectSet.setId=learningSet.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "schoolYear", "subjectSet.schoolYearId=schoolYear.id"));
                 selectAll = connection.prepareStatement(builder.build());
@@ -79,6 +83,9 @@ public class MariaLessonPlanDao implements LessonPlanDao {
         return lessonPlans;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<LessonPlan> getAllByStaff(Staff staff) throws DataAccessException {
         ArrayList<LessonPlan> lessonPlans = new ArrayList<>();
@@ -91,11 +98,11 @@ public class MariaLessonPlanDao implements LessonPlanDao {
                                 "dayOfWeek.id", "dayOfWeek.dayOfWeek", "period.startTime", "period.endTime", "subjectSet.id",
                                 "learningSet.id", "learningSet.setName", "schoolYear.id", "schoolYear.schoolYearName")
                         .addJoinClause(new JoinClause(JoinType.INNER, "classroom", "lessonPlan.classroomId=classroom.id"))
-                        .addJoinClause(new JoinClause(JoinType.INNER, "subject", "classroom.subjectId=subject.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "building", "classroom.buildingId=building.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "period", "lessonPlan.periodId=period.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "dayOfWeek", "period.dayId=dayOfWeek.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "subjectSet", "lessonPlan.subjectSetId=subjectSet.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "subject", "subjectSet.subjectId=subject.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "learningSet", "subjectSet.setId=learningSet.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "schoolYear", "subjectSet.schoolYearId=schoolYear.id"));
                 selectAllStaff = connection.prepareStatement(builder.build());
@@ -123,6 +130,9 @@ public class MariaLessonPlanDao implements LessonPlanDao {
         return lessonPlans;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<LessonPlan> getAllByClassroom(Classroom classroom) throws DataAccessException {
         ArrayList<LessonPlan> lessonPlans = new ArrayList<>();
@@ -135,10 +145,10 @@ public class MariaLessonPlanDao implements LessonPlanDao {
                                 "dayOfWeek.dayOfWeek", "period.startTime", "period.endTime", "subjectSet.id",
                                 "learningSet.id", "learningSet.setName", "schoolYear.id", "schoolYear.schoolYearName")
                         .addJoinClause(new JoinClause(JoinType.INNER, "staff", "lessonPlan.staffId=staff.id"))
-                        .addJoinClause(new JoinClause(JoinType.INNER, "subject", "staff.subjectId=subject.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "period", "lessonPlan.periodId=period.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "dayOfWeek", "period.dayId=dayOfWeek.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "subjectSet", "lessonPlan.subjectSetId=subjectSet.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "subject", "subjectSet.subjectId=subject.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "learningSet", "subjectSet.setId=learningSet.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "schoolYear", "subjectSet.schoolYearId=schoolYear.id"));
                 selectAllClassroom = connection.prepareStatement(builder.build());
@@ -165,6 +175,9 @@ public class MariaLessonPlanDao implements LessonPlanDao {
         return lessonPlans;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<LessonPlan> getAllByPeriod(Period period) throws DataAccessException {
         ArrayList<LessonPlan> lessonPlans = new ArrayList<>();
@@ -177,10 +190,10 @@ public class MariaLessonPlanDao implements LessonPlanDao {
                                 "building.id", "building.buildingName", "subjectSet.id", "learningSet.id",
                                 "learningSet.setName", "schoolYear.id", "schoolYear.schoolYearName")
                         .addJoinClause(new JoinClause(JoinType.INNER, "staff", "lessonPlan.staffId=staff.id"))
-                        .addJoinClause(new JoinClause(JoinType.INNER, "subject", "staff.subjectId=subject.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "classroom", "lessonPlan.classroomId=classroom.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "building", "classroom.buildingId=building.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "subjectSet", "lessonPlan.subjectSetId=subjectSet.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "subject", "subjectSet.subjectId=subject.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "learningSet", "subjectSet.setId=learningSet.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "schoolYear", "subjectSet.schoolYearId=schoolYear.id"));
                 selectAllPeriod = connection.prepareStatement(builder.build());
@@ -207,6 +220,9 @@ public class MariaLessonPlanDao implements LessonPlanDao {
         return lessonPlans;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<LessonPlan> getAllBySubjectSet(SubjectSet subjectSet) throws DataAccessException {
         ArrayList<LessonPlan> lessonPlans = new ArrayList<>();
@@ -248,6 +264,68 @@ public class MariaLessonPlanDao implements LessonPlanDao {
         return lessonPlans;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<LessonPlan> getAllBySubject(Subject subject) throws DataAccessException {
+        ArrayList<LessonPlan> lessonPlans = new ArrayList<>();
+
+        try {
+            if (selectAllSubject == null || selectAllSubject.isClosed()) {
+                SqlBuilder builder = new SqlBuilder("lessonPlan", StatementType.SELECT)
+                        .addColumns("lessonPlan.id", "staff.id", "staff.staffName", "staff.hoursPerWeek", "classroom.id",
+                                "classroom.roomName", "building.id", "building.buildingName", "period.id", "dayOfWeek.id",
+                                "dayOfWeek.dayOfWeek", "period.startTime", "period.endTime", "subjectSet.id",
+                                "learningSet.id", "learningSet.setName", "schoolYear.id", "schoolYear.schoolYearName", "subjectSet.subjectId")
+                        .addJoinClause(new JoinClause(JoinType.INNER, "staff", "lessonPlan.staffId=staff.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "classroom", "lessonPlan.classroomId=classroom.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "building", "classroom.buildingId=building.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "period", "lessonPlan.periodId=period.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "dayOfWeek", "period.dayId=dayOfWeek.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "subjectSet", "lessonPlan.subjectSetId=subjectSet.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "learningSet", "subjectSet.setId=learningSet.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "schoolYear", "subjectSet.schoolYearId=schoolYear.id"))
+                        .addWhereClause("subjectSet.subjectId=?");
+                selectAllSubject = connection.prepareStatement(builder.build());
+            }
+            selectAllSubject.setInt(19, subject.id);
+
+            ResultSet set = selectAllSubject.executeQuery();
+            while (set.next()) {
+                int staffId = set.getInt(2);
+                Staff staff = null;
+                if (!set.wasNull()){
+                    staff = new Staff(staffId, set.getString(3), subject, set.getInt(4));
+                }
+
+                int classroomId = set.getInt(5);
+                Classroom classroom = null;
+                if (!set.wasNull()) {
+                    classroom = new Classroom(classroomId, set.getString(6),
+                            new Building(set.getInt(7), set.getString(8)), subject);
+                }
+
+                Period period = new Period(set.getInt(9),
+                        new Day(set.getInt(10), set.getString(11)), set.getTime(12).toLocalTime(), set.getTime(13).toLocalTime());
+                SubjectSet subjectSet = new SubjectSet(set.getInt(14), subject, new LearningSet(set.getInt(15), set.getString(16)),
+                        new SchoolYear(set.getInt(17), set.getString(18)));
+
+                LessonPlan lessonPlan = new LessonPlan(set.getInt(1), staff, classroom, period, subjectSet);
+                lessonPlans.add(lessonPlan);
+            }
+            set.close();
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
+            throw new DataAccessException(e);
+        }
+
+        return lessonPlans;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int insert(LessonPlan lessonPlan) throws DataUpdateException, DataAccessException {
         int id = -1;
@@ -260,8 +338,18 @@ public class MariaLessonPlanDao implements LessonPlanDao {
                 insert = connection.prepareStatement(builder.build(), Statement.RETURN_GENERATED_KEYS);
             }
 
-            insert.setInt(1, lessonPlan.staff.id);
-            insert.setInt(2, lessonPlan.classroom.id);
+            if (lessonPlan.staff == null) {
+                insert.setNull(1, Types.INTEGER);
+            } else {
+                insert.setInt(1, lessonPlan.staff.id);
+            }
+
+            if (lessonPlan.classroom == null) {
+                insert.setNull(2, Types.INTEGER);
+            } else {
+                insert.setInt(2, lessonPlan.classroom.id);
+            }
+
             insert.setInt(3, lessonPlan.period.id);
             insert.setInt(4, lessonPlan.subjectSet.id);
         } catch (SQLException e) {
@@ -288,6 +376,9 @@ public class MariaLessonPlanDao implements LessonPlanDao {
         return id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean update(LessonPlan lessonPlan) throws DataUpdateException, DataAccessException {
         boolean success = false;
@@ -321,6 +412,9 @@ public class MariaLessonPlanDao implements LessonPlanDao {
         return success;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean delete(LessonPlan lessonPlan) throws DataUpdateException, DataAccessException {
         boolean success = false;

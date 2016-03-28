@@ -36,7 +36,7 @@ public class MariaStaffDao implements StaffDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Staff> getAllStaff() throws DataAccessException {
+    public List<Staff> getAll() throws DataAccessException {
         ArrayList<Staff> staff = new ArrayList<>();
 
         try {

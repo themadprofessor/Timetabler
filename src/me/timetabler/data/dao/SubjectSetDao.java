@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * Created by stuart on 08/03/16.
  */
-public interface SubjectSetDao {
+public interface SubjectSetDao extends Dao {
     List<SubjectSet> getAll() throws DataAccessException;
     List<SubjectSet> getAllBySubject(Subject subject) throws DataAccessException;
     List<SubjectSet> getAllByYearGroup(SchoolYear schoolYear) throws DataAccessException;

@@ -28,6 +28,9 @@ public class MariaLearningSetDao implements LearningSetDao {
         this.connection = connection;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<LearningSet> getAll() throws DataAccessException {
         ArrayList<LearningSet> sets = new ArrayList<>();
@@ -53,6 +56,9 @@ public class MariaLearningSetDao implements LearningSetDao {
         return sets;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<LearningSet> getById(int id) throws DataAccessException {
         LearningSet set = null;
@@ -81,6 +87,9 @@ public class MariaLearningSetDao implements LearningSetDao {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int insert(LearningSet set) throws DataAccessException, DataUpdateException {
         int id = -1;
@@ -119,6 +128,9 @@ public class MariaLearningSetDao implements LearningSetDao {
         return id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean update(LearningSet set) throws DataAccessException, DataUpdateException {
         boolean success = false;
@@ -148,6 +160,9 @@ public class MariaLearningSetDao implements LearningSetDao {
         return success;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean delete(LearningSet set) throws DataAccessException, DataUpdateException {
         boolean success = false;

@@ -305,9 +305,25 @@ public class Bridge {
             stage.show();
             Log.debug("Opened dialog");
 
-            Thread thread = new Thread(loader, "Map Loader");
-            thread.setDaemon(true);
-            thread.start();
+            loader.setOnSucceeded((event) -> Platform.runLater(() -> {
+                try {
+                    daoManager.getBuildingDao().getAll().forEach(building -> bridge.call("addToTable", "buildingTable",
+                            new String[]{String.valueOf(building.id), building.buildingName}));
+                } catch (DataAccessException e) {
+                    DataExceptionHandler.handleJavaFx(e, "building", false);
+                } catch (DataConnectionException e) {
+                    DataExceptionHandler.handleJavaFx(e, "building", true);
+                }
+
+                try {
+                    daoManager.getClassroomDao().getAll().forEach(classroom -> bridge.call("addToTable", "classroomTable",
+                            new String[]{String.valueOf(classroom.id), classroom.name, String.valueOf(classroom.building.id)}));
+                } catch (DataAccessException e) {
+                    DataExceptionHandler.handleJavaFx(e, "classroom", false);
+                } catch (DataConnectionException e) {
+                    DataExceptionHandler.handleJavaFx(e, "classroom", true);
+                }
+            }));
             Log.debug("Started map loader thread");
         });
     }

@@ -10,7 +10,7 @@ import java.util.Optional;
  * The interface between a data source and the program. This dao will return day data. All list implementations
  * are to be determined by the implementation.
  */
-public interface DayDao {
+public interface DayDao extends Dao {
     /**
      * Returns a list of all days of the week as Day objects. The list will be unmodifiable and the type will be
      * determined by the implementation.

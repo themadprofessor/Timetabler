@@ -32,7 +32,7 @@ public class MariaBuildingDao implements BuildingDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Building> getAllBuildings() throws DataAccessException {
+    public List<Building> getAll() throws DataAccessException {
         ArrayList<Building> buildings = new ArrayList<>();
 
         try {
@@ -90,7 +90,7 @@ public class MariaBuildingDao implements BuildingDao {
      * {@inheritDoc}
      */
     @Override
-    public int insertBuilding(Building building) throws DataUpdateException, DataAccessException {
+    public int insert(Building building) throws DataUpdateException, DataAccessException {
         int id = -1;
 
         try {
@@ -130,7 +130,7 @@ public class MariaBuildingDao implements BuildingDao {
      * {@inheritDoc}
      */
     @Override
-    public boolean updateBuilding(Building building) throws DataUpdateException, DataAccessException {
+    public boolean update(Building building) throws DataUpdateException, DataAccessException {
         boolean success;
 
         try {
@@ -163,7 +163,7 @@ public class MariaBuildingDao implements BuildingDao {
      * {@inheritDoc}
      */
     @Override
-    public boolean deleteBuilding(Building building) throws DataUpdateException, DataAccessException {
+    public boolean delete(Building building) throws DataUpdateException, DataAccessException {
         boolean success;
 
         try {

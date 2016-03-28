@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Created by stuart on 13/03/16.
+ * {@inheritDoc}
  */
 public class MariaSchoolYearDao implements SchoolYearDao {
     protected Connection connection;
@@ -32,7 +32,7 @@ public class MariaSchoolYearDao implements SchoolYearDao {
      * {@inheritDoc}
      */
     @Override
-    public List<SchoolYear> getAllSchoolYears() throws DataAccessException {
+    public List<SchoolYear> getAll() throws DataAccessException {
         ArrayList<SchoolYear> schoolYears = new ArrayList<>();
 
         try {
