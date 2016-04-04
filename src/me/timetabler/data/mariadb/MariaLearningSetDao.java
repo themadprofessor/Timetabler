@@ -190,4 +190,19 @@ public class MariaLearningSetDao implements LearningSetDao {
 
         return success;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        try {
+            selectAll.close();
+            selectId.close();
+            insert.close();
+            delete.close();
+        } catch (SQLException e) {
+            Log.error(e);
+        }
+    }
 }

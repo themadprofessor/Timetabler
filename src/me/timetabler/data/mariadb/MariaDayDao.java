@@ -122,4 +122,18 @@ public class MariaDayDao implements DayDao {
             return Optional.of(day);
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        try {
+            selectAll.close();
+            selectId.close();
+            selectName.close();
+        } catch (SQLException e) {
+            Log.error(e);
+        }
+    }
 }

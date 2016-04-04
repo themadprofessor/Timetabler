@@ -28,11 +28,17 @@ public class MariaDaoManager implements DaoManager {
     private MariaSchoolYearDao schoolYearDao;
     private MariaSubjectSetDao subjectSetDao;
 
+    /**
+     * Initialises the DaoManager and establishes a DataSource object with the database.
+     * @param config A map containing the keys 'addr', 'port', 'database', 'username' and 'password'.
+     * @throws DataConnectionException Thrown if the data source cannot be established.
+     */
     public MariaDaoManager(Map<String, String> config) throws DataConnectionException {
         try {
             MariaDbDataSource source = new MariaDbDataSource(config.get("addr"), Integer.parseInt(config.get("port")), config.get("database"));
-            source.setUser("root");
-            source.setPassword("root");
+            source.setUser(config.get("username"));
+            source.setPassword(config.get("password"));
+            this.source = source;
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DataConnectionException!");
             throw new DataConnectionException(config.get("addr"), e);
@@ -275,6 +281,10 @@ public class MariaDaoManager implements DaoManager {
      */
     @Override
     public void close() {
-
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            Log.error(e);
+        }
     }
 }

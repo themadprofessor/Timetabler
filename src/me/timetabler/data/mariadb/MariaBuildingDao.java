@@ -189,4 +189,20 @@ public class MariaBuildingDao implements BuildingDao {
 
         return success;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        try {
+            selectAll.close();
+            selectId.close();
+            insert.close();
+            update.close();
+            delete.close();
+        } catch (SQLException e) {
+            Log.error(e);
+        }
+    }
 }

@@ -275,4 +275,22 @@ public class MariaClassroomDao implements ClassroomDao {
 
         return success;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        try {
+            selectAll.close();
+            selectBuilding.close();
+            selectId.close();
+            selectSubject.close();
+            insert.close();
+            update.close();
+            delete.close();
+        } catch (SQLException e) {
+            Log.error(e);
+        }
+    }
 }

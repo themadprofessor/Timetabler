@@ -18,19 +18,29 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by stuart on 23/03/16.
+ * A background process which parses map files into the Java, calculates the distance between the classrooms and store
+ * the map data in the database.
  */
 public class MapLoader extends Task<Void> {
     private Map<String, String> config;
     private DaoManager daoManager;
 
+    /**
+     * Initialises the MapLoader.
+     * @param config A map containing the keys 'top_map' and 'other_maps'.
+     * @param daoManager The DaoManger to be used by the MapLoader to store the map data.
+     */
     public MapLoader(Map<String, String> config, DaoManager daoManager) {
         this.config = config;
         this.daoManager = daoManager;
     }
 
+    /**
+     * Parses the map files, calculates the distances between all classrooms and adds them to the database.
+     * @return Nothing.
+     */
     @Override
-    protected Void call() throws Exception {
+    protected Void call() {
         updateMessage("Loading Top Map.");
         updateProgress(0, 6);
         Log.verbose("Loading Top Map From [" + config.get("top_map") + "] And Other Maps From [" +  config.get("other_maps") + ']');
@@ -77,7 +87,13 @@ public class MapLoader extends Task<Void> {
         });
         Building top = new Building();
         top.buildingName = "Top";
-        top.id = daoManager.getBuildingDao().insert(new Building(-1, "Top"));
+        try {
+            top.id = daoManager.getBuildingDao().insert(new Building(-1, "Top"));
+        } catch (DataUpdateException | DataAccessException e) {
+            DataExceptionHandler.handleJavaFx(e, "building", false);
+        } catch (DataConnectionException e) {
+            DataExceptionHandler.handleJavaFx(e, "building", true);
+        }
         buildingsDb.add(top);
 
         updateMessage("Adding Classrooms To Database.");

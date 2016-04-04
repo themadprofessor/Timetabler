@@ -29,31 +29,62 @@ public class Bridge {
     private DaoManager daoManager;
     private JSObject bridge;
 
+    /**
+     * Initialises the Javascript-Java bridge.
+     * @param daoManager The DaoManger to be used by this bridge to request and store data.
+     * @param bridge The Java-Javascript bridge to be used by this bridge.
+     */
     public Bridge(DaoManager daoManager, JSObject bridge) {
         this.daoManager = daoManager;
         this.bridge = bridge;
     }
 
+    /**
+     * Prints '[JAVASCRIPT] $msg' to Log.info.
+     * @param msg The message to print.
+     */
     public void out(String msg) {
         Log.info("[JAVASCRIPT] " + msg);
     }
 
+    /**
+     * Prints '[JAVASCRIPT] $msg' to Log.debug.
+     * @param msg The message to print.
+     */
     public void debug(String msg) {
         Log.debug("[JAVASCRIPT] " + msg);
     }
 
+    /**
+     * Prints '[JAVASCRIPT] $msg' to Log.err.
+     * @param msg The message to print.
+     */
     public void err(String msg) {
         Log.error("[JAVASCRIPT] " + msg);
     }
 
+    /**
+     * Prints '[JAVASCRIPT] $msg' to Log.verbose.
+     * @param msg The message to print.
+     */
     public void verbose(String msg) {
         Log.verbose("[JAVASCRIPT] " + msg);
     }
 
+    /**
+     * Prints '[JAVASCRIPT] $msg' to Log.warn.
+     * @param msg The message to print.
+     */
     public void warn(String msg) {
         Log.warning("[JAVASCRIPT] " + msg);
     }
 
+    /**
+     * Stores the given data of the given type with the DaoManager.
+     * @param type The type of data. E.G. Building, Staff.
+     * @param data The data to be stored.
+     * @return The id of the data after it is stored by the DaoManager.
+     */
     public int add(String type, String data) {
         switch (type) {
             case "Subject":
@@ -168,10 +199,11 @@ public class Bridge {
         }
     }
 
-    public void update(String type, String json) {
-
-    }
-
+    /**
+     * Removes the given data of the given type with the DaoManager.
+     * @param type The type of data. E.G. Building, Staff.
+     * @param data The data to be removed.
+     */
     public void remove(String type, String data) {
         switch (type) {
             case "Subject":
@@ -272,6 +304,10 @@ public class Bridge {
         }
     }
 
+    /**
+     * Asks the user for the map folder and the root folder. Then gives this information to a MapLoader instance to run
+     * in the background.
+     */
     public void loadMap() {
         Platform.runLater(() -> {
             FileChooser fileChooser = new FileChooser();

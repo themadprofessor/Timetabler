@@ -325,4 +325,20 @@ public class MariaDistanceDao implements DistanceDao {
 
         return success;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        try {
+            selectAll.close();
+            selectAllRoomEnd.close();
+            selectAllRoomStart.close();
+            selectId.close();
+            selectTwoRooms.close();
+        } catch (SQLException e) {
+            Log.error(e);
+        }
+    }
 }
