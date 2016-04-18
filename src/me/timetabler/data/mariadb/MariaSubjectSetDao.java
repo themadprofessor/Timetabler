@@ -13,6 +13,7 @@ import me.timetabler.data.sql.SqlBuilder;
 import me.timetabler.data.sql.StatementType;
 import me.util.Log;
 
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,16 +21,53 @@ import java.util.Optional;
 
 /**
  * {@inheritDoc}
+ * The dao will utilise a MariaDB database as it data source.
  */
 public class MariaSubjectSetDao implements SubjectSetDao {
+    /**
+     * The connection to the database, which all the PreparedStatements rely on.
+     */
     protected Connection connection;
+
+    /**
+     * A PreparedStatement which is used to select all subjectSets from the database.
+     */
     private PreparedStatement selectAll;
+
+    /**
+     * A PreparedStatement which is used to select all subjectSets of a given subject from the database.
+     */
     private PreparedStatement selectAllSubject;
+
+    /**
+     * A PreparedStatement which is used to select all subjectSets of a given subject from the database.
+     */
     private PreparedStatement selectAllYear;
+
+    /**
+     * A PreparedStatement which is used to select a subjectSet with a given id from the database.
+     */
     private PreparedStatement selectId;
+
+    /**
+     * A PreparedStatement which is used to insert a subjectSet into the database.
+     */
     private PreparedStatement insert;
+
+    /**
+     * A PreparedStatement which is used to update a subjectSet in the database.
+     */
     private PreparedStatement update;
+
+    /**
+     * A PreparedStatement which is used to delete a subjectSet from the database.
+     */
     private PreparedStatement delete;
+
+    /**
+     * A PreparedStatement to load the subjectSet data from a file into the database.
+     */
+    private PreparedStatement loadFile;
 
     public MariaSubjectSetDao(Connection connection) {
         this.connection = connection;
@@ -37,6 +75,8 @@ public class MariaSubjectSetDao implements SubjectSetDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the subjectSet data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<SubjectSet> getAll() throws DataAccessException {
@@ -70,6 +110,8 @@ public class MariaSubjectSetDao implements SubjectSetDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the subjectSet data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<SubjectSet> getAllBySubject(Subject subject) throws DataAccessException {
@@ -104,6 +146,8 @@ public class MariaSubjectSetDao implements SubjectSetDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the subjectSet data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<SubjectSet> getAllByYearGroup(SchoolYear schoolYear) throws DataAccessException {
@@ -138,6 +182,8 @@ public class MariaSubjectSetDao implements SubjectSetDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the subjectSet data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public Optional<SubjectSet> getById(int id) throws DataAccessException {
@@ -175,6 +221,8 @@ public class MariaSubjectSetDao implements SubjectSetDao {
 
     /**
      * {@inheritDoc}
+     * This method will insert the subjectSet data into a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public int insert(SubjectSet set) throws DataAccessException, DataUpdateException {
@@ -217,6 +265,8 @@ public class MariaSubjectSetDao implements SubjectSetDao {
 
     /**
      * {@inheritDoc}
+     * This method will update the subjectSet data in a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public boolean update(SubjectSet set) throws DataAccessException, DataUpdateException {
@@ -252,6 +302,8 @@ public class MariaSubjectSetDao implements SubjectSetDao {
 
     /**
      * {@inheritDoc}
+     * This method will delete the subjectSet data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public boolean delete(SubjectSet set) throws DataAccessException, DataUpdateException {
@@ -279,5 +331,62 @@ public class MariaSubjectSetDao implements SubjectSetDao {
         }
 
         return success;
+    }
+
+    /**
+     * {@inheritDoc}
+     * This method will load the classroom data into the MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
+     */
+    @Override
+    public boolean loadFile(File file) throws DataAccessException, DataUpdateException {
+        if (file == null) {
+            throw new NullPointerException("Data File Cannot Be Null!");
+        } else if (!file.exists()) {
+            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Exist!");
+        } else if (file.isDirectory()) {
+            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Not Be A Directory!");
+        } else if (!file.canRead()) {
+            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Have Read Permissions For User [" + System.getProperty("user.name") + "]!");
+        }
+
+        try {
+            if (loadFile == null || loadFile.isClosed()) {
+                loadFile = connection.prepareStatement("LOAD DATA INFILE '?' INTO TABLE classroom FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';");
+            }
+
+            loadFile.setString(1, file.getAbsolutePath());
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing DataAccessException!");
+            throw new DataAccessException(e);
+        }
+
+        try {
+            loadFile.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
+            throw new DataUpdateException(e);
+        }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        try {
+            if (selectAll != null && !selectAll.isClosed()) selectAll.close();
+            if (selectAllSubject != null && !selectAllSubject.isClosed()) selectAllSubject.close();
+            if (selectAllYear != null && !selectAllYear.isClosed()) selectAllYear.close();
+            if (selectId != null && !selectId.isClosed()) selectId.close();
+            if (insert != null && !insert.isClosed()) insert.close();
+            if (update != null && !update.isClosed()) update.close();
+            if (delete != null && !delete.isClosed()) delete.close();
+            if (connection != null && !connection.isClosed()) connection.close();
+        } catch (SQLException e) {
+            Log.error(e);
+        }
     }
 }

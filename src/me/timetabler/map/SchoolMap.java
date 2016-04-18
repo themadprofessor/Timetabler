@@ -71,9 +71,9 @@ public class SchoolMap {
                         schoolGrid[x][y] = new Entrance();
                     } else if (cellsStrings[x].startsWith("C-")) {
                         String[] split = cellsStrings[x].replace("C-", "").split("-");
-                        schoolGrid[x][y] = new ClassRoom(split[0], split[1]);
+                        schoolGrid[x][y] = new ClassroomCell(split[0], split[1]);
                     } else {
-                        schoolGrid[x][y] = new Building(cellsStrings[x]);
+                        schoolGrid[x][y] = new BuildingCell(cellsStrings[x]);
                     }
                 }
             }
@@ -83,14 +83,14 @@ public class SchoolMap {
     }
 
     /**
-     * Uses the already created Building objects to populate the map.
+     * Uses the already created BuildingCell objects to populate the map.
      * @param buildings All buildings which exist in the whole map.
      */
     public void init(Map<String, SchoolMap> buildings) {
-        ArrayList<Building> optionalBuildings = getAllBuildings();
-        Log.verbose("Found [" + optionalBuildings.size() + "] Buildings");
-        if (!optionalBuildings.isEmpty()) {
-            optionalBuildings.forEach(building -> buildings.forEach((name, map) -> {
+        ArrayList<BuildingCell> optionalBuildingCells = getAllBuildings();
+        Log.verbose("Found [" + optionalBuildingCells.size() + "] Buildings");
+        if (!optionalBuildingCells.isEmpty()) {
+            optionalBuildingCells.forEach(building -> buildings.forEach((name, map) -> {
                 if (building.name.equals(name)) {
                     building.init(map);
                 }
@@ -155,7 +155,7 @@ public class SchoolMap {
         for(int y = 0; y < this.height - 1; ++y) {
             for(int x = 0; x < this.width - 1; ++x) {
                 CellType cell = schoolGrid[x][y];
-                if(cell instanceof ClassRoom && ((ClassRoom)cell).number.equals(number)) {
+                if(cell instanceof ClassroomCell && ((ClassroomCell)cell).number.equals(number)) {
                     return Optional.of(new Coordinate(x, y));
                 }
             }
@@ -168,14 +168,14 @@ public class SchoolMap {
      * Gets a list of all classrooms.csv in the map.
      * @return The list of classrooms.csv in the map, which can be empty.
      */
-    public ArrayList<ClassRoom> getAllClassrooms() {
-        ArrayList<ClassRoom> classrooms = new ArrayList<>();
+    public ArrayList<ClassroomCell> getAllClassrooms() {
+        ArrayList<ClassroomCell> classrooms = new ArrayList<>();
 
         for(int y = 0; y < this.height - 1; ++y) {
             for(int x = 0; x < this.width - 1; ++x) {
                 CellType cell = schoolGrid[x][y];
-                if(cell instanceof ClassRoom) {
-                    classrooms.add((ClassRoom) cell);
+                if(cell instanceof ClassroomCell) {
+                    classrooms.add((ClassroomCell) cell);
                 }
             }
         }
@@ -186,21 +186,21 @@ public class SchoolMap {
      * Gets a list containing all the buildings in the map.
      * @return The list of buildings in the map, which can be empty.
      */
-    public ArrayList<Building> getAllBuildings() {
-        ArrayList<Building> buildings = new ArrayList<>();
+    public ArrayList<BuildingCell> getAllBuildings() {
+        ArrayList<BuildingCell> buildingCells = new ArrayList<>();
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
                 CellType cell = schoolGrid[x][y];
-                if (cell instanceof Building) {
-                    buildings.add((Building) cell);
+                if (cell instanceof BuildingCell) {
+                    buildingCells.add((BuildingCell) cell);
                 }
             }
         }
-        return buildings;
+        return buildingCells;
     }
 
     /**
-     * Gets a list of all the ImportantCells(ClassRoom, Building, Entrance) in the map.
+     * Gets a list of all the ImportantCells(ClassroomCell, BuildingCell, Entrance) in the map.
      * @return The list of the ImportantCells in the map which can be empty.
      */
     public ArrayList<ImportantCell> getAllImportantCells() {

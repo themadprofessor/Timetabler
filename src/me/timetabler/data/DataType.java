@@ -1,7 +1,7 @@
 package me.timetabler.data;
 
 /**
- * Created by stuart on 28/03/16.
+ * A type of data which is stored by the system.
  */
 public interface DataType {
 }

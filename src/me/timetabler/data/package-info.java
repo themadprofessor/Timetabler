@@ -1,4 +1,4 @@
 /**
- * The class which represent data about the school but not about the layout of the school.
+ * Classes which represents and accesses data from various data sources.
  */
 package me.timetabler.data;

@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Created by stuart on 28/03/16.
+ * A background thread which timetables staff members into lessons and lessons into classrooms.
  */
 public class TimetableThread implements Runnable {
     private DaoManager daoManager;
@@ -90,7 +90,14 @@ public class TimetableThread implements Runnable {
         return overloadedPeriod;
     }
 
-    //Returns true if maps successfully
+    /**
+     * Puts all the given staff into the given lessonPlans, avoiding all given lessonPlans. Returns true if it
+     * successfully put the staff into the lessonPlans.
+     * @param lessonPlans The lessonPlans to have staff put in.
+     * @param staffList The staff to put into the lessonPlans.
+     * @param overloadedPeriods The lessonPlans which overlap.
+     * @return True if successfully put the staff into the lessonPlans.
+     */
     private boolean putStaffIntoLessonPlan(List<LessonPlan> lessonPlans, List<Staff> staffList, List<Set<LessonPlan>> overloadedPeriods) {
         boolean done = false;
 

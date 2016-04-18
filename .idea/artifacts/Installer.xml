@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="Installer">
+    <output-path>$PROJECT_DIR$/out/artifacts/Installer</output-path>
+    <root id="root">
+      <element id="archive" name="Installer.jar">
+        <element id="module-output" name="Installer" />
+      </element>
+      <element id="directory" name="lib">
+        <element id="dir-copy" path="$PROJECT_DIR$/Installer/lib" />
+      </element>
+      <element id="directory" name="assets">
+        <element id="dir-copy" path="$PROJECT_DIR$/Installer/assets" />
+      </element>
+    </root>
+  </artifact>
+</component>

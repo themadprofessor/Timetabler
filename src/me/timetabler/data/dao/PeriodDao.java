@@ -8,18 +8,10 @@ import java.time.LocalTime;
 import java.util.List;
 
 /**
- * The interface between a data source and the program. This dao will return period data. All list implementations
- * are to be determined by the implementation.
+ * {@inheritDoc}
+ * This dao will return period data.
  */
 public interface PeriodDao extends Dao {
-    /**
-     * Returns a list containing all periods present in the data source. The list implementation is to be determined by
-     * the implementation.
-     * @return A list of all periods.
-     * @throws me.timetabler.data.exceptions.DataAccessException Thrown if the data cannot be accessed.
-     */
-    List<Period> getAll() throws DataAccessException;
-
     /**
      * Returns a list containing all the periods in a given day. The list implementation is to be determined by the
      * implementation.

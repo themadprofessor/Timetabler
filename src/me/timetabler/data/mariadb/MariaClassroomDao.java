@@ -12,6 +12,7 @@ import me.timetabler.data.sql.SqlBuilder;
 import me.timetabler.data.sql.StatementType;
 import me.util.Log;
 
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,17 +20,58 @@ import java.util.Optional;
 
 /**
  * {@inheritDoc}
+ * The dao will utilise a MariaDB database as it data source.
  */
 public class MariaClassroomDao implements ClassroomDao {
+    /**
+     * The connection to the database, which all the PreparedStatements rely on.
+     */
     protected Connection connection;
+
+    /**
+     * A PreparedStatement which is used to select all classrooms from the database.
+     */
     private PreparedStatement selectAll;
+
+    /**
+     * A PreparedStatement which is used to select all classrooms of a given subject from the database.
+     */
     private PreparedStatement selectSubject;
+
+    /**
+     * A PreparedStatement which is used to select all classrooms in a given building from the database.
+     */
     private PreparedStatement selectBuilding;
+
+    /**
+     * A PreparedStatement which is used to select a classroom with a given id from the database.
+     */
     private PreparedStatement selectId;
+
+    /**
+     * A PreparedStatement which is used to insert a classroom into the database.
+     */
     private PreparedStatement insert;
+
+    /**
+     * A PreparedStatement which is used to update a classroom in the database.
+     */
     private PreparedStatement update;
+
+    /**
+     * A PreparedStatement which is used to delete a classroom from the database.
+     */
     private PreparedStatement delete;
 
+    /**
+     * A PreparedStatement to load the classroom data from a file into the database.
+     */
+    private PreparedStatement loadFile;
+
+    /**
+     * Initialises the dao with the given connection. The statements are initialised when required.
+     * @param connection The connection to the database.
+     */
     public MariaClassroomDao(Connection connection) {
         this.connection = connection;
     }
@@ -37,6 +79,8 @@ public class MariaClassroomDao implements ClassroomDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the classroom data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<Classroom> getAll() throws DataAccessException {
@@ -68,6 +112,8 @@ public class MariaClassroomDao implements ClassroomDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the classroom data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<Classroom> getBySubject(Subject subject) throws DataAccessException {
@@ -100,6 +146,8 @@ public class MariaClassroomDao implements ClassroomDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the classroom data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<Classroom> getByBuilding(Building building) throws DataAccessException {
@@ -111,11 +159,11 @@ public class MariaClassroomDao implements ClassroomDao {
                         .addColumns("classroom.id", "classroom.roomName", "subject.id", "subject.subjectName")
                         .addJoinClause(new JoinClause(JoinType.INNER, "subject", "classroom.subjectId=subject.id"))
                         .addWhereClause("classroom.buildingId=?");
-                selectSubject = connection.prepareStatement(builder.build());
+                selectBuilding = connection.prepareStatement(builder.build());
             }
 
             selectBuilding.setInt(1, building.id);
-            ResultSet set = selectSubject.executeQuery();
+            ResultSet set = selectBuilding.executeQuery();
             while (set.next()) {
                 Classroom classroom = new Classroom(set.getInt(1), set.getString(2), building, new Subject(set.getInt(3), set.getString(4)));
                 classrooms.add(classroom);
@@ -132,6 +180,8 @@ public class MariaClassroomDao implements ClassroomDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the classroom data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public Optional<Classroom> getById(int id) throws DataAccessException {
@@ -149,8 +199,9 @@ public class MariaClassroomDao implements ClassroomDao {
 
             selectBuilding.setInt(1, id);
             ResultSet set = selectSubject.executeQuery();
-            set.next();
-            classroom = new Classroom(id, set.getString(1), new Building(set.getInt(2), set.getString(3)), new Subject(set.getInt(4), set.getString(5)));
+            if (set.next()) {
+                classroom = new Classroom(id, set.getString(1), new Building(set.getInt(2), set.getString(3)), new Subject(set.getInt(4), set.getString(5)));
+            }
             set.close();
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
@@ -167,12 +218,18 @@ public class MariaClassroomDao implements ClassroomDao {
 
     /**
      * {@inheritDoc}
+     * This method will insert the classroom data into a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public int insert(Classroom classroom) throws DataAccessException, DataUpdateException {
-        int id = -1;
+        int id;
 
         try {
+            if (classroom == null || classroom.name == null || classroom.subject == null || classroom.building == null) {
+                return -1;
+            }
+
             if (insert == null || insert.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("classroom", StatementType.INSERT)
                         .addColumns("roomName", "buildingId", "subjectId")
@@ -211,22 +268,27 @@ public class MariaClassroomDao implements ClassroomDao {
 
     /**
      * {@inheritDoc}
+     * This method will update the classroom data in a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public boolean update(Classroom classroom) throws DataAccessException, DataUpdateException {
-        boolean success = false;
-
         try {
-            if (update == null || update.isClosed()) {
-                SqlBuilder builder = new SqlBuilder("classroom", StatementType.UPDATE)
-                        .addSetClauses("roomName=?", "buildingId=?", "subjectId=?")
-                        .addWhereClause("id=?");
-                update = connection.prepareStatement(builder.build());
+            if (classroom.name != null && classroom.building != null && classroom.subject != null && classroom.id > -1) {
+                if (update == null || update.isClosed()) {
+                    SqlBuilder builder = new SqlBuilder("classroom", StatementType.UPDATE)
+                            .addSetClauses("roomName=?", "buildingId=?", "subjectId=?")
+                            .addWhereClause("id=?");
+                    update = connection.prepareStatement(builder.build());
+                }
+
+                update.setInt(4, classroom.id);
+                update.setString(1, classroom.name);
+                update.setInt(2, classroom.building.id);
+                update.setInt(3, classroom.subject.id);
+            } else {
+                return false;
             }
-            update.setInt(4, classroom.id);
-            update.setString(1, classroom.name);
-            update.setInt(2, classroom.building.id);
-            update.setInt(3, classroom.subject.id);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DataAccessException!");
             throw new DataAccessException(e);
@@ -234,32 +296,35 @@ public class MariaClassroomDao implements ClassroomDao {
 
         try {
             update.executeUpdate();
-            success = true;
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
             throw new DataUpdateException(e);
         }
 
-        return success;
+        return true;
     }
 
 
 
     /**
      * {@inheritDoc}
+     * This method will delete the classroom data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public boolean delete(Classroom classroom) throws DataAccessException, DataUpdateException {
-        boolean success = false;
-
         try {
-            if (delete == null || delete.isClosed()) {
-                SqlBuilder builder = new SqlBuilder("classroom", StatementType.DELETE)
-                        .addWhereClause("id=?");
-                delete = connection.prepareStatement(builder.build());
-            }
+            if (classroom != null && classroom.id > -1) {
+                if (delete == null || delete.isClosed()) {
+                    SqlBuilder builder = new SqlBuilder("classroom", StatementType.DELETE)
+                            .addWhereClause("id=?");
+                    delete = connection.prepareStatement(builder.build());
+                }
 
-            delete.setInt(1, classroom.id);
+                delete.setInt(1, classroom.id);
+            } else {
+                return false;
+            }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);
@@ -267,13 +332,49 @@ public class MariaClassroomDao implements ClassroomDao {
 
         try {
             delete.executeUpdate();
-            success = true;
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
             throw new DataUpdateException(e);
         }
 
-        return success;
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     * This method will load the classroom data into the MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
+     */
+    @Override
+    public boolean loadFile(File file) throws DataAccessException, DataUpdateException {
+        if (file == null) {
+            throw new NullPointerException("Data File Cannot Be Null!");
+        } else if (!file.exists()) {
+            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Exist!");
+        } else if (file.isDirectory()) {
+            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Not Be A Directory!");
+        } else if (!file.canRead()) {
+            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Have Read Permissions For User [" + System.getProperty("user.name") + "]!");
+        }
+
+        try {
+            if (loadFile == null || loadFile.isClosed()) {
+                loadFile = connection.prepareStatement("LOAD DATA INFILE '?' INTO TABLE classroom FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';");
+            }
+
+            loadFile.setString(1, file.getAbsolutePath());
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing DataAccessException!");
+            throw new DataAccessException(e);
+        }
+
+        try {
+            loadFile.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
+            throw new DataUpdateException(e);
+        }
     }
 
     /**
@@ -282,13 +383,14 @@ public class MariaClassroomDao implements ClassroomDao {
     @Override
     public void close() {
         try {
-            selectAll.close();
-            selectBuilding.close();
-            selectId.close();
-            selectSubject.close();
-            insert.close();
-            update.close();
-            delete.close();
+            if (selectAll != null) selectAll.close();
+            if (selectBuilding != null) selectBuilding.close();
+            if (selectId != null) selectId.close();
+            if (selectSubject != null) selectSubject.close();
+            if (loadFile != null) loadFile.close();
+            if (insert != null) insert.close();
+            if (update != null) update.close();
+            if (delete != null) delete.close();
         } catch (SQLException e) {
             Log.error(e);
         }

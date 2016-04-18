@@ -13,24 +13,65 @@ import me.timetabler.data.sql.SqlBuilder;
 import me.timetabler.data.sql.StatementType;
 import me.util.Log;
 
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Created by stuart on 13/03/16.
+ * {@inheritDoc}
  */
 public class MariaDistanceDao implements DistanceDao {
+    /**
+     * The connection to the database, which all the PreparedStatements rely on.
+     */
     protected Connection connection;
+
+    /**
+     * A PreparedStatement which is used to select all distances from the database.
+     */
     private PreparedStatement selectAll;
+
+    /**
+     * A PreparedStatement which is used to select a distances with a given id from the database.
+     */
     private PreparedStatement selectId;
+
+    /**
+     * A PreparedStatement which is used to select all distances with a given startRoom from the database.
+     */
     private PreparedStatement selectAllRoomStart;
+
+    /**
+     * A PreparedStatement which is used to select all distances with a given endRoom from the database.
+     */
     private PreparedStatement selectAllRoomEnd;
+
+    /**
+     * A PreparedStatement which is used to select all distances with a given pair of rooms from the database.
+     */
     private PreparedStatement selectTwoRooms;
+
+    /**
+     * A PreparedStatement which is used to insert a distance into the database.
+     */
     private PreparedStatement insert;
+
+    /**
+     * A PreparedStatement which is used to update a distance in the database.
+     */
     private PreparedStatement update;
+
+    /**
+     * A PreparedStatement which is used to delete a distance from the database.
+     */
     private PreparedStatement delete;
+
+    /**
+     * A PreparedStatement to load the distance data from a file into the database.
+     */
+    private PreparedStatement loadFile;
 
     public MariaDistanceDao(Connection connection) {
         this.connection = connection;
@@ -38,6 +79,8 @@ public class MariaDistanceDao implements DistanceDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the distance data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<Distance> getAll() throws DataAccessException {
@@ -80,6 +123,8 @@ public class MariaDistanceDao implements DistanceDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the distance data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public Optional<Distance> getById(int id) throws DataAccessException {
@@ -103,28 +148,28 @@ public class MariaDistanceDao implements DistanceDao {
             }
 
             ResultSet set = selectId.executeQuery();
-            set.next();
-            Subject subject1 = new Subject(set.getInt(7), set.getString(8));
-            Subject subject2 = new Subject(set.getInt(12), set.getString(13));
-            Building building1 = new Building(set.getInt(5), set.getString(6));
-            Building building2 = new Building(set.getInt(10), set.getString(11));
-            Classroom classroom1 = new Classroom(set.getInt(2), set.getString(4), building1, subject1);
-            Classroom classroom2 = new Classroom(set.getInt(3), set.getString(9), building2, subject2);
-            distance = new Distance(set.getInt(1), classroom1, classroom2, set.getInt(14));
+            if (set.next()) {
+                Subject subject1 = new Subject(set.getInt(7), set.getString(8));
+                Subject subject2 = new Subject(set.getInt(12), set.getString(13));
+                Building building1 = new Building(set.getInt(5), set.getString(6));
+                Building building2 = new Building(set.getInt(10), set.getString(11));
+                Classroom classroom1 = new Classroom(set.getInt(2), set.getString(4), building1, subject1);
+                Classroom classroom2 = new Classroom(set.getInt(3), set.getString(9), building2, subject2);
+                distance = new Distance(set.getInt(1), classroom1, classroom2, set.getInt(14));
+            }
+            set.close();
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);
         }
 
-        if (distance == null) {
-            return Optional.empty();
-        } else {
-            return Optional.of(distance);
-        }
+        return Optional.ofNullable(distance);
     }
 
     /**
      * {@inheritDoc}
+     * This method will get the distance data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public Optional<Distance> getDistanceBetween(Classroom classroom1, Classroom classroom2) throws DataAccessException {
@@ -144,26 +189,30 @@ public class MariaDistanceDao implements DistanceDao {
             selectTwoRooms.setInt(3, classroom2.id);
 
             ResultSet set = selectTwoRooms.executeQuery();
-            set.next();
-            distance = new Distance(set.getInt(1), classroom1, classroom2, set.getInt(2));
+            if (set.next()) {
+                distance = new Distance(set.getInt(1), classroom1, classroom2, set.getInt(2));
+            }
+            set.close();
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);
         }
 
-        if (distance == null) {
-            return Optional.empty();
-        } else {
-            return Optional.of(distance);
-        }
+        return Optional.ofNullable(distance);
     }
 
     /**
      * {@inheritDoc}
+     * This method will get the distance data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<Distance> getAllDistancesFrom(Classroom classroom) throws DataAccessException {
         ArrayList<Distance> distances = new ArrayList<>();
+
+        if (classroom == null || classroom.id < 0) {
+            return distances;
+        }
 
         try {
             if (selectAllRoomStart == null || selectAllRoomStart.isClosed()) {
@@ -221,10 +270,16 @@ public class MariaDistanceDao implements DistanceDao {
 
     /**
      * {@inheritDoc}
+     * This method will insert the distance data into a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
-    public int insertDistance(Distance distance) throws DataUpdateException, DataAccessException {
+    public int insert(Distance distance) throws DataUpdateException, DataAccessException {
         int id = -1;
+
+        if (distance == null || distance.endRoom == null || distance.startRoom == null || distance.distance < 0) {
+            return id;
+        }
 
         try {
             if (insert == null || insert.isClosed()) {
@@ -251,8 +306,10 @@ public class MariaDistanceDao implements DistanceDao {
 
         try {
             ResultSet set = insert.getGeneratedKeys();
-            set.next();
-            id = set.getInt(1);
+            if (set.next()) {
+                id = set.getInt(1);
+            }
+            set.close();
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
         }
@@ -262,10 +319,14 @@ public class MariaDistanceDao implements DistanceDao {
 
     /**
      * {@inheritDoc}
+     * This method will update the distance data in a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
-    public boolean updateDistance(Distance distance) throws DataUpdateException, DataAccessException {
-        boolean success = false;
+    public boolean update(Distance distance) throws DataUpdateException, DataAccessException {
+        if (distance == null || distance.endRoom == null || distance.startRoom == null || distance.id < 0 || distance.distance < 0) {
+            return false;
+        }
 
         try {
             if (update == null || update.isClosed()) {
@@ -286,21 +347,23 @@ public class MariaDistanceDao implements DistanceDao {
 
         try {
             update.executeUpdate();
-            success = true;
+            return true;
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
             throw new DataUpdateException(e);
         }
-
-        return success;
     }
 
     /**
      * {@inheritDoc}
+     * This method will delete the distance data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
-    public boolean deleteDistance(Distance distance) throws DataUpdateException, DataAccessException {
-        boolean success = false;
+    public boolean delete(Distance distance) throws DataUpdateException, DataAccessException {
+        if (distance == null || distance.id < 0) {
+            return false;
+        }
 
         try {
             if (delete == null || delete.isClosed()) {
@@ -317,13 +380,49 @@ public class MariaDistanceDao implements DistanceDao {
 
         try {
             delete.executeUpdate();
-            success = true;
+            return true;
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
             throw new DataUpdateException(e);
         }
 
-        return success;
+    }
+
+    /**
+     * {@inheritDoc}
+     * This method will delete the distance data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
+     */
+    @Override
+    public boolean loadFile(File file) throws DataAccessException, DataUpdateException {
+        if (file == null) {
+            throw new NullPointerException("Data File Cannot Be Null!");
+        } else if (!file.exists()) {
+            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Exist!");
+        } else if (file.isDirectory()) {
+            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Not Be A Directory!");
+        } else if (!file.canRead()) {
+            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Have Read Permissions For User [" + System.getProperty("user.name") + "]!");
+        }
+
+        try {
+            if (loadFile == null || loadFile.isClosed()) {
+                loadFile = connection.prepareStatement("LOAD DATA INFILE '?' INTO TABLE distance FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';");
+            }
+
+            loadFile.setString(1, file.getAbsolutePath());
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing DataAccessException!");
+            throw new DataAccessException(e);
+        }
+
+        try {
+            loadFile.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
+            throw new DataUpdateException(e);
+        }
     }
 
     /**

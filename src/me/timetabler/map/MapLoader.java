@@ -2,7 +2,7 @@ package me.timetabler.map;
 
 import javafx.concurrent.Task;
 import me.timetabler.data.Building;
-import me.timetabler.data.Classroom;
+import me.timetabler.data.Distance;
 import me.timetabler.data.dao.DaoManager;
 import me.timetabler.data.exceptions.DataAccessException;
 import me.timetabler.data.exceptions.DataConnectionException;
@@ -12,10 +12,7 @@ import me.util.Log;
 
 import java.io.File;
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A background process which parses map files into the Java, calculates the distance between the classrooms and store
@@ -27,7 +24,8 @@ public class MapLoader extends Task<Void> {
 
     /**
      * Initialises the MapLoader.
-     * @param config A map containing the keys 'top_map' and 'other_maps'.
+     *
+     * @param config     A map containing the keys 'top_map' and 'other_maps'.
      * @param daoManager The DaoManger to be used by the MapLoader to store the map data.
      */
     public MapLoader(Map<String, String> config, DaoManager daoManager) {
@@ -37,24 +35,35 @@ public class MapLoader extends Task<Void> {
 
     /**
      * Parses the map files, calculates the distances between all classrooms and adds them to the database.
+     *
      * @return Nothing.
      */
     @Override
     protected Void call() {
+        //Warning: This method utilises lambdas extensively!
+
+        //Initialise temporary data storage
+        Map<String, SchoolMap> buildings = new HashMap<>();
+        Set<Building> buildingsDb = new HashSet<>();
+        HashMap<String, ClassroomCell> classRoomList = new HashMap<>();
+        ArrayList<Distance> distances = new ArrayList<>();
+
         updateMessage("Loading Top Map.");
         updateProgress(0, 6);
-        Log.verbose("Loading Top Map From [" + config.get("top_map") + "] And Other Maps From [" +  config.get("other_maps") + ']');
+        Log.verbose("Loading Top Map From [" + config.get("top_map") + "] And Other Maps From [" + config.get("other_maps") + ']');
 
+        //Loads the top map file
         File mapFolder = new File(config.get("other_maps"));
         SchoolMap schoolMap = new SchoolMap(new File(config.get("top_map")));
         if (mapFolder.isFile()) {
             throw new InvalidParameterException("Map folder is not a folder!");
         }
 
+        //Loads all other map files
         updateMessage("Loading Other Maps");
         updateProgress(1, 6);
+        //Get all the files in ampFolder which is a file, ends with .csv and is not top_map.
         File[] files = mapFolder.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".csv") && !pathname.getPath().endsWith(config.get("top_map")));
-        Map<String, SchoolMap> buildings = new HashMap<>();
         for (File file : files) {
             buildings.put(file.getName().replace(".csv", ""), new SchoolMap(file));
         }
@@ -62,83 +71,34 @@ public class MapLoader extends Task<Void> {
         if (buildings.size() == 0) {
             throw new IllegalStateException("Failed to find any buildings");
         }
+
+        //Initialises buildings
         Log.verbose("Loaded [" + files.length + "] Extra Maps");
         updateMessage("Initialising Buildings. May Take A Long Time.");
         updateProgress(2, 6);
         schoolMap.init(buildings);
 
+        //Adds all the buildings from the maps to the database.
         updateMessage("Adding Buildings To Database.");
         updateProgress(3, 6);
-        List<me.timetabler.map.Building> buildingCells = schoolMap.getAllBuildings();
-        List<Building> buildingsDb = new ArrayList<>();
+        List<BuildingCell> buildingCells = schoolMap.getAllBuildings();
         buildingCells.forEach(building -> {
             try {
+                Log.verbose("Adding building [" + building.name + ']');
                 Building buildingDb = new Building();
                 buildingDb.buildingName = building.name;
                 buildingDb.id = daoManager.getBuildingDao().insert(buildingDb);
                 buildingsDb.add(buildingDb);
             } catch (DataUpdateException | DataAccessException e) {
-                Log.error(e);
-                DataExceptionHandler.handleJavaFx(e, "Building", false);
+                Log.debug("Exception thrown by [" + building.name + ']');
+                DataExceptionHandler.handleJavaFx(e, "BuildingCell", false);
             } catch (DataConnectionException e) {
-                Log.error(e);
-                DataExceptionHandler.handleJavaFx(e, "Building", true);
-            }
-        });
-        Building top = new Building();
-        top.buildingName = "Top";
-        try {
-            top.id = daoManager.getBuildingDao().insert(new Building(-1, "Top"));
-        } catch (DataUpdateException | DataAccessException e) {
-            DataExceptionHandler.handleJavaFx(e, "building", false);
-        } catch (DataConnectionException e) {
-            DataExceptionHandler.handleJavaFx(e, "building", true);
-        }
-        buildingsDb.add(top);
-
-        updateMessage("Adding Classrooms To Database.");
-        updateProgress(4, 6);
-        ArrayList<Classroom> classrooms = new ArrayList<>();
-        schoolMap.getAllClassrooms().forEach(classRoom -> {
-            Classroom room = new Classroom();
-            room.name = classRoom.number;
-            room.building = top;
-            try {
-                room.subject = daoManager.getSubjectDao().getByName(classRoom.subject).orElseThrow(DataAccessException::new);
-                room.id = daoManager.getClassroomDao().insert(room);
-                classrooms.add(room);
-            } catch (DataUpdateException | DataAccessException e) {
-                Log.error(e);
-                DataExceptionHandler.handleJavaFx(e, "Building", false);
-            } catch (DataConnectionException e) {
-                Log.error(e);
-                DataExceptionHandler.handleJavaFx(e, "Building", true);
+                Log.debug("Exception thrown by [" + building.name + ']');
+                DataExceptionHandler.handleJavaFx(e, "BuidlingCell", true);
             }
         });
 
-        buildingsDb.forEach(building -> buildings.forEach((name, map) -> {
-            if (name.equals(building.buildingName)) {
-                map.getAllClassrooms().forEach(classRoom -> {
-                    Log.verbose("Adding classroom [" + classRoom.number + ',' + classRoom.subject + ']');
-                    Classroom room = new Classroom();
-                    room.name = classRoom.number;
-                    room.building = building;
-                    try {
-                        room.subject = daoManager.getSubjectDao().getByName(classRoom.subject).orElseThrow(DataAccessException::new);
-                        room.id = daoManager.getClassroomDao().insert(room);
-                        classrooms.add(room);
-                    } catch (DataUpdateException | DataAccessException e) {
-                        Log.verbose("Error thrown by [" + classRoom.number + ',' + classRoom.subject + ']');
-                        Log.error(e);
-                        DataExceptionHandler.handleJavaFx(e, "Building", false);
-                    } catch (DataConnectionException e) {
-                        Log.error(e);
-                        DataExceptionHandler.handleJavaFx(e, "Building", true);
-                    }
-                });
-            }
-        }));
-
+        //Return null
         return null;
     }
 }

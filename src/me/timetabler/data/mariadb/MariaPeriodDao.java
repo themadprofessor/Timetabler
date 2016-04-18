@@ -14,23 +14,56 @@ import java.sql.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * {@inheritDoc}
+ * The dao will utilise a MariaDB database as it data source.
  */
 public class MariaPeriodDao implements PeriodDao {
+    /**
+     * The connection to the database, which all the PreparedStatements rely on.
+     */
     protected Connection connection;
+
+    /**
+     * A PreparedStatement which is used to select all periods from the database.
+     */
     private PreparedStatement selectAll;
+
+    /**
+     * A PreparedStatement which is used to select a period with a given id from the database.
+     */
+    private PreparedStatement selectId;
+
+    /**
+     * A PreparedStatement which is used to select all periods on a given day from the database.
+     */
     private PreparedStatement selectDay;
+
+    /**
+     * A PreparedStatement which is used to select all periods with a given start time from the database.
+     */
     private PreparedStatement selectStart;
+
+    /**
+     * A PreparedStatement which is used to select all periods with a given end time from the database.
+     */
     private PreparedStatement selectEnd;
 
+
+    /**
+     * Initialises the dao with the given connection. The statements are initialised when required.
+     * @param connection The connection to the database.
+     */
     public MariaPeriodDao(Connection connection) {
         this.connection = connection;
     }
 
     /**
      * {@inheritDoc}
+     * This method will get the period data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<Period> getAll() throws DataAccessException {
@@ -59,6 +92,37 @@ public class MariaPeriodDao implements PeriodDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the period data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
+     */
+    @Override
+    public Optional<Period> getById(int id) throws DataAccessException {
+        Period period = null;
+
+        try {
+            if (selectId == null || selectId.isClosed()) {
+                SqlBuilder builder = new SqlBuilder("period", StatementType.SELECT)
+                        .addColumns("period.id", "dayOfWeek.id", "dayOfWeek.dayOfWeek", "period.startTime", "period.endTime")
+                        .addJoinClause(new JoinClause(JoinType.INNER, "dayOfWeek", "period.dayId=dayOfWeek.id"));
+                selectId = connection.prepareStatement(builder.build());
+            }
+            ResultSet set = selectId.executeQuery();
+            if (set.next()) {
+                period = new Period(set.getInt(1), new Day(set.getInt(4), set.getString(5)), set.getTime(2).toLocalTime(), set.getTime(3).toLocalTime());
+            }
+            set.close();
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
+            throw new DataAccessException(e);
+        }
+
+        return Optional.ofNullable(period);
+    }
+
+    /**
+     * {@inheritDoc}
+     * This method will get the period data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<Period> getAllByDay(Day day) throws DataAccessException {
@@ -88,6 +152,8 @@ public class MariaPeriodDao implements PeriodDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the period data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<Period> getByStartTime(LocalTime time) throws DataAccessException {
@@ -120,6 +186,8 @@ public class MariaPeriodDao implements PeriodDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the period data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<Period> getByEndTime(LocalTime time) throws DataAccessException {
@@ -147,5 +215,21 @@ public class MariaPeriodDao implements PeriodDao {
         }
 
         return periods;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        try {
+            if (selectAll != null) selectAll.close();
+            if (selectDay != null) selectDay.close();
+            if (selectEnd != null) selectEnd.close();
+            if (selectStart != null) selectStart.close();
+            if (connection != null) connection.close();
+        } catch (SQLException e) {
+            Log.error(e);
+        }
     }
 }

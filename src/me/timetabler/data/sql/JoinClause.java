@@ -4,9 +4,9 @@ package me.timetabler.data.sql;
  * Created by stuart on 11/03/16.
  */
 public class JoinClause {
-    protected JoinType type;
-    protected String table;
-    protected String joinCondition;
+    public JoinType type;
+    public String table;
+    public String joinCondition;
 
     public JoinClause() {
     }
@@ -15,30 +15,6 @@ public class JoinClause {
         this.type = type;
         this.table = table;
         this.joinCondition = joinCondition;
-    }
-
-    public JoinType getType() {
-        return type;
-    }
-
-    public void setType(JoinType type) {
-        this.type = type;
-    }
-
-    public String getJoinCondition() {
-        return joinCondition;
-    }
-
-    public void setJoinCondition(String joinCondition) {
-        this.joinCondition = joinCondition;
-    }
-
-    public String getTable() {
-        return table;
-    }
-
-    public void setTable(String table) {
-        this.table = table;
     }
 
     /**

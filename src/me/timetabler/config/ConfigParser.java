@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * A way of parsing a config file into a Map<String, Map<String, String>>. The type of Map is determined by the implementation.<br>
+ * A way of parsing a config file into a Map<String, Map<String, String>>. The type of Map is determined by the implementation.
  * A static factory method is provided to get the correct type of parser for the file type given.
  */
 public interface ConfigParser {

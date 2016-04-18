@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * The manager of all the daos for a specific data source.
  */
-public interface DaoManager {
+public interface DaoManager extends AutoCloseable {
     /**
      * Returns an implementation of StaffDao corresponding with this manager's data source.
      * @return A StaffDao implementation.

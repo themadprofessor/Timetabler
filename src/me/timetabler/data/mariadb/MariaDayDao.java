@@ -18,11 +18,27 @@ import java.util.Optional;
 
 /**
  * {@inheritDoc}
+ * The dao will utilise a MariaDB database as it data source.
  */
 public class MariaDayDao implements DayDao {
+    /**
+     * The connection to the database, which all the PreparedStatements rely on.
+     */
     protected Connection connection;
+
+    /**
+     * A PreparedStatement which is used to select a classroom with a given id from the database.
+     */
     private PreparedStatement selectId;
+
+    /**
+     * A PreparedStatement which is used to select a classroom with a given name from the database.
+     */
     private PreparedStatement selectName;
+
+    /**
+     * A PreparedStatement which is used to select all classrooms from the database.
+     */
     private PreparedStatement selectAll;
 
     public MariaDayDao(Connection connection) {
@@ -32,6 +48,8 @@ public class MariaDayDao implements DayDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the day data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager
      */
     @Override
     public List<Day> getAll() throws DataAccessException {
@@ -60,67 +78,69 @@ public class MariaDayDao implements DayDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the day data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager
      */
     @Override
     public Optional<Day> getById(int id) throws DataAccessException {
         Day day = null;
 
-        try {
-            if (selectId == null || selectId.isClosed()) {
-                SqlBuilder builder = new SqlBuilder("dayOfWeek", StatementType.SELECT)
-                        .addColumn("dayOfWeek")
-                        .addWhereClause("id=?");
-                selectId = connection.prepareStatement(builder.build());
+        if (id >= 0) {
+            try {
+                if (selectId == null || selectId.isClosed()) {
+                    SqlBuilder builder = new SqlBuilder("dayOfWeek", StatementType.SELECT)
+                            .addColumn("dayOfWeek")
+                            .addWhereClause("id=?");
+                    selectId = connection.prepareStatement(builder.build());
+                }
+                selectId.setInt(1, id);
+
+                ResultSet set = selectId.executeQuery();
+                if (set.next()) {
+                    day = new Day(id, set.getString(1));
+                }
+                set.close();
+            } catch (SQLException e) {
+                Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
+                throw new DataAccessException(e);
             }
-            selectId.setInt(1, id);
-
-            ResultSet set = selectId.executeQuery();
-            set.next();
-            day = new Day(id, set.getString(1));
-            set.close();
-        } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
-            throw new DataAccessException(e);
         }
 
-        if (day == null) {
-            return Optional.empty();
-        } else {
-            return Optional.of(day);
-        }
+        return Optional.ofNullable(day);
     }
 
 
     /**
      * {@inheritDoc}
+     * This method will get the day data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager
      */
     @Override
     public Optional<Day> getByName(String name) throws DataAccessException {
         Day day = null;
 
-        try {
-            if (selectName == null || selectName.isClosed()) {
-                SqlBuilder builder = new SqlBuilder("dayOfWeek", StatementType.SELECT)
-                        .addColumn("id")
-                        .addWhereClause("dayOfWeek=?");
-                selectName = connection.prepareStatement(builder.build());
+        if (name != null && !name.isEmpty()) {
+            try {
+                if (selectName == null || selectName.isClosed()) {
+                    SqlBuilder builder = new SqlBuilder("dayOfWeek", StatementType.SELECT)
+                            .addColumn("id")
+                            .addWhereClause("dayOfWeek=?");
+                    selectName = connection.prepareStatement(builder.build());
+                }
+                selectName.setString(1, name);
+
+                ResultSet set = selectName.executeQuery();
+                if (set.next()) {
+                    day = new Day(set.getInt(1), name);
+                }
+                set.close();
+            } catch (SQLException e) {
+                Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
+                throw new DataAccessException(e);
             }
-            selectName.setString(1, name);
-
-            ResultSet set = selectName.executeQuery();
-            set.next();
-            day = new Day(set.getInt(1), name);
-            set.close();
-        } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
-            throw new DataAccessException(e);
         }
 
-        if (day == null) {
-            return Optional.empty();
-        } else {
-            return Optional.of(day);
-        }
+        return Optional.ofNullable(day);
     }
 
     /**

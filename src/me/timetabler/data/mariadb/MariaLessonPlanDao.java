@@ -10,31 +10,89 @@ import me.timetabler.data.sql.SqlBuilder;
 import me.timetabler.data.sql.StatementType;
 import me.util.Log;
 
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * {@inheritDoc}
+ * The dao will utilise a MariaDB database as it data source.
  */
 public class MariaLessonPlanDao implements LessonPlanDao {
+    /**
+     * The connection to the database, which all the PreparedStatements rely on.
+     */
     protected Connection connection;
+
+    /**
+     * A PreparedStatement which is used to select all lessonPlans from the database.
+     */
     private PreparedStatement selectAll;
+
+    /**
+     * A PreparedStatement which is used to select all lessonPlans of a given staff from the database.
+     */
     private PreparedStatement selectAllStaff;
+
+    /**
+     * A PreparedStatement which is used to select all lessonPlans of a given classroom from the database.
+     */
     private PreparedStatement selectAllClassroom;
+
+    /**
+     * A PreparedStatement which is used to select all lessonPlans of a given period from the database.
+     */
     private PreparedStatement selectAllPeriod;
+
+    /**
+     * A PreparedStatement which is used to select all lessonPlans of a given subjectSet from the database.
+     */
     private PreparedStatement selectAllSubjectSet;
+
+    /**
+     * A PreparedStatement which is used to select all lessonPlans of a given subject from the database.
+     */
     private PreparedStatement selectAllSubject;
+
+    /**
+     * A PreparedStatement which is used to select a lessonPlan with a given id from the database.
+     */
+    private PreparedStatement selectId;
+
+    /**
+     * A PreparedStatement which is used to insert a lessonPlan into the database.
+     */
     private PreparedStatement insert;
+
+    /**
+     * A PreparedStatement which is used to update a lessonPlan in the database.
+     */
     private PreparedStatement update;
+
+    /**
+     * A PreparedStatement which is used to delete a lessonPlan from the database.
+     */
     private PreparedStatement delete;
 
+    /**
+     * A PreparedStatement to load the learningSet data from a file into the database.
+     */
+    private PreparedStatement loadFile;
+
+    /**
+     * Initialises the dao with the given connection. The statements are initialised when required.
+     * @param connection The connection to the database.
+     */
     public MariaLessonPlanDao(Connection connection) {
         this.connection = connection;
     }
 
     /**
      * {@inheritDoc}
+     * This method will get the lessonPlan data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<LessonPlan> getAll() throws DataAccessException {
@@ -85,6 +143,8 @@ public class MariaLessonPlanDao implements LessonPlanDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the lessonPlan data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<LessonPlan> getAllByStaff(Staff staff) throws DataAccessException {
@@ -132,6 +192,8 @@ public class MariaLessonPlanDao implements LessonPlanDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the lessonPlan data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<LessonPlan> getAllByClassroom(Classroom classroom) throws DataAccessException {
@@ -177,6 +239,8 @@ public class MariaLessonPlanDao implements LessonPlanDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the lessonPlan data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<LessonPlan> getAllByPeriod(Period period) throws DataAccessException {
@@ -222,6 +286,8 @@ public class MariaLessonPlanDao implements LessonPlanDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the lessonPlan data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<LessonPlan> getAllBySubjectSet(SubjectSet subjectSet) throws DataAccessException {
@@ -266,6 +332,8 @@ public class MariaLessonPlanDao implements LessonPlanDao {
 
     /**
      * {@inheritDoc}
+     * This method will get the lessonPlan data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public List<LessonPlan> getAllBySubject(Subject subject) throws DataAccessException {
@@ -325,10 +393,16 @@ public class MariaLessonPlanDao implements LessonPlanDao {
 
     /**
      * {@inheritDoc}
+     * This method will insert the lessonPlan data into a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public int insert(LessonPlan lessonPlan) throws DataUpdateException, DataAccessException {
         int id = -1;
+
+        if (lessonPlan == null || lessonPlan.subjectSet == null || lessonPlan.period == null) {
+            return id;
+        }
 
         try {
             if (insert == null || insert.isClosed()) {
@@ -366,8 +440,10 @@ public class MariaLessonPlanDao implements LessonPlanDao {
 
         try {
             ResultSet set = insert.getGeneratedKeys();
-            set.next();
-            id = set.getInt(1);
+            if (set.next()) {
+                id = set.getInt(1);
+            }
+            set.close();
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);
@@ -378,10 +454,14 @@ public class MariaLessonPlanDao implements LessonPlanDao {
 
     /**
      * {@inheritDoc}
+     * This method will update the lessonPlan data in a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public boolean update(LessonPlan lessonPlan) throws DataUpdateException, DataAccessException {
-        boolean success = false;
+        if (lessonPlan == null || lessonPlan.period == null || lessonPlan.subjectSet == null || lessonPlan.staff == null || lessonPlan.classroom == null || lessonPlan.id < 0) {
+            return false;
+        }
 
         try {
             if (update == null || update.isClosed()) {
@@ -403,21 +483,23 @@ public class MariaLessonPlanDao implements LessonPlanDao {
 
         try {
             update.executeUpdate();
-            success = true;
+            return true;
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
             throw new DataUpdateException(e);
         }
-
-        return success;
     }
 
     /**
      * {@inheritDoc}
+     * This method will delete the lessonPlan data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
     @Override
     public boolean delete(LessonPlan lessonPlan) throws DataUpdateException, DataAccessException {
-        boolean success = false;
+        if (lessonPlan == null || lessonPlan.id < 0) {
+            return false;
+        }
 
         try {
             if (delete == null || delete.isClosed()) {
@@ -432,12 +514,128 @@ public class MariaLessonPlanDao implements LessonPlanDao {
 
         try {
             delete.executeUpdate();
-            success = true;
+            return true;
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
             throw new DataUpdateException(e);
         }
+    }
 
-        return success;
+    /**
+     * {@inheritDoc}
+     * This method will get the lessonPlan data from a MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
+     */
+    @Override
+    public Optional<LessonPlan> getById(int id) throws DataAccessException {
+        LessonPlan plan = null;
+
+        try {
+            if (id >= 0) {
+                if (selectId == null || selectId.isClosed()) {
+                    SqlBuilder builder = new SqlBuilder("lessonPlan", StatementType.SELECT)
+                        .addColumns("subject.id", "subject.subjectName",
+                                "classroom.id", "classroom.roomName", "building.id", "building.buildingName", "period.id",
+                                "dayOfWeek.id", "dayOfWeek.dayOfWeek", "period.startTime", "period.endTime", "subjectSet.id",
+                                "learningSet.id", "learningSet.setName", "schoolYear.id", "schoolYear.schoolYearName")
+                        .addJoinClause(new JoinClause(JoinType.INNER, "classroom", "lessonPlan.classroomId=classroom.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "building", "classroom.buildingId=building.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "period", "lessonPlan.periodId=period.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "dayOfWeek", "period.dayId=dayOfWeek.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "subjectSet", "lessonPlan.subjectSetId=subjectSet.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "subject", "subjectSet.subjectId=subject.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "learningSet", "subjectSet.setId=learningSet.id"))
+                        .addJoinClause(new JoinClause(JoinType.INNER, "schoolYear", "subjectSet.schoolYearId=schoolYear.id"))
+                        .addWhereClause("lessonPlan.id=?");
+                    selectId = connection.prepareStatement(builder.build());
+                }
+
+                selectId.setInt(1, id);
+
+                ResultSet set = selectId.executeQuery();
+
+                if (set.next()) {
+                    Subject subject = new Subject(set.getInt(1), set.getString(2));
+                    Staff staff = new Staff(set.getInt(3), set.getString(4), subject, set.getInt(5));
+                    Classroom classroom = new Classroom(set.getInt(6), set.getString(7),
+                            new Building(set.getInt(8), set.getString(9)), subject);
+                    Period period = new Period(set.getInt(10),
+                            new Day(set.getInt(11), set.getString(12)), set.getTime(13).toLocalTime(), set.getTime(14).toLocalTime());
+                    SubjectSet subjectSet = new SubjectSet(set.getInt(15), subject, new LearningSet(set.getInt(16), set.getString(17)),
+                            new SchoolYear(set.getInt(18), set.getString(19)));
+
+                    plan = new LessonPlan(id, staff, classroom, period, subjectSet);
+                }
+                set.close();
+            }
+        } catch (SQLException e) {
+            Log.error("Caught [" + e + "] so throwing a DataAccessException!");
+            throw new DataAccessException(e);
+        }
+
+        if (plan == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(plan);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * This method will load the classroom data into the MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
+     */
+    @Override
+    public boolean loadFile(File file) throws DataAccessException, DataUpdateException {
+        if (file == null) {
+            throw new NullPointerException("Data File Cannot Be Null!");
+        } else if (!file.exists()) {
+            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Exist!");
+        } else if (file.isDirectory()) {
+            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Not Be A Directory!");
+        } else if (!file.canRead()) {
+            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Have Read Permissions For User [" + System.getProperty("user.name") + "]!");
+        }
+
+        try {
+            if (loadFile == null || loadFile.isClosed()) {
+                loadFile = connection.prepareStatement("LOAD DATA INFILE '?' INTO TABLE classroom FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';");
+            }
+
+            loadFile.setString(1, file.getAbsolutePath());
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing DataAccessException!");
+            throw new DataAccessException(e);
+        }
+
+        try {
+            loadFile.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
+            throw new DataUpdateException(e);
+        }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        try {
+            if (selectAll != null && !selectAll.isClosed()) selectAll.close();
+            if (selectAllStaff != null && !selectAllStaff.isClosed()) selectAllStaff.close();
+            if (selectAllClassroom != null && !selectAllClassroom.isClosed()) selectAllClassroom.close();
+            if (selectAllPeriod != null && !selectAllPeriod.isClosed()) selectAllPeriod.close();
+            if (selectAllSubjectSet != null && !selectAllSubjectSet.isClosed()) selectAllSubjectSet.close();
+            if (selectAllSubject != null && !selectAllSubject.isClosed()) selectAllSubject.close();
+            if (insert != null && !insert.isClosed()) insert.close();
+            if (update != null && !update.isClosed()) update.close();
+            if (delete != null && !delete.isClosed()) delete.close();
+            if (connection != null && !connection.isClosed()) connection.close();
+        } catch (SQLException e) {
+            Log.error(e);
+        }
     }
 }

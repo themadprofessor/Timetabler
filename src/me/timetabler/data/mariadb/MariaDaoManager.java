@@ -1,11 +1,13 @@
 package me.timetabler.data.mariadb;
 
+import javafx.scene.control.Alert;
 import me.timetabler.data.dao.*;
 import me.timetabler.data.exceptions.DataConnectionException;
+import me.timetabler.ui.main.JavaFxBridge;
 import me.util.Log;
-import org.mariadb.jdbc.MariaDbDataSource;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
@@ -14,39 +16,95 @@ import java.util.Map;
  * {@inheritDoc}
  */
 public class MariaDaoManager implements DaoManager {
+    /**
+     * The DataSource wrapper object to the database.
+     */
     private DataSource source;
+
+    /**
+     * The connection given to the daos.
+     */
     private Connection connection;
+
+    /**
+     * The MariaDB SubjectDao implementation.
+     */
     private MariaSubjectDao subjectDao;
+
+    /**
+     * The MariaDB StaffDao implementation.
+     */
     private MariaStaffDao staffDao;
+
+    /**
+     * The MariaDB DayDao implementation.
+     */
     private MariaDayDao dayDao;
+
+    /**
+     * The MariaDB ClassroomDao implementation.
+     */
     private MariaClassroomDao classroomDao;
+
+    /**
+     * The MariaDB BuildingDao implementation.
+     */
     private MariaBuildingDao buildingDao;
+
+    /**
+     * The MariaDB DistanceDao implementation.
+     */
     private MariaDistanceDao distanceDao;
+
+    /**
+     * The MariaDB LearningSetDao implementation.
+     */
     private MariaLearningSetDao learningSetDao;
+
+    /**
+     * The MariaDB LessonPlanDao implementation.
+     */
     private MariaLessonPlanDao lessonPlanDao;
+
+    /**
+     * The MariaDB PeriodDao implementation.
+     */
     private MariaPeriodDao periodDao;
+
+    /**
+     * The MariaDB SchoolYearDao implementation.
+     */
     private MariaSchoolYearDao schoolYearDao;
+
+    /**
+     * The MariaDB SubjectSetDao implementation.
+     */
     private MariaSubjectSetDao subjectSetDao;
 
     /**
+     * The manager of the MariaDB server.
+     */
+    private MariaDbManager dbManager;
+
+    /**
      * Initialises the DaoManager and establishes a DataSource object with the database.
-     * @param config A map containing the keys 'addr', 'port', 'database', 'username' and 'password'.
+     * @param config A map containing the keys 'addr', 'port', 'database', 'exec', 'args', 'username' and 'password'.
      * @throws DataConnectionException Thrown if the data source cannot be established.
      */
     public MariaDaoManager(Map<String, String> config) throws DataConnectionException {
         try {
-            MariaDbDataSource source = new MariaDbDataSource(config.get("addr"), Integer.parseInt(config.get("port")), config.get("database"));
-            source.setUser(config.get("username"));
-            source.setPassword(config.get("password"));
-            this.source = source;
-        } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing DataConnectionException!");
-            throw new DataConnectionException(config.get("addr"), e);
+            dbManager = new MariaDbManager(config);
+        } catch (IOException e) {
+            JavaFxBridge.createAlert(Alert.AlertType.ERROR, "Failed to start database!", null, "Failed to start the database due to a IO exception! [" + e.getMessage() + ']', true);
         }
+        source = dbManager.getDataSource(config);
     }
 
     /**
      * {@inheritDoc}
+     * Using the lazy initialisation pattern, the staffDao object is initialised when it is needed. Also, the
+     * connection object is checked and passed to staffDao, if staffDao is initialised and its connection
+     * object is uninitialised or closed.
      */
     @Override
     public StaffDao getStaffDao() throws DataConnectionException {
@@ -68,6 +126,9 @@ public class MariaDaoManager implements DaoManager {
 
     /**
      * {@inheritDoc}
+     * Using the lazy initialisation pattern, the subjectDao object is initialised when it is needed. Also, the
+     * connection object is checked and passed to subjectDao, if subjectDao is initialised and its connection
+     * object is uninitialised or closed.
      */
     @Override
     public SubjectDao getSubjectDao() throws DataConnectionException {
@@ -89,6 +150,9 @@ public class MariaDaoManager implements DaoManager {
 
     /**
      * {@inheritDoc}
+     * Using the lazy initialisation pattern, the dayDao object is initialised when it is needed. Also, the
+     * connection object is checked and passed to dayDao, if dayDao is initialised and its connection
+     * object is uninitialised or closed.
      */
     @Override
     public DayDao getDayDao() throws DataConnectionException {
@@ -110,6 +174,9 @@ public class MariaDaoManager implements DaoManager {
 
     /**
      * {@inheritDoc}
+     * Using the lazy initialisation pattern, the classroomDao object is initialised when it is needed. Also, the
+     * connection object is checked and passed to classroomDao, if classroomDao is initialised and its connection
+     * object is uninitialised or closed.
      */
     @Override
     public ClassroomDao getClassroomDao() throws DataConnectionException {
@@ -131,6 +198,9 @@ public class MariaDaoManager implements DaoManager {
 
     /**
      * {@inheritDoc}
+     * Using the lazy initialisation pattern, the buildingDao object is initialised when it is needed. Also, the
+     * connection object is checked and passed to buildingDao, if buildingDao is initialised and its connection
+     * object is uninitialised or closed.
      */
     @Override
     public BuildingDao getBuildingDao() throws DataConnectionException {
@@ -152,6 +222,9 @@ public class MariaDaoManager implements DaoManager {
 
     /**
      * {@inheritDoc}
+     * Using the lazy initialisation pattern, the distanceDao object is initialised when it is needed. Also, the
+     * connection object is checked and passed to distanceDao, if distanceDao is initialised and its connection
+     * object is uninitialised or closed.
      */
     @Override
     public DistanceDao getDistanceDao() throws DataConnectionException {
@@ -173,6 +246,9 @@ public class MariaDaoManager implements DaoManager {
 
     /**
      * {@inheritDoc}
+     * Using the lazy initialisation pattern, the lessonSetDao object is initialised when it is needed. Also, the
+     * connection object is checked and passed to lessonSetDao, if lessonSetDao is initialised and its connection
+     * object is uninitialised or closed.
      */
     @Override
     public LearningSetDao getLearningSetDao() throws DataConnectionException {
@@ -194,6 +270,9 @@ public class MariaDaoManager implements DaoManager {
 
     /**
      * {@inheritDoc}
+     * Using the lazy initialisation pattern, the lessonPlanDao object is initialised when it is needed. Also, the
+     * connection object is checked and passed to lessonPlanDao, if lessonPlanDao is initialised and its connection
+     * object is uninitialised or closed.
      */
     @Override
     public LessonPlanDao getLessonPlanDao() throws DataConnectionException {
@@ -215,6 +294,9 @@ public class MariaDaoManager implements DaoManager {
 
     /**
      * {@inheritDoc}
+     * Using the lazy initialisation pattern, the periodDao object is initialised when it is needed. Also, the
+     * connection object is checked and passed to periodDao, if periodDao is initialised and its connection
+     * object is uninitialised or closed.
      */
     @Override
     public PeriodDao getPeriodDao() throws DataConnectionException {
@@ -236,6 +318,9 @@ public class MariaDaoManager implements DaoManager {
 
     /**
      * {@inheritDoc}
+     * Using the lazy initialisation pattern, the schoolYearDao object is initialised when it is needed. Also, the
+     * connection object is checked and passed to schoolYearDao, if schoolYearDao is initialised and its connection
+     * object is uninitialised or closed.
      */
     @Override
     public SchoolYearDao getSchoolYearDao() throws DataConnectionException {
@@ -257,6 +342,9 @@ public class MariaDaoManager implements DaoManager {
 
     /**
      * {@inheritDoc}
+     * Using the lazy initialisation pattern, the subjectSetDao object is initialised when it is needed. Also, the
+     * connection object is checked and passed to subjectSetDao, if subjectSetDao is initialised and its connection
+     * object is uninitialised or closed.
      */
     @Override
     public SubjectSetDao getSubjectSetDao() throws DataConnectionException {
@@ -281,10 +369,23 @@ public class MariaDaoManager implements DaoManager {
      */
     @Override
     public void close() {
+        if (subjectDao != null) subjectDao.close();
+        if (staffDao != null) staffDao.close();
+        if (dayDao != null) dayDao.close();
+        if (classroomDao != null) classroomDao.close();
+        if (buildingDao != null) buildingDao.close();
+        if (distanceDao != null) distanceDao.close();
+        if (learningSetDao != null) learningSetDao.close();
+        if (lessonPlanDao != null) lessonPlanDao.close();
+        if (periodDao != null) periodDao.close();
+        if (schoolYearDao != null) schoolYearDao.close();
+        if (subjectSetDao != null) subjectSetDao.close();
+        dbManager.close();
         try {
-            connection.close();
+            if (connection != null && !connection.isClosed()) connection.close();
         } catch (SQLException e) {
             Log.error(e);
         }
     }
+
 }

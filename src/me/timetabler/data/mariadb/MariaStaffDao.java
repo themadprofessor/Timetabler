@@ -11,6 +11,7 @@ import me.timetabler.data.sql.SqlBuilder;
 import me.timetabler.data.sql.StatementType;
 import me.util.Log;
 
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,15 +19,48 @@ import java.util.Optional;
 
 /**
  * {@inheritDoc}
+ * The dao will utilise a MariaDB database as it data source.
  */
 public class MariaStaffDao implements StaffDao {
+    /**
+     * The connection to the database, which all the PreparedStatements rely on.
+     */
     protected Connection connection;
+
+    /**
+     * A PreparedStatement which is used to select all staffs from the database.
+     */
     private PreparedStatement selectAll;
+
+    /**
+     * A PreparedStatement which is used to select all staffs of a given subject from the database.
+     */
     private PreparedStatement selectAllSubject;
+
+    /**
+     * A PreparedStatement which is used to select a staff with a given id from the database.
+     */
     private PreparedStatement selectId;
+
+    /**
+     * A PreparedStatement which is used to insert a staff into the database.
+     */
     private PreparedStatement insert;
+
+    /**
+     * A PreparedStatement which is used to update a staff in the database.
+     */
     private PreparedStatement update;
+
+    /**
+     * A PreparedStatement which is used to delete a staff from the database.
+     */
     private PreparedStatement delete;
+
+    /**
+     * A PreparedStatement to load the staff data from a file into the database.
+     */
+    private PreparedStatement loadFile;
 
     public MariaStaffDao(Connection connection) {
         this.connection = connection;
@@ -129,7 +163,7 @@ public class MariaStaffDao implements StaffDao {
      * {@inheritDoc}
      */
     @Override
-    public int insertStaff(Staff staff) throws DataAccessException, DataUpdateException {
+    public int insert(Staff staff) throws DataAccessException, DataUpdateException {
         int id = -1;
 
         try {
@@ -171,7 +205,7 @@ public class MariaStaffDao implements StaffDao {
      * {@inheritDoc}
      */
     @Override
-    public boolean updateStaff(Staff staff) throws DataAccessException, DataUpdateException {
+    public boolean update(Staff staff) throws DataAccessException, DataUpdateException {
         boolean success = false;
 
         try {
@@ -205,7 +239,7 @@ public class MariaStaffDao implements StaffDao {
      * {@inheritDoc}
      */
     @Override
-    public boolean deleteStaff(Staff staff) throws DataAccessException, DataUpdateException {
+    public boolean delete(Staff staff) throws DataAccessException, DataUpdateException {
         boolean success = false;
 
         try {
@@ -229,5 +263,61 @@ public class MariaStaffDao implements StaffDao {
         }
 
         return success;
+    }
+
+    /**
+     * {@inheritDoc}
+     * This method will load the classroom data into the MariaDB database.
+     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
+     */
+    @Override
+    public boolean loadFile(File file) throws DataAccessException, DataUpdateException {
+        if (file == null) {
+            throw new NullPointerException("Data File Cannot Be Null!");
+        } else if (!file.exists()) {
+            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Exist!");
+        } else if (file.isDirectory()) {
+            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Not Be A Directory!");
+        } else if (!file.canRead()) {
+            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Have Read Permissions For User [" + System.getProperty("user.name") + "]!");
+        }
+
+        try {
+            if (loadFile == null || loadFile.isClosed()) {
+                loadFile = connection.prepareStatement("LOAD DATA INFILE '?' INTO TABLE classroom FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';");
+            }
+
+            loadFile.setString(1, file.getAbsolutePath());
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing DataAccessException!");
+            throw new DataAccessException(e);
+        }
+
+        try {
+            loadFile.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
+            throw new DataUpdateException(e);
+        }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        try {
+            if (selectAll != null && !selectAll.isClosed()) selectAll.close();
+            if (selectAllSubject != null && !selectAllSubject.isClosed()) selectAllSubject.close();
+            if (selectId != null && !selectId.isClosed()) selectId.close();
+            if (insert != null && !insert.isClosed()) insert.close();
+            if (update != null && !update.isClosed()) update.close();
+            if (delete != null && !delete.isClosed()) delete.close();
+            if (connection != null && !connection.isClosed()) connection.close();
+        } catch (SQLException e) {
+            Log.error(e);
+        }
     }
 }

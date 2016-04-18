@@ -4,11 +4,13 @@ import me.util.Log;
 
 import java.io.*;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
+ * {@inheritDoc}
  * A ConfigParser implementation for a YAML config file.
  */
 public class YamlConfigParser implements ConfigParser {
@@ -36,17 +38,20 @@ public class YamlConfigParser implements ConfigParser {
 
     /**
      * {@inheritDoc}
+     * @return The parsed config in an unmodifiable HashMap.
      */
     @Override
     public Map<String, Map<String, String>> parse() throws IOException {
         checkFile(loc);
-        Map<String, Map<String, String>> map = new LinkedHashMap<>();
+        Map<String, Map<String, String>> map = new HashMap<>();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(new FileInputStream(loc))));
         String line;
         String currentMap = "";
         while ((line = reader.readLine()) != null) {
             line = line.replaceAll("#.*", "");
+            if (line.trim().isEmpty()) break;
+
             if (mapRegex.matcher(line).matches()) {
                 currentMap = line.split(":")[0].trim();
                 map.put(currentMap, new LinkedHashMap<>());

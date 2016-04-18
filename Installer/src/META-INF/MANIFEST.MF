@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: lib/sevenzipjbinding.jar lib/sevenzipjbinding-AllPlatforms
+ .jar
+Main-Class: me.timetabler.installer.Main
+
