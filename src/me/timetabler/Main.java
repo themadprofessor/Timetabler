@@ -25,7 +25,14 @@ import java.util.Map;
  * The entry point of the program. It handles command line parameters.
  */
 public class Main extends Application {
+    /**
+     * The implementation of daoManager to be used by the system.
+     */
     private DaoManager daoManager;
+
+    /**
+     * The type of config loader to be used. It defaults to YAML as that is the default config file format.
+     */
     private static ConfigType configType = ConfigType.YAML;
 
     /**

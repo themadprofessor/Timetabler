@@ -67,8 +67,6 @@ public class SchoolMap {
                         //Do nothing as default value is wall
                     } else if ("0".equals(cellsStrings[x])) {
                         schoolGrid[x][y] = new Path();
-                    } else if ("Enter".equals(cellsStrings[x])) {
-                        schoolGrid[x][y] = new Entrance();
                     } else if (cellsStrings[x].startsWith("C-")) {
                         String[] split = cellsStrings[x].replace("C-", "").split("-");
                         schoolGrid[x][y] = new ClassroomCell(split[0], split[1]);

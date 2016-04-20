@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The way for the program to interact with a data source. All list implementations are to be determined by the
+ * The way for the program to interact a type of data from a data source. All list implementations are to be determined by the
  * implementation.
  */
 public interface Dao<T> extends AutoCloseable {
