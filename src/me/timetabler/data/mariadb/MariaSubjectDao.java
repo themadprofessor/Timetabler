@@ -300,7 +300,7 @@ public class MariaSubjectDao implements SubjectDao {
 
         try {
             if (loadFile == null || loadFile.isClosed()) {
-                loadFile = connection.prepareStatement("LOAD DATA INFILE ? INTO TABLE classroom FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';");
+                loadFile = connection.prepareStatement("TRUNCATE TABLE subject;LOAD DATA INFILE ? INTO TABLE subject FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';");
             }
 
             loadFile.setString(1, file.getAbsolutePath());

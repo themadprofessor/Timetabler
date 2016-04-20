@@ -369,8 +369,6 @@ public class Bridge {
             }));
             Log.debug("Started map loader thread");
         });
-
-
     }
 
     public void loadFromFile(String dataType, int[] presentIds) {

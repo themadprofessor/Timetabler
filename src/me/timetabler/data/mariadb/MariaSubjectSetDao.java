@@ -352,7 +352,7 @@ public class MariaSubjectSetDao implements SubjectSetDao {
 
         try {
             if (loadFile == null || loadFile.isClosed()) {
-                loadFile = connection.prepareStatement("LOAD DATA INFILE '?' INTO TABLE classroom FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';");
+                loadFile = connection.prepareStatement("LOAD DATA INFILE '?' INTO TABLE subjectSet FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';");
             }
 
             loadFile.setString(1, file.getAbsolutePath());

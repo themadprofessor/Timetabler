@@ -1,7 +1,10 @@
 package me.timetabler.installer;
 
 import javafx.concurrent.Task;
-import net.sf.sevenzipjbinding.*;
+import net.sf.sevenzipjbinding.IInArchive;
+import net.sf.sevenzipjbinding.SevenZip;
+import net.sf.sevenzipjbinding.SevenZipException;
+import net.sf.sevenzipjbinding.SevenZipNativeInitializationException;
 import net.sf.sevenzipjbinding.impl.RandomAccessFileInStream;
 
 import java.io.File;
@@ -10,6 +13,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.NotDirectoryException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A background thread which installs the system to the given path and sets the root password to be the given password.
@@ -27,9 +32,9 @@ public class InstallThread extends Task<Void> {
     private char[] password;
 
     /**
-     * A class-wide flag to determine if the install was a success.
+     * A class-wide flag to specify if the install is not failing.
      */
-    boolean success = true;
+    private boolean success = true;
 
     /**
      * Initaliises the class. The installPath must exist, be a directory and have write permissions.
@@ -74,49 +79,22 @@ public class InstallThread extends Task<Void> {
                 updateProgress(-1, 5);
                 return null;
             }
-            extract7z(sevenZip, installPath);
+            extract(sevenZip, installPath);
         } catch (SevenZipNativeInitializationException e) {
             e.printStackTrace();
             updateProgress(-1, 5);
             updateMessage("ERROR [" + e.getMessage() + ']');
             success = false;
         } finally {
-            if (sevenZip != null) sevenZip.close();
-        }
-
-        //Check if the task has been cancelled, and stop if it has.
-        if (isCancelled()) {
-            updateMessage("Cancelled");
-            updateProgress(-1, 5);
-            return null;
-        }
-        try {
-            OperatingSystem os = OperatingSystem.getCurrentOs();
-            System.out.println("Current OS [" + os + ']');
-            RandomAccessFile mariaZip = null;
-            switch (os) {
-                case WINDOWS_X64:
-                    mariaZip = new RandomAccessFile("assets/mariadb-windows-x86_64.7z", "r");
-                    break;
-                case WINDOWS_X86:
-                    mariaZip = new RandomAccessFile("assets/mariadb-windows-i686.7z", "r");
-                    break;
-                case LINUX_X64:
-                    mariaZip = new RandomAccessFile("assets/mariadb-linux-x86_64.7z", "r");
-                    break;
-                case LINUX_X86:
-                    mariaZip = new RandomAccessFile("assets/mariadb-linux-i686.7z", "r");
-                    break;
+            try {
+                if (sevenZip != null) sevenZip.close();
+            } catch (IOException e) {
+                displayException(e);
+                success = false;
             }
-
-            //The archives contain the folder 'mariadb' as the top entry.
-            extract7z(sevenZip, installPath);
-        } catch (UnsupportedOperationException e) {
-            //No need to change message as it shows the currently supported operating systems and the exception info.
-            updateMessage("[ERROR] " + e.getMessage());
-            updateProgress(-1, 5);
-            e.printStackTrace();
         }
+        //Stop if the system could not be extracted.
+        if (!success) return null;
 
         //Check if the task has been cancelled, and stop if it has.
         if (isCancelled()) {
@@ -125,12 +103,51 @@ public class InstallThread extends Task<Void> {
             return null;
         }
 
-        if (success) {
-            updateMessage("Done.");
-            updateProgress(5, 5);
-        } else  {
-            System.out.println("Completed with problems.");
+        updateProgress(2, 5);
+        updateMessage("Extracting Database System");
+        OperatingSystem os = OperatingSystem.getCurrentOs();
+        System.out.println("Current OS [" + os + ']');
+        if (os == OperatingSystem.UNSUPPORTED) {
+            updateMessage("Unsupported operating system/architecture! Please use a supported system. Consult the user manual for the supported system list.");
+            updateProgress(-1, 5);
+            return null;
         }
+
+        RandomAccessFile mariaZip;
+        if (os == OperatingSystem.WINDOWS_X64 || os == OperatingSystem.WINDOWS_X86) {
+            mariaZip = new RandomAccessFile("assets/mariadb-" + os.getName() + ".7z", "r");
+        } else {
+            mariaZip = new RandomAccessFile("assets/mariadb-" + os.getName() + ".tar.gz", "r");
+        }
+        //The archives contain the folder 'mariadb' as the top entry.
+        extract(mariaZip, installPath);
+        mariaZip.close();
+        //Stop if the system could not be extracted.
+        if (!success) return null;
+
+        //Check if the task has been cancelled, and stop if it has.
+        if (isCancelled()) {
+            updateMessage("Cancelled");
+            updateProgress(-1, 5);
+            return null;
+        }
+        updateProgress(3, 5);
+        updateMessage("Setting Up Database");
+        File mariaDataDir = new File(installPath, "db");
+        File mariaBaseDir = new File(installPath, "mariadb");
+        //installDb(mariaDataDir, mariaBaseDir);
+
+        //Stop if the system could not be extracted.
+        if (!success) return null;
+        //Check if the task has been cancelled, and stop if it has.
+        if (isCancelled()) {
+            updateMessage("Cancelled");
+            updateProgress(-1, 5);
+            return null;
+        }
+
+        updateMessage("Done.");
+        updateProgress(5, 5);
         //Return nothing.
         return null;
     }
@@ -141,12 +158,12 @@ public class InstallThread extends Task<Void> {
      * @param sevenZip The archive to extract.
      * @param outFolder The folder to extract the archive to.
      */
-    private void extract7z(RandomAccessFile sevenZip, File outFolder) {
+    private void extract(RandomAccessFile sevenZip, File outFolder) {
         assert outFolder.exists() && outFolder.isDirectory() && outFolder.canWrite() : "outFolder must exist, be a directory and have write permissions!";
 
         IInArchive inArchive = null;
         try {
-            inArchive = SevenZip.openInArchive(ArchiveFormat.SEVEN_ZIP, new RandomAccessFileInStream(sevenZip));
+            inArchive = SevenZip.openInArchive(null, new RandomAccessFileInStream(sevenZip));
             inArchive.extract(null, false, new ExtractCallback(inArchive, outFolder));
         } catch (SevenZipException e) {
             e.printStackTrace();
@@ -160,7 +177,43 @@ public class InstallThread extends Task<Void> {
                 e.printStackTrace();
                 updateProgress(-1, 5);
                 updateMessage("ERROR [" + e.getMessage() + ']');
+                success = false;
             }
         }
+    }
+
+    private void installDb(File dataDir, File baseDir) {
+        //Setup command to install system tables
+        List<String> cmd = new ArrayList<>();
+        if (OperatingSystem.getCurrentOs() == OperatingSystem.WINDOWS_X64 || OperatingSystem.getCurrentOs() == OperatingSystem.WINDOWS_X86) {
+            cmd.add(baseDir.getPath() + "/bin/mysql_install_db.exe");
+        } else {
+            cmd.add(baseDir.getPath() + "/scripts/mysql_install_db");
+            cmd.add("--no-defaults");
+            cmd.add("--basedir=" + baseDir);
+            cmd.add("--datadir=" + dataDir);
+        }
+
+        try {
+            Process process = new ProcessBuilder().inheritIO().command(cmd).start();
+            //Make sure the tables where installed successfully
+            if (process.waitFor() != 0) {
+                success = false;
+                return;
+            }
+        } catch (IOException | InterruptedException e) {
+            displayException(e);
+            success = false;
+        }
+    }
+
+    /**
+     * Prints the stackTrace of the given exception, sets the process to indefinite and displays the error to the user.
+     * @param e The exception to display.
+     */
+    private void displayException(Exception e) {
+        e.printStackTrace();
+        updateProgress(-1, 5);
+        updateMessage("ERROR [" + e.getMessage() + ']');
     }
 }

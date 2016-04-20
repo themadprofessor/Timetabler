@@ -5,7 +5,7 @@ import java.util.HashMap;
 /**
  * A cell which represents a class room containing it's room number
  */
-public class ClassRoom implements ImportantCell {
+public class ClassroomCell implements ImportantCell {
     /**
      * The number the room is identified with
      */
@@ -23,7 +23,7 @@ public class ClassRoom implements ImportantCell {
      * @param number The room's identifier
      * @param s
      */
-    public ClassRoom(String number, String subject) {
+    public ClassroomCell(String number, String subject) {
         this.number = number;
         distances = new HashMap<>();
         this.subject = subject;
@@ -38,14 +38,14 @@ public class ClassRoom implements ImportantCell {
     }
 
     /**
-     * If the obj is a ClassRoom, then it will return true if the room numbers are the same. If the obj is not a ClassRoom, then uses the super's equals method.
+     * If the obj is a ClassroomCell, then it will return true if the room numbers are the same. If the obj is not a ClassroomCell, then uses the super's equals method.
      * @param obj The object to compare with.
-     * @return If the obj is a ClassRoom, then it will return true if the room numbers are the same. If the obj is not a ClassRoom, then uses the super's equals method.
+     * @return If the obj is a ClassroomCell, then it will return true if the room numbers are the same. If the obj is not a ClassroomCell, then uses the super's equals method.
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ClassRoom) {
-            return number.equals(((ClassRoom) obj).number);
+        if (obj instanceof ClassroomCell) {
+            return number.equals(((ClassroomCell) obj).number);
         } else {
             return super.equals(obj);
         }

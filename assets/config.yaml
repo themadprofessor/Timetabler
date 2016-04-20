@@ -8,4 +8,4 @@ data_source:                                    #Configuration regarding the dat
     - database: school                          #The name of the database
     - username: root                            #The username to access the database, this should not change
     - exec: /usr/bin/mysqld                     #The path to the database server daemon
-    - args: --defaults-file=#                   #The arguments to be given to mysqld
+    - args: --no-defaults --datadir=./db --basedir=/usr --socket=db/mysqld.sock #The arguments to be given to mysqld

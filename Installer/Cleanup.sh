@@ -2,7 +2,7 @@
 if [[ "$PWD" =~ "Timetabler/Installer" ]]; then
     cd ../test
     if [[ "$PWD" =~ "Timetabler/test" ]]; then
-        rm -fv ./*
+        rm -fvr ./*
     else
         echo "Im in the wrong working directory"
         echo $PWD

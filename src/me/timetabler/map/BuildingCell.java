@@ -9,7 +9,7 @@ import java.util.HashMap;
  * A type of cell which contains of the important cells within it in its map.<br>
  * The init method must be called after the full map has been populated inorder to avoid StackOverflowExceptions.
  */
-public class Building implements ImportantCell {
+public class BuildingCell implements ImportantCell {
     /**
      * The important cells within this building.
      */
@@ -24,7 +24,7 @@ public class Building implements ImportantCell {
      * Initialises the building but does not calculate the distances between the internal important cells.
      * @param name The unique name of the building.
      */
-    public Building(String name) {
+    public BuildingCell(String name) {
         this.name = name;
         important = new ArrayList<>();
     }
@@ -34,11 +34,11 @@ public class Building implements ImportantCell {
      * @param schoolMap The map of this building.
      */
     public void init(SchoolMap schoolMap) {
-        Log.debug("Initialising Building [" + name + "]");
+        Log.debug("Initialising BuildingCell [" + name + "]");
         important = schoolMap.getAllImportantCells();
         Walker walker = new Walker(schoolMap);
         if (important.isEmpty()) {
-            throw new IllegalStateException("No Important Cells Found in Building [" + name +']');
+            throw new IllegalStateException("No Important Cells Found in BuildingCell [" + name +']');
         }
         important.forEach(source -> important.forEach(destination -> {
             if (!source.equals(destination) && (!source.getDistances().containsKey(destination) || !destination.getDistances().containsKey(source))) {

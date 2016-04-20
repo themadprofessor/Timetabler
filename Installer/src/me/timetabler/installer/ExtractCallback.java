@@ -27,6 +27,21 @@ public class ExtractCallback implements IArchiveExtractCallback {
     private BufferedOutputStream outStream;
 
     /**
+     * The number of extracted files.
+     */
+    private long completed;
+
+    /**
+     * The total number of file being extracted.
+     */
+    private long total;
+
+    /**
+     * The index of the file currently being extracted.
+     */
+    private int currentIndex;
+
+    /**
      * Initialises the callback. The outFolder must have write permissions.
      * @param inArchive The archive being extracted.
      * @param outFolder The folder the archive will be extracted to.
@@ -53,10 +68,10 @@ public class ExtractCallback implements IArchiveExtractCallback {
 
         File file = new File(outFolder, in.getStringProperty(index, PropID.PATH));
         file.getParentFile().mkdirs();
-        BufferedOutputStream outputStream;
         try {
             file.createNewFile();
-            outputStream = new BufferedOutputStream(new FileOutputStream(file));
+            outStream = new BufferedOutputStream(new FileOutputStream(file));
+            this.currentIndex = index;
         } catch (IOException e) {
             //Print stackTrace, then let sevenZip handle it.
             e.printStackTrace();
@@ -68,7 +83,7 @@ public class ExtractCallback implements IArchiveExtractCallback {
             int length;
 
             try {
-                outputStream.write(data);
+                outStream.write(data);
                 length = data.length;
             } catch (IOException e) {
                 //Print stackTrace, then let sevenZip handle it
@@ -98,25 +113,27 @@ public class ExtractCallback implements IArchiveExtractCallback {
         closeStream();
         if (extractOperationResult != ExtractOperationResult.OK) {
             System.err.println("Extraction Error!");
+            System.err.println("Completed [" + completed + "] of [" + total + ']');
+            System.err.println("Failed on file [" + in.getStringProperty(currentIndex, PropID.PATH) + ']');
+        } else {
+            System.out.println("Extracted [" + completed + "] of [" + total + ']');
         }
     }
 
     /**
      * {@inheritDoc}
-     * Does not need implementing as there is no need to keep track of total.
      */
     @Override
     public void setTotal(long total) throws SevenZipException {
-
+        this.total = total;
     }
 
     /**
      * {@inheritDoc}
-     * Does not need implementing as there is no need to keep track of currently completed count.
      */
     @Override
     public void setCompleted(long complete) throws SevenZipException {
-
+        this.completed = complete;
     }
 
     /**
