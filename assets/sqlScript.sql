@@ -3,12 +3,12 @@ CREATE DATABASE school;
 USE school;
 
 CREATE TABLE subject
-       (id INT NOT NULL AUTO_INCREMENT,
+       (id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	subjectName VARCHAR(20) NOT NULL,
 	PRIMARY KEY (id));
 
 CREATE TABLE staff
-       (id INT NOT NULL AUTO_INCREMENT,
+       (id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	staffName VARCHAR(20) NOT NULL,
 	subjectId INT NOT NULL,
 	hoursPerWeek INT NOT NULL,
@@ -16,17 +16,17 @@ CREATE TABLE staff
 	FOREIGN KEY (subjectId) REFERENCES subject(id));
 
 CREATE TABLE dayOfWeek
-       (id INT NOT NULL,
+       (id INT UNSIGNED NOT NULL,
 	dayOfWeek CHAR(9) NOT NULL,
 	PRIMARY KEY (id));
 
 CREATE TABLE building
-       (id INT NOT NULL AUTO_INCREMENT,
+       (id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     buildingName VARCHAR(10) NOT NULL,
     PRIMARY KEY (id));
 
 CREATE TABLE classroom
-       (id INT NOT NULL AUTO_INCREMENT,
+       (id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	roomName VARCHAR(10) NOT NULL,
 	buildingId INT NULL,
 	subjectId INT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE classroom
 	FOREIGN KEY (subjectId) REFERENCES subject(id));
 
 CREATE TABLE period
-       (id INT NOT NULL AUTO_INCREMENT,
+       (id INT UNSIGNED UNSIGNED NOT NULL AUTO_INCREMENT,
         dayId INT NOT NULL,
 	startTime TIME NOT NULL,
 	endTime TIME NOT NULL,
@@ -43,17 +43,17 @@ CREATE TABLE period
 	FOREIGN KEY (dayId) REFERENCES dayOfWeek(id));
 
 CREATE TABLE learningSet
-       (id INT NOT NULL AUTO_INCREMENT,
+       (id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     setName VARCHAR(10) NOT NULL,
     PRIMARY KEY (id));
 
 CREATE TABLE schoolYear
-       (id INT NOT NULL AUTO_INCREMENT,
+       (id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     schoolYearName VARCHAR(8) NOT NULL,
     PRIMARY KEY (id));
 
 CREATE TABLE subjectSet
-       (id INT NOT NULL AUTO_INCREMENT,
+       (id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     subjectId INT NOT NULL,
     setId INT NOT NULL,
     schoolYearId INT NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE subjectSet
     FOREIGN KEY (schoolYearId) REFERENCES schoolYear(id));
 
 CREATE TABLE distance
-       (id INT NOT NULL AUTO_INCREMENT,
+       (id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     startRoomId INT NOT NULL,
     endRoomId INT NOT NULL,
     distance INT NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE distance
     FOREIGN KEY (endRoomId) REFERENCES classroom(id));
 
 CREATE TABLE lessonPlan
-       (id INT NOT NULL AUTO_INCREMENT,
+       (id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	staffId INT NULL,
 	classroomId INT NULL,
 	periodId INT NOT NULL,
