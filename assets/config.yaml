@@ -7,5 +7,6 @@ data_source:                                    #Configuration regarding the dat
     - port: 3306                                #The port of ther database server
     - database: school                          #The name of the database
     - username: root                            #The username to access the database, this should not change
+    - password: root #TO BE REMOVED
     - exec: /usr/bin/mysqld                     #The path to the database server daemon
-    - args: --no-defaults --datadir=./db --basedir=/usr --socket=./db/mysqld.sock #The arguments to be given to mysqld
+    - args: --no-defaults --basedir=/usr/ --datadir=./db --socket=./mysqld.sock --bind-address=127.0.0.1 --port=3306 #The arguments to be given to mysqld

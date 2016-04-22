@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import me.timetabler.config.ConfigParser;
 import me.timetabler.config.ConfigType;
 import me.timetabler.data.dao.DaoManager;
-import me.timetabler.ui.MainController;
+import me.timetabler.ui.main.MainController;
 import me.timetabler.ui.main.JavaFxBridge;
 import me.util.Log;
 import me.util.LogLevel;
@@ -17,8 +17,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -90,6 +93,7 @@ public class Main extends Application {
             primaryStage.setScene(scene);
             primaryStage.setTitle("Timetabler");
             primaryStage.show();
+            Log.info("Opened Main Window");
         } catch (Exception e) {
             Log.error(e);
             JavaFxBridge.close();
@@ -127,6 +131,7 @@ public class Main extends Application {
         } else {
             Log.error("Unknown Log Level [" + level + "] Setting To Default [ERROR]");
         }
+        Log.info("Log Level set to [" + Log.LEVEL + ']');
 
         try {
             File logFolder = new File("log/");
@@ -143,8 +148,9 @@ public class Main extends Application {
                 MultipleWriter out = new MultipleWriter(new PrintWriter(System.out, true), new FileWriter(outFile, true));
                 MultipleWriter err = new MultipleWriter(new PrintWriter(System.err, true), new FileWriter(errFile, true));
 
-                Log.NORMAL_WRITER = new PrintWriter(out);
-                Log.ERROR_WRITER = new PrintWriter(err);
+                Log.NORMAL_WRITER = new PrintWriter(out, true);
+                Log.ERROR_WRITER = new PrintWriter(err, true);
+                Log.info("Setup log files");
             }
         } catch (IOException e) {
             e.printStackTrace();

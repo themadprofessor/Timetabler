@@ -21,6 +21,7 @@
       <element id="directory" name="lib">
         <element id="library" level="project" name="jna" />
         <element id="library" level="project" name="mariadb" />
+        <element id="library" level="application" name="Util" />
       </element>
       <element id="directory" name="assets">
         <element id="dir-copy" path="$PROJECT_DIR$/assets" />

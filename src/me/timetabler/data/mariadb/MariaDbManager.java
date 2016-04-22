@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * Manages the database server process.
+ * Manages the database server process. The database server will be ran in the current user, and expected to be
+ * connected to via TCP.
  */
 public class MariaDbManager implements AutoCloseable {
     /**
@@ -32,11 +33,16 @@ public class MariaDbManager implements AutoCloseable {
                 .add(config.get("exec"))
                 .addAll(config.get("args").split(" "))
                 .build();
+
+        Log.debug("Starting MariaDB with [" + (command.size() - 1) + "] arguments");
+        Log.verbose("Staring MariaDB with the following arguments [" + command.toString() + ']');
+
         if (Log.willLog(LogLevel.ERROR)) {
             process = new ProcessBuilder().command(command).redirectError(ProcessBuilder.Redirect.INHERIT).start();
         } else if (Log.willLog(LogLevel.INFO)) {
             process = new ProcessBuilder().command(command).inheritIO().start();
         }
+        Runtime.getRuntime().addShutdownHook(new Thread (() -> process.destroyForcibly()));
         if (!process.isAlive()) {
             JavaFxBridge.createAlert(Alert.AlertType.ERROR, "Failed to start database!", null, "Failed to start database server. It close with the error code [" + process.exitValue() +']', true);
         }
@@ -50,6 +56,11 @@ public class MariaDbManager implements AutoCloseable {
      * @return The data source.
      */
     public DataSource getDataSource(Map<String, String> config) {
+        //Ensure the server is still running
+        if (!process.isAlive()) {
+            JavaFxBridge.createAlert(Alert.AlertType.ERROR, "Failed to connect to the database!", null, "Failed to connect to the database server. It close with the error code [" + process.exitValue() +']', true);
+        }
+
         MariaDbDataSource mariaDbDataSource = new MariaDbDataSource();
 
         mariaDbDataSource.setPort(Integer.parseInt(config.get("port")));
@@ -57,6 +68,7 @@ public class MariaDbManager implements AutoCloseable {
         mariaDbDataSource.setDatabaseName(config.get("database"));
         mariaDbDataSource.setUserName(config.get("username"));
         mariaDbDataSource.setPassword(config.get("password"));
+        Log.debug("Created new data source");
 
         return mariaDbDataSource;
     }

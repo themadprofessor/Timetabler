@@ -10,8 +10,8 @@ CREATE TABLE subject
 CREATE TABLE staff
        (id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	staffName VARCHAR(20) NOT NULL,
-	subjectId INT NOT NULL,
-	hoursPerWeek INT NOT NULL,
+	subjectId INT UNSIGNED NOT NULL,
+	hoursPerWeek INT UNSIGNED NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (subjectId) REFERENCES subject(id));
 
@@ -28,15 +28,15 @@ CREATE TABLE building
 CREATE TABLE classroom
        (id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	roomName VARCHAR(10) NOT NULL,
-	buildingId INT NULL,
-	subjectId INT NULL,
+	buildingId INT UNSIGNED NULL,
+	subjectId INT UNSIGNED NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (buildingId) REFERENCES building(id),
 	FOREIGN KEY (subjectId) REFERENCES subject(id));
 
 CREATE TABLE period
-       (id INT UNSIGNED UNSIGNED NOT NULL AUTO_INCREMENT,
-        dayId INT NOT NULL,
+       (id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+        dayId INT UNSIGNED NOT NULL,
 	startTime TIME NOT NULL,
 	endTime TIME NOT NULL,
 	PRIMARY KEY (id),
@@ -54,9 +54,9 @@ CREATE TABLE schoolYear
 
 CREATE TABLE subjectSet
        (id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    subjectId INT NOT NULL,
-    setId INT NOT NULL,
-    schoolYearId INT NOT NULL,
+    subjectId INT UNSIGNED NOT NULL,
+    setId INT UNSIGNED NOT NULL,
+    schoolYearId INT UNSIGNED NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (subjectId) REFERENCES subject(id),
     FOREIGN KEY (setId) REFERENCES learningSet(id),
@@ -64,8 +64,8 @@ CREATE TABLE subjectSet
 
 CREATE TABLE distance
        (id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    startRoomId INT NOT NULL,
-    endRoomId INT NOT NULL,
+    startRoomId INT UNSIGNED NOT NULL,
+    endRoomId INT UNSIGNED NOT NULL,
     distance INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (startRoomId) REFERENCES classroom(id),
@@ -73,10 +73,10 @@ CREATE TABLE distance
 
 CREATE TABLE lessonPlan
        (id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	staffId INT NULL,
-	classroomId INT NULL,
-	periodId INT NOT NULL,
-	subjectSetId INT NOT NULL,
+	staffId INT UNSIGNED NULL,
+	classroomId INT UNSIGNED NULL,
+	periodId INT UNSIGNED NOT NULL,
+	subjectSetId INT UNSIGNED NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (staffId) REFERENCES staff(id),
 	FOREIGN KEY (classroomId) REFERENCES classroom(id),

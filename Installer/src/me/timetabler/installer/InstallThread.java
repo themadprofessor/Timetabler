@@ -135,7 +135,7 @@ public class InstallThread extends Task<Void> {
         updateMessage("Setting Up Database");
         File mariaDataDir = new File(installPath, "db");
         File mariaBaseDir = new File(installPath, "mariadb");
-        //installDb(mariaDataDir, mariaBaseDir);
+        installDb(mariaDataDir, mariaBaseDir);
 
         //Stop if the system could not be extracted.
         if (!success) return null;
@@ -188,8 +188,10 @@ public class InstallThread extends Task<Void> {
         if (OperatingSystem.getCurrentOs() == OperatingSystem.WINDOWS_X64 || OperatingSystem.getCurrentOs() == OperatingSystem.WINDOWS_X86) {
             cmd.add(baseDir.getPath() + "/bin/mysql_install_db.exe");
         } else {
-            cmd.add(baseDir.getPath() + "/scripts/mysql_install_db");
+            cmd.add(baseDir.getPath() + "bin/mysqld");
             cmd.add("--no-defaults");
+            cmd.add("--console");
+            cmd.add("--skip-grant-tables");
             cmd.add("--basedir=" + baseDir);
             cmd.add("--datadir=" + dataDir);
         }

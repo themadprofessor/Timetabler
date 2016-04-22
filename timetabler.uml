@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>me.timetabler</OriginalElement>
+  <nodes>
+    <node x="4955.037000811621" y="3487.986020834692">me.timetabler.data.exceptions.DataConnectionException</node>
+    <node x="7390.068162722484" y="0.0">me.timetabler.installer.OperatingSystem</node>
+    <node x="2198.271896467755" y="5649.348191741491">me.timetabler.map.MapLoader</node>
+    <node x="4136.847600297025" y="1323.6596736515198">me.timetabler.data.mariadb.MariaSubjectSetDao</node>
+    <node x="556.6940485644313" y="4653.688458107589">me.timetabler.data.SubjectSet</node>
+    <node x="0.0" y="3608.738499465503">me.timetabler.data.mariadb.MariaPeriodDao</node>
+    <node x="32.62856558472504" y="3351.780427770662">me.timetabler.data.dao.PeriodDao</node>
+    <node x="3033.0783447311464" y="747.3694434031331">me.timetabler.data.LessonPlan</node>
+    <node x="221.09918924246085" y="4001.9234857767765">me.timetabler.data.Day</node>
+    <node x="220.46695904168337" y="2474.6566504060384">me.timetabler.data.dao.SchoolYearDao</node>
+    <node x="926.0" y="8388.5915304198">me.timetabler.ui.main.html.assets.fonts</node>
+    <node x="350.85714993314514" y="4343.035156770326">me.timetabler.data.Distance</node>
+    <node x="670.1124386606616" y="6735.102906322567">me.timetabler.data.mariadb.MariaDbManager</node>
+    <node x="4904.6064022229575" y="0.0">me.timetabler.data.sql.JoinType</node>
+    <node x="4139.289969682862" y="4793.242016050544">me.timetabler.data.mariadb.MariaSubjectDao</node>
+    <node x="1525.0" y="8388.5915304198">me.timetabler.ui.main.html.assets.js</node>
+    <node x="2806.0830664467603" y="710.8323677271146">me.timetabler.data.Staff</node>
+    <node x="2482.511365424056" y="5583.026500586556">me.timetabler.ui.main.Bridge</node>
+    <node x="1310.3762059803958" y="7073.679271668163">me.timetabler.Main</node>
+    <node x="3557.03116351137" y="5504.395581435953">me.timetabler.data.dao.LearningSetDao</node>
+    <node x="213.45876514121665" y="2233.5489551793994">me.timetabler.data.dao.SubjectSetDao</node>
+    <node x="57.693541899115644" y="3102.403641695204">me.timetabler.data.dao.Dao</node>
+    <node x="995.6837078324602" y="1197.6681599367967">me.timetabler.data.dao.DistanceDao</node>
+    <node x="4452.6905148688365" y="4323.428164919195">me.timetabler.data.mariadb.MariaDistanceDao</node>
+    <node x="696.0289449586562" y="4822.476813208799">me.timetabler.data.SchoolYear</node>
+    <node x="2112.521935617645" y="7470.919171622555">me.timetabler.Coordinate</node>
+    <node x="64.61042452442098" y="2864.204247138725">me.timetabler.data.dao.DayDao</node>
+    <node x="142.20103982753062" y="2600.8309691588756">me.timetabler.data.dao.MutableDao</node>
+    <node x="5908.053162722484" y="32.0">me.timetabler.installer.InstallThread</node>
+    <node x="1927.2028300113948" y="7683.435530706574">me.timetabler.map.Walker</node>
+    <node x="2641.4494515512974" y="7538.961724006552">me.timetabler.map.Wall</node>
+    <node x="218.0" y="8388.5915304198">me.timetabler.data.exceptions.DataExceptionHandler</node>
+    <node x="8152.183162722484" y="0.0">me.timetabler.config.YamlConfigParser</node>
+    <node x="4986.728327585097" y="3187.0205221350516">me.timetabler.data.exceptions.DataException</node>
+    <node x="512.1651263126132" y="4584.248626355855">me.timetabler.data.DataType</node>
+    <node x="2297.689887459829" y="7307.37716772624">me.timetabler.map.SchoolMap</node>
+    <node x="1651.8866059468724" y="949.3251132529485">me.timetabler.data.dao.BuildingDao</node>
+    <node x="3980.7885102414257" y="1188.3792426827454">me.timetabler.data.sql.JoinClause</node>
+    <node x="5427.488162722484" y="0.0">me.timetabler.installer.ExtractCallback</node>
+    <node x="1081.0" y="8388.5915304198">me.timetabler.ui.main.html.assets.scss</node>
+    <node x="592.0" y="8388.5915304198">me.timetabler.ui.main.html.assets.plugins</node>
+    <node x="4550.033421942491" y="1838.4955231327035">me.timetabler.data.exceptions.DataUpdateException</node>
+    <node x="2746.453196684945" y="7695.152572084716">me.timetabler.map.CellType</node>
+    <node x="6709.7981627224835" y="41.999999999999815">me.timetabler.installer.monitor.TaskMonitor</node>
+    <node x="1232.0" y="8388.5915304198">me.timetabler.ui.main.html.assets.less</node>
+    <node x="726.6258568817725" y="1426.912865702333">me.timetabler.data.dao.LessonPlanDao</node>
+    <node x="365.6946344564044" y="1949.1688826998663">me.timetabler.data.dao.ClassroomDao</node>
+    <node x="8408.183162722484" y="0.0">me.timetabler.ui.main.JavaFxBridge</node>
+    <node x="1327.47702805563" y="7451.960199597378">me.timetabler.config.ConfigType</node>
+    <node x="4617.389914695217" y="2014.9808631814144">me.timetabler.data.mariadb.MariaStaffDao</node>
+    <node x="3088.2251006205506" y="5453.5595016754105">me.timetabler.data.mariadb.MariaLearningSetDao</node>
+    <node x="759.0" y="8388.5915304198">me.timetabler.ui.main.html.assets.images</node>
+    <node x="927.4791801237095" y="6920.701153890506">me.timetabler.data.TimetableThread</node>
+    <node x="2553.47906918651" y="8147.114599240875">me.timetabler.map.ImportantCell</node>
+    <node x="6328.448162722484" y="42.9999999999999">me.timetabler.installer.InstallerController</node>
+    <node x="1763.8657959313716" y="692.9116524409319">me.timetabler.data.mariadb.MariaBuildingDao</node>
+    <node x="1152.1235267158877" y="5148.302017919075">me.timetabler.data.mariadb.MariaDaoManager</node>
+    <node x="4724.488162722484" y="2507.86628342709">me.timetabler.data.mariadb.MariaLessonPlanDao</node>
+    <node x="2414.7465759387164" y="762.3114637532235">me.timetabler.SqlTest</node>
+    <node x="4772.396453521102" y="4010.214112528292">me.timetabler.data.mariadb.MariaDayDao</node>
+    <node x="548.8956832176159" y="1711.897699111746">me.timetabler.data.dao.SubjectDao</node>
+    <node x="3474.7144650245546" y="834.6322190940728">me.timetabler.data.mariadb.MariaClassroomDao</node>
+    <node x="7717.068162722484" y="53.5">me.timetabler.config.ConfigParser</node>
+    <node x="2734.4622419871534" y="7889.237438127404">me.timetabler.map.Path</node>
+    <node x="1819.561658870729" y="5492.08068330207">me.timetabler.data.dao.DaoManager</node>
+    <node x="2926.1349568242845" y="5640.644878889869">me.timetabler.data.LearningSet</node>
+    <node x="269.80313053950294" y="4158.016635986473">me.timetabler.data.Period</node>
+    <node x="4906.694877327288" y="3771.312986487863">me.timetabler.data.exceptions.DataAccessException</node>
+    <node x="2245.511449802065" y="746.3168193880902">me.timetabler.data.Building</node>
+    <node x="1394.8731169369325" y="1021.9067154972295">me.timetabler.data.dao.StaffDao</node>
+    <node x="0.0" y="8388.5915304198">me.timetabler.installer.Main</node>
+    <node x="769.2406486626373" y="4938.6974624484155">me.timetabler.data.mariadb.MariaSchoolYearDao</node>
+    <node x="7076.068162722484" y="52.999999999999716">me.timetabler.installer.monitor.MonitorController</node>
+    <node x="4670.499797474889" y="6538.422960803133">me.timetabler.data.sql.StatementType</node>
+    <node x="3660.7879435859886" y="5116.590090207229">me.timetabler.data.sql.SqlBuilder</node>
+    <node x="1950.2145116736187" y="8005.66512197718">me.timetabler.map.BuildingCell</node>
+    <node x="1380.0" y="8388.5915304198">me.timetabler.ui.main.html.assets.css</node>
+    <node x="2597.671812698057" y="727.2845658722595">me.timetabler.data.Subject</node>
+    <node x="3255.2444813121065" y="796.8145726725552">me.timetabler.data.Classroom</node>
+    <node x="2292.493832963615" y="8165.591530419801">me.timetabler.map.ClassroomCell</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="me.timetabler.data.TimetableThread" target="me.timetabler.data.dao.DaoManager">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.SchoolYear">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaStaffDao" target="me.timetabler.data.dao.StaffDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.SchoolMap" target="me.timetabler.map.CellType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.exceptions.DataUpdateException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.dao.MutableDao" target="me.timetabler.data.dao.Dao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.SchoolYear" target="me.timetabler.data.DataType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaBuildingDao" target="me.timetabler.data.exceptions.DataAccessException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.ui.main.Bridge" target="me.timetabler.data.SchoolYear">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.Wall" target="me.timetabler.map.CellType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.ui.main.Bridge" target="me.timetabler.data.Staff">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDayDao" target="me.timetabler.data.dao.DayDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaClassroomDao" target="me.timetabler.data.Building">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaBuildingDao" target="me.timetabler.data.sql.SqlBuilder">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDistanceDao" target="me.timetabler.data.exceptions.DataAccessException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.dao.DistanceDao" target="me.timetabler.data.dao.MutableDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.Staff" target="me.timetabler.data.DataType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.config.ConfigParser" target="me.timetabler.config.YamlConfigParser">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.exceptions.DataAccessException" target="me.timetabler.data.exceptions.DataException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaPeriodDao" target="me.timetabler.data.Period">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.dao.LessonPlanDao" target="me.timetabler.data.dao.MutableDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.Staff" target="me.timetabler.data.Subject">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaDayDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.exceptions.DataAccessException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLearningSetDao" target="me.timetabler.data.LearningSet">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.dao.DaoManager">
+      <point x="0.0" y="-5.35923356747071" />
+      <point x="0.0" y="-5.35923356747071" />
+    </edge>
+    <edge source="me.timetabler.ui.main.Bridge" target="me.timetabler.map.MapLoader">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.sql.SqlBuilder" target="me.timetabler.data.sql.JoinClause">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.dao.BuildingDao" target="me.timetabler.data.dao.MutableDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.ImportantCell" target="me.timetabler.map.CellType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.Building" target="me.timetabler.data.DataType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.config.YamlConfigParser" target="me.timetabler.config.ConfigParser">
+      <point x="0.0" y="5.0" />
+      <point x="0.0" y="5.0" />
+    </edge>
+    <edge source="me.timetabler.installer.InstallThread" target="me.timetabler.installer.ExtractCallback">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.dao.ClassroomDao" target="me.timetabler.data.dao.MutableDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.SubjectSet" target="me.timetabler.data.LearningSet">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.LessonPlan" target="me.timetabler.data.SubjectSet">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.ui.main.Bridge" target="me.timetabler.data.Subject">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaSubjectSetDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.SqlTest" target="me.timetabler.data.Distance">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaClassroomDao" target="me.timetabler.data.sql.JoinClause">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.SchoolMap" target="me.timetabler.map.Path">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.exceptions.DataConnectionException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.LessonPlan" target="me.timetabler.data.Period">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.exceptions.DataAccessException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.sql.SqlBuilder">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.dao.SubjectSetDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.ui.main.Bridge" target="me.timetabler.data.LearningSet">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaPeriodDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.sql.SqlBuilder" target="me.timetabler.data.sql.StatementType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSchoolYearDao" target="me.timetabler.data.sql.SqlBuilder">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectDao" target="me.timetabler.data.exceptions.DataAccessException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDistanceDao" target="me.timetabler.data.Building">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.SchoolMap" target="me.timetabler.map.ClassroomCell">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSchoolYearDao" target="me.timetabler.data.exceptions.DataAccessException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.LessonPlan" target="me.timetabler.data.Staff">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.exceptions.DataUpdateException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.BuildingCell" target="me.timetabler.map.Walker">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.SchoolYear">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectDao" target="me.timetabler.data.sql.SqlBuilder">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLearningSetDao" target="me.timetabler.data.sql.SqlBuilder">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.installer.InstallerController" target="me.timetabler.installer.InstallThread">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.LearningSet">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.Subject">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.dao.SchoolYearDao" target="me.timetabler.data.dao.MutableDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.dao.LessonPlanDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDistanceDao" target="me.timetabler.data.Classroom">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.Day">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.sql.JoinClause">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaBuildingDao" target="me.timetabler.data.dao.BuildingDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.LessonPlan" target="me.timetabler.data.DataType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaPeriodDao" target="me.timetabler.data.Day">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.SubjectSet" target="me.timetabler.data.SchoolYear">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLearningSetDao" target="me.timetabler.data.dao.LearningSetDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLearningSetDao" target="me.timetabler.data.exceptions.DataAccessException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.Walker" target="me.timetabler.Coordinate">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.SubjectSet" target="me.timetabler.data.DataType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaBuildingDao" target="me.timetabler.data.exceptions.DataUpdateException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDistanceDao" target="me.timetabler.data.sql.SqlBuilder">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.MapLoader" target="me.timetabler.data.Building">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.LearningSet" target="me.timetabler.data.DataType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.SqlTest" target="me.timetabler.data.Subject">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.installer.InstallerController" target="me.timetabler.installer.monitor.TaskMonitor">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaStaffDao" target="me.timetabler.data.Subject">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.Classroom" target="me.timetabler.data.Subject">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDistanceDao" target="me.timetabler.data.sql.JoinClause">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.sql.JoinClause" target="me.timetabler.data.sql.JoinType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.exceptions.DataUpdateException" target="me.timetabler.data.exceptions.DataException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.SchoolMap" target="me.timetabler.map.Wall">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.dao.SubjectDao" target="me.timetabler.data.dao.MutableDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDayDao" target="me.timetabler.data.sql.SqlBuilder">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.Main" target="me.timetabler.data.dao.DaoManager">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSchoolYearDao" target="me.timetabler.data.exceptions.DataUpdateException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDayDao" target="me.timetabler.data.exceptions.DataAccessException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaClassroomDao" target="me.timetabler.data.dao.ClassroomDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSchoolYearDao" target="me.timetabler.data.SchoolYear">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.dao.DaoManager" target="me.timetabler.data.mariadb.MariaDaoManager">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.Classroom">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaLearningSetDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaLessonPlanDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaStaffDao" target="me.timetabler.data.Staff">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaDistanceDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.Period">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.exceptions.DataConnectionException" target="me.timetabler.data.exceptions.DataException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaClassroomDao" target="me.timetabler.data.exceptions.DataUpdateException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.Distance" target="me.timetabler.data.DataType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaStaffDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.dao.SubjectSetDao" target="me.timetabler.data.dao.MutableDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaPeriodDao" target="me.timetabler.data.dao.PeriodDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaClassroomDao" target="me.timetabler.data.Subject">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaClassroomDao" target="me.timetabler.data.Classroom">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.SubjectSet">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaStaffDao" target="me.timetabler.data.exceptions.DataUpdateException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.Path" target="me.timetabler.map.CellType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaBuildingDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLearningSetDao" target="me.timetabler.data.exceptions.DataUpdateException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDistanceDao" target="me.timetabler.data.Distance">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.Day" target="me.timetabler.data.DataType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.SchoolMap" target="me.timetabler.map.BuildingCell">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.ui.main.Bridge" target="me.timetabler.data.dao.DaoManager">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.SubjectSet" target="me.timetabler.data.Subject">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.dao.DayDao" target="me.timetabler.data.dao.Dao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSchoolYearDao" target="me.timetabler.data.dao.SchoolYearDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.Main" target="me.timetabler.config.ConfigType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.BuildingCell" target="me.timetabler.map.ImportantCell">
+      <point x="0.6738445394992141" y="-4.954385283422198" />
+      <point x="0.6738445394992141" y="-4.954385283422198" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectDao" target="me.timetabler.data.dao.SubjectDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDistanceDao" target="me.timetabler.data.dao.DistanceDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.Staff">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaSchoolYearDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.Walker" target="me.timetabler.map.SchoolMap">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.Classroom" target="me.timetabler.data.DataType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.dao.LearningSetDao" target="me.timetabler.data.dao.MutableDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.sql.JoinClause">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.SqlTest" target="me.timetabler.data.Classroom">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.ui.main.Bridge" target="me.timetabler.data.SubjectSet">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.dao.PeriodDao" target="me.timetabler.data.dao.Dao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.LessonPlan" target="me.timetabler.data.Classroom">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.ClassroomCell" target="me.timetabler.map.ImportantCell">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.SubjectSet">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaClassroomDao" target="me.timetabler.data.sql.SqlBuilder">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.installer.monitor.TaskMonitor" target="me.timetabler.installer.monitor.MonitorController">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaBuildingDao" target="me.timetabler.data.Building">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.LearningSet">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaStaffDao" target="me.timetabler.data.exceptions.DataAccessException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaClassroomDao" target="me.timetabler.data.exceptions.DataAccessException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.Subject" target="me.timetabler.data.DataType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.Period" target="me.timetabler.data.DataType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.Subject">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectDao" target="me.timetabler.data.Subject">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDistanceDao" target="me.timetabler.data.exceptions.DataUpdateException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaPeriodDao" target="me.timetabler.data.exceptions.DataAccessException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.Distance" target="me.timetabler.data.Classroom">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.Building">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaPeriodDao" target="me.timetabler.data.sql.SqlBuilder">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.MapLoader" target="me.timetabler.map.SchoolMap">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.sql.SqlBuilder">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaClassroomDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDistanceDao" target="me.timetabler.data.Subject">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.LessonPlan">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaStaffDao" target="me.timetabler.data.sql.JoinClause">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaDbManager">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectDao" target="me.timetabler.data.exceptions.DataUpdateException">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.dao.StaffDao" target="me.timetabler.data.dao.MutableDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.SqlTest" target="me.timetabler.data.Building">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaStaffDao" target="me.timetabler.data.sql.SqlBuilder">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.SchoolMap" target="me.timetabler.Coordinate">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDayDao" target="me.timetabler.data.Day">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.Classroom" target="me.timetabler.data.Building">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.Period" target="me.timetabler.data.Day">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaPeriodDao" target="me.timetabler.data.sql.JoinClause">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.map.MapLoader" target="me.timetabler.data.dao.DaoManager">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaSubjectDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.30000000000000004" x="1176.6666666666665" y="4906.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

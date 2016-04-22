@@ -1,4 +1,4 @@
-package me.timetabler.ui;
+package me.timetabler.ui.main;
 
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;

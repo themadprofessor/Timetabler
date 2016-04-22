@@ -110,9 +110,11 @@ public class MariaDaoManager implements DaoManager {
     public StaffDao getStaffDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
+                Log.verbose("Establishing new connection");
                 connection = source.getConnection();
             }
             if (staffDao == null) {
+                Log.verbose("Creating new Staff Dao");
                 staffDao = new MariaStaffDao(connection);
             } else if (staffDao.connection != connection) {
                 staffDao.connection = connection;
@@ -134,9 +136,11 @@ public class MariaDaoManager implements DaoManager {
     public SubjectDao getSubjectDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
+                Log.verbose("Establishing new connection");
                 connection = source.getConnection();
             }
             if (subjectDao == null) {
+                Log.verbose("Creating new Subject Dao");
                 subjectDao = new MariaSubjectDao(connection);
             } else if (subjectDao.connection != connection) {
                 subjectDao.connection = connection;
@@ -158,9 +162,11 @@ public class MariaDaoManager implements DaoManager {
     public DayDao getDayDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
+                Log.verbose("Establishing new connection");
                  connection = source.getConnection();
             }
             if (dayDao == null) {
+                Log.verbose("Creating new Day Dao");
                 dayDao = new MariaDayDao(connection);
             } else if (dayDao.connection != connection) {
                 dayDao.connection = connection;
@@ -182,9 +188,11 @@ public class MariaDaoManager implements DaoManager {
     public ClassroomDao getClassroomDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
+                Log.verbose("Establishing new connection");
                 connection = source.getConnection();
             }
             if (classroomDao == null) {
+                Log.verbose("Creating new Classroom Dao");
                 classroomDao = new MariaClassroomDao(connection);
             } else if (classroomDao.connection != connection) {
                 classroomDao.connection = connection;
@@ -206,9 +214,11 @@ public class MariaDaoManager implements DaoManager {
     public BuildingDao getBuildingDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
+                Log.verbose("Establishing new connection");
                 connection = source.getConnection();
             }
             if (buildingDao == null) {
+                Log.verbose("Creating new Building Dao");
                 buildingDao = new MariaBuildingDao(connection);
             } else if (buildingDao.connection != connection) {
                 buildingDao.connection = connection;
@@ -230,9 +240,11 @@ public class MariaDaoManager implements DaoManager {
     public DistanceDao getDistanceDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
+                Log.verbose("Establishing new connection");
                 connection = source.getConnection();
             }
             if (distanceDao == null) {
+                Log.verbose("Creating new Distance Dao");
                 distanceDao = new MariaDistanceDao(connection);
             } else if (distanceDao.connection != connection) {
                 distanceDao.connection = connection;
@@ -254,9 +266,11 @@ public class MariaDaoManager implements DaoManager {
     public LearningSetDao getLearningSetDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
+                Log.verbose("Establishing new connection");
                 connection = source.getConnection();
             }
             if (learningSetDao == null) {
+                Log.verbose("Creating new LearningSet Dao");
                 learningSetDao = new MariaLearningSetDao(connection);
             } else if (learningSetDao.connection != connection) {
                 learningSetDao.connection = connection;
@@ -278,9 +292,11 @@ public class MariaDaoManager implements DaoManager {
     public LessonPlanDao getLessonPlanDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
+                Log.verbose("Establishing new connection");
                 connection = source.getConnection();
             }
             if (lessonPlanDao == null) {
+                Log.verbose("Creating new LessonPlan Dao");
                 lessonPlanDao = new MariaLessonPlanDao(connection);
             } else if (lessonPlanDao.connection != connection) {
                 lessonPlanDao.connection = connection;
@@ -302,9 +318,11 @@ public class MariaDaoManager implements DaoManager {
     public PeriodDao getPeriodDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
+                Log.verbose("Establishing new connection");
                 connection = source.getConnection();
             }
             if (periodDao == null) {
+                Log.verbose("Creating new Period Dao");
                 periodDao = new MariaPeriodDao(connection);
             } else if (periodDao.connection != connection) {
                 periodDao.connection = connection;
@@ -326,9 +344,11 @@ public class MariaDaoManager implements DaoManager {
     public SchoolYearDao getSchoolYearDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
+                Log.verbose("Establishing new connection");
                 connection = source.getConnection();
             }
             if (schoolYearDao == null) {
+                Log.verbose("Creating new SchoolYear Dao");
                 schoolYearDao = new MariaSchoolYearDao(connection);
             } else if (schoolYearDao.connection != connection) {
                 schoolYearDao.connection = connection;
@@ -350,9 +370,11 @@ public class MariaDaoManager implements DaoManager {
     public SubjectSetDao getSubjectSetDao() throws DataConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
+                Log.verbose("Establishing new connection");
                 connection = source.getConnection();
             }
             if (subjectSetDao == null) {
+                Log.verbose("Creating new SubjectSet Dao");
                 subjectSetDao = new MariaSubjectSetDao(connection);
             } else if (subjectSetDao.connection != connection) {
                 subjectSetDao.connection = connection;
