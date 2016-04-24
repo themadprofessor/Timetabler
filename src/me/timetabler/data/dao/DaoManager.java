@@ -95,7 +95,7 @@ public interface DaoManager extends AutoCloseable {
      * Returns a DaoManager to correspond with the given config's entry 'type'. The config will be given to the
      * DaoManager. If the config does not have a 'type' entry, or it does not correspond with the DaoManger
      * implementations, this will return null.
-     * @param config The config.
+     * @param config The configuration map for 'data_type'
      * @return A DaoManager implementation or null.
      * @throws DataConnectionException Thrown if the DaoManager cannot establish a connection with the data source.
      */

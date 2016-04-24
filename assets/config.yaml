@@ -1,6 +1,3 @@
-map:                                            #Configuration regarding the map
-    - top_map: assets/maps/school.csv           #Highest level of the map
-    - other_maps: assets/maps                   #All other maps, needs to be a directory, which can contain top_map
 data_source:                                    #Configuration regarding the data source
     - type: MARIADB                             #The type of data source. The other entries are dependent on this type value
     - addr: 127.0.0.1                           #The address of the database server

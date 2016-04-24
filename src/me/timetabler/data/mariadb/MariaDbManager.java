@@ -4,13 +4,13 @@ import javafx.scene.control.Alert;
 import me.timetabler.ui.main.JavaFxBridge;
 import me.util.CollectionBuilder;
 import me.util.Log;
-import me.util.LogLevel;
 import org.mariadb.jdbc.MariaDbDataSource;
 
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  * Manages the database server process. The database server will be ran in the current user, and expected to be
@@ -37,12 +37,23 @@ public class MariaDbManager implements AutoCloseable {
         Log.debug("Starting MariaDB with [" + (command.size() - 1) + "] arguments");
         Log.verbose("Staring MariaDB with the following arguments [" + command.toString() + ']');
 
-        if (Log.willLog(LogLevel.ERROR)) {
-            process = new ProcessBuilder().command(command).redirectError(ProcessBuilder.Redirect.INHERIT).start();
-        } else if (Log.willLog(LogLevel.INFO)) {
-            process = new ProcessBuilder().command(command).inheritIO().start();
+        process = new ProcessBuilder().command(command).start();
+        Scanner scanner = new Scanner(process.getErrorStream());
+        String line;
+        while ((line = scanner.nextLine()) != null) {
+            if (line.contains("ready for connections")) {
+                break;
+            } else if (line.contains("shutdown")) {
+                try {
+                    process.destroyForcibly().waitFor();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        Runtime.getRuntime().addShutdownHook(new Thread (() -> process.destroyForcibly()));
+
+        Runtime.getRuntime().addShutdownHook(new Thread (() -> process.destroy()));
+
         if (!process.isAlive()) {
             JavaFxBridge.createAlert(Alert.AlertType.ERROR, "Failed to start database!", null, "Failed to start database server. It close with the error code [" + process.exitValue() +']', true);
         }

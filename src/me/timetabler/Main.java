@@ -4,9 +4,11 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import me.timetabler.auth.MariaAuthenticator;
 import me.timetabler.config.ConfigParser;
 import me.timetabler.config.ConfigType;
 import me.timetabler.data.dao.DaoManager;
+import me.timetabler.ui.login.LoginController;
 import me.timetabler.ui.main.MainController;
 import me.timetabler.ui.main.JavaFxBridge;
 import me.util.Log;
@@ -29,14 +31,14 @@ import java.util.Map;
  */
 public class Main extends Application {
     /**
-     * The implementation of daoManager to be used by the system.
-     */
-    private DaoManager daoManager;
-
-    /**
      * The type of config loader to be used. It defaults to YAML as that is the default config file format.
      */
     private static ConfigType configType = ConfigType.YAML;
+
+    /**
+     * The full configuration map from the parsed configuration file.
+     */
+    private static Map<String, Map<String, String>> config;
 
     /**
      * Entry point to the program and handles command line parameters.
@@ -64,14 +66,11 @@ public class Main extends Application {
     @Override
     public void init() {
         try {
-            Map<String, Map<String, String>> config = ConfigParser.getParser(configType, "assets/config.yaml").parse();
+            config = ConfigParser.getParser(configType, "assets/config.yaml").parse();
             if (config == null) {
                 Log.error("Unknown config type!");
                 System.exit(1);
             }
-
-            daoManager = DaoManager.getManager(config.get("data_source"));
-            Log.info("Initialised DaoManger");
         } catch (Exception e) {
             Log.error(e);
             JavaFxBridge.close();
@@ -86,8 +85,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/main/main.fxml"));
-            MainController controller = new MainController(daoManager);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/login/login.fxml"));
+            LoginController controller = new LoginController(primaryStage, config.get("data_source"));
             loader.setController(controller);
             Scene scene = new Scene(loader.load());
             primaryStage.setScene(scene);
@@ -105,7 +104,6 @@ public class Main extends Application {
      */
     @Override
     public void stop() {
-        daoManager.close();
     }
 
     /**
