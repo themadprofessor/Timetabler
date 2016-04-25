@@ -83,6 +83,7 @@ public class MariaDbManager implements AutoCloseable {
         mariaDbDataSource.setDatabaseName(config.get("database"));
         mariaDbDataSource.setUserName(config.get("username"));
         mariaDbDataSource.setPassword(config.get("password"));
+        mariaDbDataSource.setProperties("rewriteBatchStatements=true");
         Log.debug("Created new data source");
 
         return mariaDbDataSource;

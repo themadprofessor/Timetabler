@@ -1,16 +1,22 @@
 package me.timetabler.data.mariadb;
 
+import javafx.scene.control.Alert;
 import me.timetabler.data.Subject;
 import me.timetabler.data.dao.SubjectDao;
 import me.timetabler.data.exceptions.DataAccessException;
+import me.timetabler.data.exceptions.DataExceptionHandler;
 import me.timetabler.data.exceptions.DataUpdateException;
 import me.timetabler.data.sql.SqlBuilder;
 import me.timetabler.data.sql.StatementType;
+import me.timetabler.ui.main.JavaFxBridge;
 import me.util.Log;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -300,18 +306,80 @@ public class MariaSubjectDao implements SubjectDao {
 
         try {
             if (loadFile == null || loadFile.isClosed()) {
-                loadFile = connection.prepareStatement("TRUNCATE TABLE subject;LOAD DATA INFILE ? INTO TABLE subject FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';");
+                SqlBuilder builder = new SqlBuilder("subject", StatementType.INSERT)
+                        .addColumns("id", "subjectName")
+                        .addValues("?", "?");
+                loadFile = connection.prepareStatement(builder.build());
             }
 
-            loadFile.setString(1, file.getAbsolutePath());
+            StringBuffer failedBuilder = new StringBuffer();
+            try {
+                Log.info("Will load subject file [" + file + ']');
+                Files.lines(file.toPath()).forEach(line -> {
+                    try {
+                        String[] split = line.split(",");
+                        if (split.length == 0) {
+                            //Empty lines are to be ignored
+                        } else if (split.length == 1) {
+                            loadFile.setNull(1, Types.INTEGER);
+                            loadFile.setString(2, split[0]);
+                            Log.verbose("Loaded subject name entry without id [" + line + ']');
+                        } else {
+                            if (split.length > 2) {
+                                //Line should have no more than two elements, but will still try to add first two elements.
+                                failedBuilder.append("On line [")
+                                        .append(line)
+                                        .append("] ignoring [")
+                                        .append(Arrays.toString(Arrays.copyOfRange(split, 2, split.length)))
+                                        .append("]. Will try to add first two elements\n");
+                                Log.verbose("Will partially load line [" + line + ']');
+                            }
+
+                            //Ensure the first entry is an unsigned integer, else set it as null and let the database
+                            //set the id
+                            if (split[0].chars().allMatch(Character::isDigit)) {
+                                loadFile.setInt(1, Integer.parseInt(split[0]));
+                            } else {
+                                loadFile.setNull(1, Types.INTEGER);
+                            }
+                            loadFile.setString(2, split[1]);
+                            Log.verbose("Loaded line [" + line + ']');
+                        }
+
+                        //Use batch statement as it is faster and easier
+                        //The batch will be overwritten if this method is not called, e.g. exception thrown
+                        loadFile.addBatch();
+                    } catch (SQLException e) {
+                        //Only thrown if the data cannot be added
+                        failedBuilder.append("Failed to load line [")
+                                .append(line)
+                                .append("]\n");
+                    }
+                });
+                Log.info("Finished Loading File");
+            } catch (IOException e) {
+                //Should only happen if the file goes missing during reading
+                Log.error(e);
+                JavaFxBridge.createAlert(Alert.AlertType.ERROR, "IO Exception", null, "Is [" + file.toString() + "] still there?\nAn IO Exception has occurred [" + e.toString() + "]", false);
+            }
+
+            if (failedBuilder.length() > 0) {
+                Log.warning(failedBuilder);
+                JavaFxBridge.createAlert(Alert.AlertType.WARNING, "Failed to load entries!", "Some entries could not be loaded!", failedBuilder.toString(), false);
+            }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DataAccessException!");
             throw new DataAccessException(e);
         }
 
+
         try {
-            loadFile.executeUpdate();
+            int[] results = loadFile.executeBatch();
+            Log.debug("Loaded [" + results.length + "] subject entries");
             return true;
+        } catch (BatchUpdateException e) {
+            JavaFxBridge.createAlert(Alert.AlertType.WARNING, "Could not load file!", "Could not load all entries from file!", "The system successfully loaded [" + e.getLargeUpdateCounts().length + "] entries from [" + file + ']', false);
+            return false;
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
             throw new DataUpdateException(e);

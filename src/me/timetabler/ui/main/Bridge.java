@@ -1,6 +1,7 @@
 package me.timetabler.ui.main;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -371,7 +372,7 @@ public class Bridge {
         });
     }
 
-    public void loadFromFile(String dataType, int[] presentIds) {
+    public void loadFromFile(String dataType, String tableName) {
         FileChooser chooser = new FileChooser();
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
         chooser.setTitle("Select CSV Data File.");
@@ -386,20 +387,16 @@ public class Bridge {
             case "Subject":
             case "subject":
                 try {
+                    bridge.call("clearTable", tableName);
                     boolean success = daoManager.getSubjectDao().loadFile(file);
-                    bridge.call("setSuccess", success);
                     Log.debug("Successfully Loaded [" + success + ']');
 
-                    List<Subject> newSubjects = daoManager.getSubjectDao().getAll();
+                    if (success) {
+                        List<Subject> newSubjects = daoManager.getSubjectDao().getAll();
 
-                    //Remove all subjects which already exist in the ui.
-                    newSubjects.parallelStream()
-                            .filter(subject -> IntStream.of(presentIds).anyMatch(i -> i == subject.id))
-                            .forEach(newSubjects::remove);
-
-                    Log.debug("Adding [" + newSubjects.size() + ']');
-                    //Add only the new subjects to the ui.
-                    newSubjects.forEach(subject -> bridge.call("addToTable", "subjectTable", new String[] {String.valueOf(subject.id)}, subject.name));
+                        Log.debug("Adding [" + newSubjects.size() + ']');
+                        newSubjects.forEach(subject -> bridge.call("addToTable", tableName, new String[]{String.valueOf(subject.id), subject.name}));
+                    }
                 } catch (DataAccessException | DataUpdateException e) {
                     DataExceptionHandler.handleJavaFx(e, dataType, false);
                 } catch (DataConnectionException e) {
@@ -407,6 +404,11 @@ public class Bridge {
                 } catch (IllegalArgumentException e) {
                     JavaFxBridge.createAlert(Alert.AlertType.WARNING, "Cannot Read File!", null, "The data file needs to have read permissions for [" + System.getProperty("user.name") + ']', false);
                 }
+
+                break;
+            case "Staff":
+            case "staff":
+
         }
     }
 }

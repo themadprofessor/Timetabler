@@ -15,8 +15,8 @@
 
     <style media="screen">
         .btn-noborder {
-        border: 0 none;
-        background-color: inherit;
+            border: 0 none;
+            background-color: inherit;
         }
     </style>
 </head>
@@ -74,8 +74,17 @@
     <div class="container">
         <h2 class="title text-center">Staff Information</h2>
         <p class="intro text-center">View and edit staff information.</p>
-        <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#staffModal" id="staffAddButton">
+        <button type="button" class="btn btn-noborder" onclick="$('#staffModal').modal('show')" id="staffAddButton"
+                data-toggle="tooltip" data-placement="right" title="Add new staff member using the wizard">
             <i class="fa fa-plus fa-2x"></i>
+        </button>
+        <button type="button" class="btn btn-noborder" onclick="loadFile('Staff', 'staffTable')" data-toggle="tooltip"
+                data-placement="right" title="Import staff data from a file">
+            <span class="glyphicon glyphicon-import"></span>
+        </button>
+        <button type="button" class=" btn btn-noborder" onclick="clearTable('subjectTable')" data-toggle="tooltip"
+                data-placement="right" title="Remove all staff">
+            <span class="glyphicon glyphicon-trash"></span>
         </button>
         <table id="staffTable" class="table table-hover">
             <thead>
@@ -92,8 +101,17 @@
     <div class="container">
         <h2 class="title text-center">Subject Information</h2>
         <p class="intro text-center">View and edit subject information</p>
-        <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#subjectModal" id="subjectAddButton">
+        <button type="button" class="btn btn-noborder" onclick="$('#subjectModal').modal('show')" id="subjectAddButton"
+                data-toggle="tooltip" data-placement="right" title="Add new subject using the wizard">
             <i class="fa fa-plus fa-2x"></i>
+        </button>
+        <button type="button" class="btn btn-noborder" onclick="loadFile('Subject', 'subjectTable')" data-toggle="tooltip"
+                data-placement="right" title="Import subject data from a file. WARNING empties table first!">
+            <span class="glyphicon glyphicon-import"></span>
+        </button>
+        <button type="button" class=" btn btn-noborder" onclick="clearTable('subjectTable')" data-toggle="tooltip"
+                data-placement="right" title="Remove all subjects">
+            <span class="glyphicon glyphicon-trash"></span>
         </button>
         <table id="subjectTable" class="table table-hover">
             <thead>
@@ -112,10 +130,14 @@
             <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#yearModal" id="yearAddButton">
                 <i class="fa fa-plus fa-2x"></i>
             </button>
+            <button type="button" class=" btn btn-noborder" onclick="clearTable('subjectTable')" data-toggle="tooltip"
+                    data-placement="right" title="Remove all years">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
             <table id="yearTable" class="table table-hover">
                 <thead>
-                    <th>ID</th>
-                    <th>Name</th>
+                <th>ID</th>
+                <th>Name</th>
                 </thead>
             </table>
         </div>
@@ -132,8 +154,8 @@
             </button>
             <table id="buildingTable" class="table table-hover">
                 <thead>
-                    <th>ID</th>
-                    <th>Name</th>
+                <th>ID</th>
+                <th>Name</th>
                 </thead>
             </table>
         </div>
@@ -150,10 +172,10 @@
             </button>
             <table id="classroomTable" class="table table-hover">
                 <thead>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Building ID</th>
-                    <th>Subject ID</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Building ID</th>
+                <th>Subject ID</th>
                 </thead>
             </table>
         </div>
@@ -168,10 +190,14 @@
             <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#setModal" id="learningSetAddButton">
                 <i class="fa fa-plus fa-2x"></i>
             </button>
+            <button type="button" class=" btn btn-noborder" onclick="clearTable('subjectTable')" data-toggle="tooltip"
+                    data-placement="right" title="Remove all sets">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
             <table id="setTable" class="table table-hover">
                 <thead>
-                    <th>ID</th>
-                    <th>Name</th>
+                <th>ID</th>
+                <th>Name</th>
                 </thead>
             </table>
         </div>
@@ -186,12 +212,16 @@
             <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#classModal" id="classAddButton">
                 <i class="fa fa-plus fa-2x"></i>
             </button>
+            <button type="button" class=" btn btn-noborder" onclick="clearTable('subjectTable')" data-toggle="tooltip"
+                    data-placement="right" title="Remove all classes">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
             <table id="classTable" class="table table-hover">
                 <thead>
-                    <th>ID</th>
-                    <th>Set ID</th>
-                    <th>Subject ID</th>
-                    <th>Year Group ID</th>
+                <th>ID</th>
+                <th>Set ID</th>
+                <th>Subject ID</th>
+                <th>Year Group ID</th>
                 </thead>
             </table>
         </div>
@@ -339,7 +369,6 @@
 <script type="text/javascript" src="assets/plugins/jquery.easing.1.3.js"></script>
 <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="assets/plugins/jquery-scrollTo/jquery.scrollTo.min.js"></script>
-<script type="text/javascript" src="assets/js/json2.js"></script>
 <script type="text/javascript" src="assets/js/main.js"></script>
 <script type="text/javascript" src="assets/js/table.js"></script>
 </body>

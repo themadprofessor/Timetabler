@@ -1,15 +1,13 @@
-$('#staffModal').on('shown.bs.modal', function () {
-  $('#staffAddButton').focus()
+//Initialise tooltips
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
 });
-$('#subjectModal').on('shown.bs.modal', function () {
-  $('#subjectAddButton').focus()
-});
-/*$('#staffName').keyup(function(event){
-  if (event.keyCode == 13) {
-    $('#staffSave').click();
-  }
-});*/
 
+/**
+ * Adds a member of staff to the system from the wizard. The data (name, subject and hours) is pulled from the
+ * corresponding entry elements (staffName, staffSubject, staffHours). If staffHours is not a number, or any data is
+ * empty, the wizard will not be closed and the user will be informed.
+ */
 function addStaff() {
     try {
         var name = document.getElementById("staffName").value;
@@ -18,7 +16,7 @@ function addStaff() {
         var hours = document.getElementById("staffHours").value;
         if (!(typeof hours === 'number') || !((hours % 1) === 0)) {
             java.warning("Hours per week must be a number");
-
+            return;
         }
     } catch (err) {
         java.warning(err);
@@ -35,6 +33,10 @@ function addStaff() {
     //No alert needed as success is false if exception in Java, which produces alert.
 }
 
+/**
+ * Adds a subject to the system from the wizard. The data (name) is pulled from the corresponding entry elements
+ * (subjectName). If any data is empty, the wizard will not be closed and the user will be informed.
+ */
 function addSubject() {
     try {
         var name = document.getElementById("subjectName").value;
@@ -59,6 +61,10 @@ function addSubject() {
     //No alert needed as success is false if exception in Java, which produces alert.
 }
 
+/**
+ * Adds a year group to the system from the wizard. The data (name) is pulled from the corresponding entry elements
+ * (yearName). If any data is empty, the wizard will not be closed and the user will be informed.
+ */
 function addYear() {
     try {
         var name = document.getElementById("yearName").value;
@@ -83,6 +89,10 @@ function addYear() {
     //No alert needed as success is false if exception in Java, which produces alert.
 }
 
+/**
+ * Adds a set to the system from the wizard. The data (name) is pulled from the corresponding entry elements
+ * (setName). If any data is empty, the wizard will not be closed and the user will be informed.
+ */
 function addSet() {
     try {
         var name = document.getElementById("setName").value;
@@ -107,6 +117,11 @@ function addSet() {
     //No alert needed as success is false if exception in Java, which produces alert.
 }
 
+/**
+ * Adds a subject set to the system from the wizard. The data (subject, set and year) is pulled from the corresponding
+ * entry elements (classSubject, classSet, classYear). If any data is empty, the wizard will not be closed and the user
+ * will be informed.
+ */
 function addClass() {
     try {
         var subject = document.getElementById("classSubject").value;
@@ -129,14 +144,21 @@ function addClass() {
     //No alert needed as success is false if exception in Java, which produces alert.
 }
 
+/**
+ * Adds the given items to the given table and adds a remove button as the last element in the row. The remove button
+ * will call removeRow(button) to remove the row.
+ * @param tableName The id of the table to be added to.
+ * @param items An array of elements to be added to the table.
+ */
 function addToTable(tableName, items) {
     var table = document.getElementById(tableName);
     var row = table.insertRow(table.rows.length);
-    for (i = 0; i < items.length; i++) {
+    for (var i = 0; i < items.length; i++) {
         java.verbose("Adding cell with the contents [" + items[i] + "]");
         row.insertCell(i).innerHTML = items[i];
     }
 
+    //The icon for the button must be an empty span element.
     var span = document.createElement("span");
     span.className = "glyphicon glyphicon-remove";
 
@@ -154,13 +176,18 @@ function addToTable(tableName, items) {
     java.debug("Added Row To [" + tableName + ']')
 }
 
+/**
+ * Removes the row this button is in. The button's parent's parent must be a row element. The data in the row is also
+ * removed from the system by calling java.remove(type, data).
+ * @param button The button who's parent's parent is a row.
+ */
 function removeRow(button) {
     var row = button.parentNode.parentNode;
     var cells = row.cells;
     var type = button.name;
     var data = [];
 
-    for (i = 0; i < cells.length-1; i++) {
+    for (var i = 0; i < cells.length-1; i++) {
         java.verbose("Storing [" + cells[i].innerHTML + "]");
         data.push(cells[i].innerHTML);
     }
@@ -175,15 +202,52 @@ function removeRow(button) {
     }
 }
 
+/**
+ * Adds the given text and value combination to the given select element. The text will be displayed to the user and the
+ * value will be used for processing e.g. the ID.
+ * @param selectName The ID of the select element to add to.
+ * @param text The text to be displayed for the new entry.
+ * @param value The value for the new entry.
+ */
 function addToSelect(selectName, text, value) {
     var options = document.getElementById(selectName);
     options[options.length] = new Option(text, value);
 }
 
+/**
+ * Sets the global success variable's value to the given value. To be used by the Java bridge as it is more reliable
+ * than direct modification.
+ * @param value The value to se the success variable to be.
+ *
+ */
 function setSuccess(value) {
     success = value;
 }
 
+/**
+ * Calls the Java bridge's method loadMap(). To be used by load map buttons.
+ */
 function loadMap() {
     java.loadMap();
+}
+
+/**
+ * Calls the the Java bridge's method loadFromFile(dataType, tableName). To be used by bulk insert buttons.
+ * @param dataType The data type in the file.
+ * @param tableName The table the data will be put into.
+ */
+function loadFile(dataType, tableName) {
+    java.loadFromFile(dataType, tableName);
+}
+
+function clearTable(tableName) {
+    java.debug("Clearing table [" + tableName + ']');
+    var rows = document.getElementById(tableName).rows;
+
+    while (rows.length > 1) {
+        var cells = rows[1].cells;
+        java.verbose("Removing row with ID [" + cells[0].innerHTML + ']');
+        var butt = cells[cells.length - 1].firstElementChild;
+        butt.click();
+    }
 }
