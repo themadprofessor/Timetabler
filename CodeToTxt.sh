@@ -4,7 +4,7 @@ count=0
 outFile="Timetabler.txt"
 rm -f $outFile
 
-for file in $(find ./src -name '*.java' -or -name 'index.html' -or -name 'table.js'); do
+for file in $(find ./src -name '*.java' -or -name 'html/index.html' -or -name 'table.js' -or -name '*.fxml'); do
 	echo $file
 	echo $file >> $outFile
 	cat $file >> $outFile
@@ -14,7 +14,7 @@ done
 
 outFile="Installer.txt"
 rm -f $outFile
-for file in $(find ./Installer/src -name '*.java' -or -name '*.html'); do
+for file in $(find ./Installer/src -name '*.java' -or -name '*.fxml'); do
 	echo $file
 	echo $file >> $outFile
 	cat $file >> $outFile

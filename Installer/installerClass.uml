@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="375.0" y="0.0">me.timetabler.installer.OperatingSystem</node>
+    <node x="0.0" y="0.0">me.timetabler.installer.ExtractCallback</node>
+    <node x="634.0" y="571.0">me.timetabler.installer.Main</node>
+    <node x="300.0" y="571.0">me.timetabler.installer.monitor.MonitorController</node>
+    <node x="328.0" y="319.0">me.timetabler.installer.monitor.TaskMonitor</node>
+    <node x="0.0" y="319.0">me.timetabler.installer.InstallThread</node>
+    <node x="0.0" y="571.0">me.timetabler.installer.InstallerController</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic Group" zoom="0.5000000000000001" x="242.0" y="260.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

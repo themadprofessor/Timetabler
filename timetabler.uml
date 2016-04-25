@@ -3,86 +3,86 @@
   <ID>JAVA</ID>
   <OriginalElement>me.timetabler</OriginalElement>
   <nodes>
-    <node x="4955.037000811621" y="3487.986020834692">me.timetabler.data.exceptions.DataConnectionException</node>
-    <node x="7390.068162722484" y="0.0">me.timetabler.installer.OperatingSystem</node>
-    <node x="2198.271896467755" y="5649.348191741491">me.timetabler.map.MapLoader</node>
-    <node x="4136.847600297025" y="1323.6596736515198">me.timetabler.data.mariadb.MariaSubjectSetDao</node>
-    <node x="556.6940485644313" y="4653.688458107589">me.timetabler.data.SubjectSet</node>
-    <node x="0.0" y="3608.738499465503">me.timetabler.data.mariadb.MariaPeriodDao</node>
-    <node x="32.62856558472504" y="3351.780427770662">me.timetabler.data.dao.PeriodDao</node>
-    <node x="3033.0783447311464" y="747.3694434031331">me.timetabler.data.LessonPlan</node>
-    <node x="221.09918924246085" y="4001.9234857767765">me.timetabler.data.Day</node>
-    <node x="220.46695904168337" y="2474.6566504060384">me.timetabler.data.dao.SchoolYearDao</node>
-    <node x="926.0" y="8388.5915304198">me.timetabler.ui.main.html.assets.fonts</node>
-    <node x="350.85714993314514" y="4343.035156770326">me.timetabler.data.Distance</node>
-    <node x="670.1124386606616" y="6735.102906322567">me.timetabler.data.mariadb.MariaDbManager</node>
-    <node x="4904.6064022229575" y="0.0">me.timetabler.data.sql.JoinType</node>
-    <node x="4139.289969682862" y="4793.242016050544">me.timetabler.data.mariadb.MariaSubjectDao</node>
-    <node x="1525.0" y="8388.5915304198">me.timetabler.ui.main.html.assets.js</node>
-    <node x="2806.0830664467603" y="710.8323677271146">me.timetabler.data.Staff</node>
-    <node x="2482.511365424056" y="5583.026500586556">me.timetabler.ui.main.Bridge</node>
-    <node x="1310.3762059803958" y="7073.679271668163">me.timetabler.Main</node>
-    <node x="3557.03116351137" y="5504.395581435953">me.timetabler.data.dao.LearningSetDao</node>
-    <node x="213.45876514121665" y="2233.5489551793994">me.timetabler.data.dao.SubjectSetDao</node>
-    <node x="57.693541899115644" y="3102.403641695204">me.timetabler.data.dao.Dao</node>
-    <node x="995.6837078324602" y="1197.6681599367967">me.timetabler.data.dao.DistanceDao</node>
-    <node x="4452.6905148688365" y="4323.428164919195">me.timetabler.data.mariadb.MariaDistanceDao</node>
-    <node x="696.0289449586562" y="4822.476813208799">me.timetabler.data.SchoolYear</node>
-    <node x="2112.521935617645" y="7470.919171622555">me.timetabler.Coordinate</node>
-    <node x="64.61042452442098" y="2864.204247138725">me.timetabler.data.dao.DayDao</node>
-    <node x="142.20103982753062" y="2600.8309691588756">me.timetabler.data.dao.MutableDao</node>
-    <node x="5908.053162722484" y="32.0">me.timetabler.installer.InstallThread</node>
-    <node x="1927.2028300113948" y="7683.435530706574">me.timetabler.map.Walker</node>
-    <node x="2641.4494515512974" y="7538.961724006552">me.timetabler.map.Wall</node>
-    <node x="218.0" y="8388.5915304198">me.timetabler.data.exceptions.DataExceptionHandler</node>
-    <node x="8152.183162722484" y="0.0">me.timetabler.config.YamlConfigParser</node>
-    <node x="4986.728327585097" y="3187.0205221350516">me.timetabler.data.exceptions.DataException</node>
-    <node x="512.1651263126132" y="4584.248626355855">me.timetabler.data.DataType</node>
-    <node x="2297.689887459829" y="7307.37716772624">me.timetabler.map.SchoolMap</node>
-    <node x="1651.8866059468724" y="949.3251132529485">me.timetabler.data.dao.BuildingDao</node>
-    <node x="3980.7885102414257" y="1188.3792426827454">me.timetabler.data.sql.JoinClause</node>
-    <node x="5427.488162722484" y="0.0">me.timetabler.installer.ExtractCallback</node>
-    <node x="1081.0" y="8388.5915304198">me.timetabler.ui.main.html.assets.scss</node>
-    <node x="592.0" y="8388.5915304198">me.timetabler.ui.main.html.assets.plugins</node>
-    <node x="4550.033421942491" y="1838.4955231327035">me.timetabler.data.exceptions.DataUpdateException</node>
-    <node x="2746.453196684945" y="7695.152572084716">me.timetabler.map.CellType</node>
-    <node x="6709.7981627224835" y="41.999999999999815">me.timetabler.installer.monitor.TaskMonitor</node>
-    <node x="1232.0" y="8388.5915304198">me.timetabler.ui.main.html.assets.less</node>
-    <node x="726.6258568817725" y="1426.912865702333">me.timetabler.data.dao.LessonPlanDao</node>
-    <node x="365.6946344564044" y="1949.1688826998663">me.timetabler.data.dao.ClassroomDao</node>
-    <node x="8408.183162722484" y="0.0">me.timetabler.ui.main.JavaFxBridge</node>
-    <node x="1327.47702805563" y="7451.960199597378">me.timetabler.config.ConfigType</node>
-    <node x="4617.389914695217" y="2014.9808631814144">me.timetabler.data.mariadb.MariaStaffDao</node>
-    <node x="3088.2251006205506" y="5453.5595016754105">me.timetabler.data.mariadb.MariaLearningSetDao</node>
-    <node x="759.0" y="8388.5915304198">me.timetabler.ui.main.html.assets.images</node>
-    <node x="927.4791801237095" y="6920.701153890506">me.timetabler.data.TimetableThread</node>
-    <node x="2553.47906918651" y="8147.114599240875">me.timetabler.map.ImportantCell</node>
-    <node x="6328.448162722484" y="42.9999999999999">me.timetabler.installer.InstallerController</node>
-    <node x="1763.8657959313716" y="692.9116524409319">me.timetabler.data.mariadb.MariaBuildingDao</node>
-    <node x="1152.1235267158877" y="5148.302017919075">me.timetabler.data.mariadb.MariaDaoManager</node>
-    <node x="4724.488162722484" y="2507.86628342709">me.timetabler.data.mariadb.MariaLessonPlanDao</node>
-    <node x="2414.7465759387164" y="762.3114637532235">me.timetabler.SqlTest</node>
-    <node x="4772.396453521102" y="4010.214112528292">me.timetabler.data.mariadb.MariaDayDao</node>
-    <node x="548.8956832176159" y="1711.897699111746">me.timetabler.data.dao.SubjectDao</node>
-    <node x="3474.7144650245546" y="834.6322190940728">me.timetabler.data.mariadb.MariaClassroomDao</node>
-    <node x="7717.068162722484" y="53.5">me.timetabler.config.ConfigParser</node>
-    <node x="2734.4622419871534" y="7889.237438127404">me.timetabler.map.Path</node>
-    <node x="1819.561658870729" y="5492.08068330207">me.timetabler.data.dao.DaoManager</node>
-    <node x="2926.1349568242845" y="5640.644878889869">me.timetabler.data.LearningSet</node>
-    <node x="269.80313053950294" y="4158.016635986473">me.timetabler.data.Period</node>
-    <node x="4906.694877327288" y="3771.312986487863">me.timetabler.data.exceptions.DataAccessException</node>
-    <node x="2245.511449802065" y="746.3168193880902">me.timetabler.data.Building</node>
-    <node x="1394.8731169369325" y="1021.9067154972295">me.timetabler.data.dao.StaffDao</node>
-    <node x="0.0" y="8388.5915304198">me.timetabler.installer.Main</node>
-    <node x="769.2406486626373" y="4938.6974624484155">me.timetabler.data.mariadb.MariaSchoolYearDao</node>
-    <node x="7076.068162722484" y="52.999999999999716">me.timetabler.installer.monitor.MonitorController</node>
-    <node x="4670.499797474889" y="6538.422960803133">me.timetabler.data.sql.StatementType</node>
-    <node x="3660.7879435859886" y="5116.590090207229">me.timetabler.data.sql.SqlBuilder</node>
-    <node x="1950.2145116736187" y="8005.66512197718">me.timetabler.map.BuildingCell</node>
-    <node x="1380.0" y="8388.5915304198">me.timetabler.ui.main.html.assets.css</node>
-    <node x="2597.671812698057" y="727.2845658722595">me.timetabler.data.Subject</node>
-    <node x="3255.2444813121065" y="796.8145726725552">me.timetabler.data.Classroom</node>
-    <node x="2292.493832963615" y="8165.591530419801">me.timetabler.map.ClassroomCell</node>
+    <node x="5152.385232448821" y="4225.057105651306">me.timetabler.data.exceptions.DataConnectionException</node>
+    <node x="6015.484017319221" y="0.0">me.timetabler.installer.OperatingSystem</node>
+    <node x="2068.752191541576" y="6416.652922616733">me.timetabler.map.MapLoader</node>
+    <node x="4520.75463507181" y="5279.400450640354">me.timetabler.data.mariadb.MariaSubjectSetDao</node>
+    <node x="869.6031957891503" y="5733.863865207926">me.timetabler.data.SubjectSet</node>
+    <node x="268.9324484470935" y="5034.464936976821">me.timetabler.data.mariadb.MariaPeriodDao</node>
+    <node x="705.7540665471079" y="5561.531125694013">me.timetabler.data.LessonPlan</node>
+    <node x="2389.4184361588204" y="1348.647803064956">me.timetabler.data.Day</node>
+    <node x="184.4045823789752" y="4791.266231684972">me.timetabler.data.dao.PeriodDao</node>
+    <node x="1263.4914200578985" y="1802.8631072740009">me.timetabler.data.dao.SchoolYearDao</node>
+    <node x="0.0" y="9136.298484292569">me.timetabler.ui.main.html.assets.fonts</node>
+    <node x="2138.907556581871" y="1336.213458742006">me.timetabler.data.Distance</node>
+    <node x="4476.1594264202795" y="7608.124126338589">me.timetabler.data.mariadb.MariaDbManager</node>
+    <node x="3943.775814807115" y="0.0">me.timetabler.data.sql.JoinType</node>
+    <node x="4956.882351553872" y="3056.3104555690734">me.timetabler.data.mariadb.MariaSubjectDao</node>
+    <node x="640.0" y="9136.298484292569">me.timetabler.ui.main.html.assets.js</node>
+    <node x="1413.0977923429914" y="6128.039972181751">me.timetabler.data.Staff</node>
+    <node x="1002.740322003719" y="5885.5436570352085">me.timetabler.ui.main.Bridge</node>
+    <node x="7106.4390173192205" y="0.0">me.timetabler.Main</node>
+    <node x="1129.6892992304834" y="1894.8057134901173">me.timetabler.data.dao.LearningSetDao</node>
+    <node x="485.7741408847901" y="2426.6824832749544">me.timetabler.data.dao.SubjectSetDao</node>
+    <node x="129.38885295690125" y="4527.561134043906">me.timetabler.data.dao.Dao</node>
+    <node x="699.6841091640349" y="2092.941459460327">me.timetabler.data.dao.DistanceDao</node>
+    <node x="4809.75740964239" y="4755.522411610589">me.timetabler.data.mariadb.MariaDistanceDao</node>
+    <node x="1990.2303231317674" y="8300.658348704157">me.timetabler.Coordinate</node>
+    <node x="1855.2053254172802" y="1466.0542862765183">me.timetabler.data.SchoolYear</node>
+    <node x="58.272449191656506" y="4264.322596517881">me.timetabler.data.dao.DayDao</node>
+    <node x="80.78844302341076" y="3974.7072440823654">me.timetabler.data.dao.MutableDao</node>
+    <node x="5634.02450686823" y="1185.4919091800948">me.timetabler.installer.InstallThread</node>
+    <node x="2027.340138664952" y="8543.065028429111">me.timetabler.map.Walker</node>
+    <node x="1461.2775407728063" y="8244.280988446084">me.timetabler.map.Wall</node>
+    <node x="8404.51401731922" y="0.0">me.timetabler.data.exceptions.DataExceptionHandler</node>
+    <node x="5193.860324780237" y="3901.7379914718695">me.timetabler.data.exceptions.DataException</node>
+    <node x="6847.4390173192205" y="0.0">me.timetabler.config.YamlConfigParser</node>
+    <node x="2021.8462819381737" y="1467.781523970766">me.timetabler.data.DataType</node>
+    <node x="3050.6305599066727" y="6492.239965711226">me.timetabler.data.dao.BuildingDao</node>
+    <node x="1661.9062984501272" y="8072.113815886728">me.timetabler.map.SchoolMap</node>
+    <node x="5640.484017319221" y="1623.2054647560533">me.timetabler.installer.ExtractCallback</node>
+    <node x="3426.186232325579" y="1439.3103039605421">me.timetabler.data.sql.JoinClause</node>
+    <node x="166.0" y="9136.298484292569">me.timetabler.ui.main.html.assets.scss</node>
+    <node x="9035.51401731922" y="0.0">me.timetabler.ui.main.html.assets.plugins</node>
+    <node x="1232.3302019743621" y="8636.436729021778">me.timetabler.map.CellType</node>
+    <node x="5106.524439881467" y="4538.110076154481">me.timetabler.data.exceptions.DataUpdateException</node>
+    <node x="5608.596860651914" y="394.98425286471">me.timetabler.installer.monitor.TaskMonitor</node>
+    <node x="327.0" y="9136.298484292569">me.timetabler.ui.main.html.assets.less</node>
+    <node x="0.0" y="3658.5415671097967">me.timetabler.data.dao.LessonPlanDao</node>
+    <node x="83.01118344917813" y="3322.88595149366">me.timetabler.data.dao.ClassroomDao</node>
+    <node x="4782.88977682011" y="2591.4483150942265">me.timetabler.data.mariadb.MariaLearningSetDao</node>
+    <node x="4154.96373560663" y="5712.626380869291">me.timetabler.data.mariadb.MariaStaffDao</node>
+    <node x="7544.51401731922" y="66.5">me.timetabler.config.ConfigType</node>
+    <node x="7691.51401731922" y="0.0">me.timetabler.ui.main.JavaFxBridge</node>
+    <node x="9214.51401731922" y="0.0">me.timetabler.ui.main.html.assets.images</node>
+    <node x="3608.825364190254" y="7961.888498333847">me.timetabler.data.TimetableThread</node>
+    <node x="1504.3525719964882" y="9040.298484292569">me.timetabler.map.ImportantCell</node>
+    <node x="2546.829362788666" y="6350.918160537205">me.timetabler.data.mariadb.MariaBuildingDao</node>
+    <node x="5621.419986971591" y="778.5468069013498">me.timetabler.installer.InstallerController</node>
+    <node x="3540.288358328155" y="5950.879921405967">me.timetabler.data.mariadb.MariaDaoManager</node>
+    <node x="2733.94682493228" y="1122.3519081136915">me.timetabler.data.mariadb.MariaLessonPlanDao</node>
+    <node x="8821.51401731922" y="0.0">me.timetabler.SqlTest</node>
+    <node x="4603.844521331403" y="2282.764294349376">me.timetabler.data.mariadb.MariaDayDao</node>
+    <node x="197.960925600029" y="3011.934871193282">me.timetabler.data.dao.SubjectDao</node>
+    <node x="3659.9552529944103" y="1461.9734354556308">me.timetabler.data.mariadb.MariaClassroomDao</node>
+    <node x="6357.484017319221" y="56.0">me.timetabler.config.ConfigParser</node>
+    <node x="1259.6052826603345" y="8384.75723696379">me.timetabler.map.Path</node>
+    <node x="3181.6154588131167" y="6298.038336791792">me.timetabler.data.dao.DaoManager</node>
+    <node x="576.4648982930944" y="5398.4727015522785">me.timetabler.data.Period</node>
+    <node x="2561.8856348284453" y="1335.5037600243704">me.timetabler.data.LearningSet</node>
+    <node x="2374.4919212118075" y="6456.11794114081">me.timetabler.data.Building</node>
+    <node x="5154.421437652851" y="3644.3034761776426">me.timetabler.data.exceptions.DataAccessException</node>
+    <node x="336.48584153065985" y="2724.8260810996635">me.timetabler.data.dao.StaffDao</node>
+    <node x="8170.51401731922" y="0.0">me.timetabler.installer.Main</node>
+    <node x="5554.252805280928" y="0.0">me.timetabler.installer.monitor.MonitorController</node>
+    <node x="1375.747074775807" y="1472.500371656059">me.timetabler.data.mariadb.MariaSchoolYearDao</node>
+    <node x="5364.252805280928" y="828.2500948718148">me.timetabler.data.sql.StatementType</node>
+    <node x="4137.420112157195" y="1793.129008543331">me.timetabler.data.sql.SqlBuilder</node>
+    <node x="1838.1581521852563" y="8866.28799153519">me.timetabler.map.BuildingCell</node>
+    <node x="486.0" y="9136.298484292569">me.timetabler.ui.main.html.assets.css</node>
+    <node x="1623.171742800359" y="6259.941082989768">me.timetabler.data.Subject</node>
+    <node x="1825.6234609270093" y="6299.361855369798">me.timetabler.data.Classroom</node>
+    <node x="1270.7984647456701" y="8802.189269044371">me.timetabler.map.ClassroomCell</node>
   </nodes>
   <notes />
   <edges>
@@ -102,15 +102,15 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.exceptions.DataUpdateException">
-      <point x="0.0" y="0.0" />
-      <point x="0.0" y="0.0" />
-    </edge>
     <edge source="me.timetabler.data.dao.MutableDao" target="me.timetabler.data.dao.Dao">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
     <edge source="me.timetabler.data.SchoolYear" target="me.timetabler.data.DataType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.exceptions.DataUpdateException">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -142,11 +142,11 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaDistanceDao" target="me.timetabler.data.exceptions.DataAccessException">
+    <edge source="me.timetabler.data.dao.DistanceDao" target="me.timetabler.data.dao.MutableDao">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.dao.DistanceDao" target="me.timetabler.data.dao.MutableDao">
+    <edge source="me.timetabler.data.mariadb.MariaDistanceDao" target="me.timetabler.data.exceptions.DataAccessException">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -187,8 +187,8 @@
       <point x="0.0" y="0.0" />
     </edge>
     <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.dao.DaoManager">
-      <point x="0.0" y="-5.35923356747071" />
-      <point x="0.0" y="-5.35923356747071" />
+      <point x="0.0" y="5.327809803781747" />
+      <point x="0.0" y="5.327809803781747" />
     </edge>
     <edge source="me.timetabler.ui.main.Bridge" target="me.timetabler.map.MapLoader">
       <point x="0.0" y="0.0" />
@@ -238,10 +238,6 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.SqlTest" target="me.timetabler.data.Distance">
-      <point x="0.0" y="0.0" />
-      <point x="0.0" y="0.0" />
-    </edge>
     <edge source="me.timetabler.data.mariadb.MariaClassroomDao" target="me.timetabler.data.sql.JoinClause">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
@@ -258,15 +254,11 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.exceptions.DataAccessException">
-      <point x="0.0" y="0.0" />
-      <point x="0.0" y="0.0" />
-    </edge>
     <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.sql.SqlBuilder">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.dao.SubjectSetDao">
+    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.exceptions.DataAccessException">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -274,15 +266,19 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.dao.SubjectSetDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
     <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaPeriodDao">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.sql.SqlBuilder" target="me.timetabler.data.sql.StatementType">
+    <edge source="me.timetabler.data.mariadb.MariaSchoolYearDao" target="me.timetabler.data.sql.SqlBuilder">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaSchoolYearDao" target="me.timetabler.data.sql.SqlBuilder">
+    <edge source="me.timetabler.data.sql.SqlBuilder" target="me.timetabler.data.sql.StatementType">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -294,11 +290,11 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.map.SchoolMap" target="me.timetabler.map.ClassroomCell">
+    <edge source="me.timetabler.data.mariadb.MariaSchoolYearDao" target="me.timetabler.data.exceptions.DataAccessException">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaSchoolYearDao" target="me.timetabler.data.exceptions.DataAccessException">
+    <edge source="me.timetabler.map.SchoolMap" target="me.timetabler.map.ClassroomCell">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -318,11 +314,11 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaSubjectDao" target="me.timetabler.data.sql.SqlBuilder">
+    <edge source="me.timetabler.data.mariadb.MariaLearningSetDao" target="me.timetabler.data.sql.SqlBuilder">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaLearningSetDao" target="me.timetabler.data.sql.SqlBuilder">
+    <edge source="me.timetabler.data.mariadb.MariaSubjectDao" target="me.timetabler.data.sql.SqlBuilder">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -334,15 +330,15 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.Subject">
-      <point x="0.0" y="0.0" />
-      <point x="0.0" y="0.0" />
-    </edge>
     <edge source="me.timetabler.data.dao.SchoolYearDao" target="me.timetabler.data.dao.MutableDao">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
     <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.dao.LessonPlanDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.Subject">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -354,11 +350,11 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.sql.JoinClause">
+    <edge source="me.timetabler.data.mariadb.MariaBuildingDao" target="me.timetabler.data.dao.BuildingDao">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaBuildingDao" target="me.timetabler.data.dao.BuildingDao">
+    <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.sql.JoinClause">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -406,10 +402,6 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.SqlTest" target="me.timetabler.data.Subject">
-      <point x="0.0" y="0.0" />
-      <point x="0.0" y="0.0" />
-    </edge>
     <edge source="me.timetabler.installer.InstallerController" target="me.timetabler.installer.monitor.TaskMonitor">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
@@ -418,11 +410,11 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.Classroom" target="me.timetabler.data.Subject">
+    <edge source="me.timetabler.data.mariadb.MariaDistanceDao" target="me.timetabler.data.sql.JoinClause">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaDistanceDao" target="me.timetabler.data.sql.JoinClause">
+    <edge source="me.timetabler.data.Classroom" target="me.timetabler.data.Subject">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -446,10 +438,6 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.Main" target="me.timetabler.data.dao.DaoManager">
-      <point x="0.0" y="0.0" />
-      <point x="0.0" y="0.0" />
-    </edge>
     <edge source="me.timetabler.data.mariadb.MariaSchoolYearDao" target="me.timetabler.data.exceptions.DataUpdateException">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
@@ -458,7 +446,7 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaClassroomDao" target="me.timetabler.data.dao.ClassroomDao">
+    <edge source="me.timetabler.data.dao.DaoManager" target="me.timetabler.data.mariadb.MariaDaoManager">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -466,7 +454,7 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.dao.DaoManager" target="me.timetabler.data.mariadb.MariaDaoManager">
+    <edge source="me.timetabler.data.mariadb.MariaClassroomDao" target="me.timetabler.data.dao.ClassroomDao">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -478,11 +466,11 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaLessonPlanDao">
+    <edge source="me.timetabler.data.mariadb.MariaStaffDao" target="me.timetabler.data.Staff">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaStaffDao" target="me.timetabler.data.Staff">
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaLessonPlanDao">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -502,11 +490,11 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.Distance" target="me.timetabler.data.DataType">
+    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaStaffDao">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaDaoManager" target="me.timetabler.data.mariadb.MariaStaffDao">
+    <edge source="me.timetabler.data.Distance" target="me.timetabler.data.DataType">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -522,11 +510,11 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaClassroomDao" target="me.timetabler.data.Classroom">
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.SubjectSet">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.SubjectSet">
+    <edge source="me.timetabler.data.mariadb.MariaClassroomDao" target="me.timetabler.data.Classroom">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -558,11 +546,11 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.ui.main.Bridge" target="me.timetabler.data.dao.DaoManager">
+    <edge source="me.timetabler.data.SubjectSet" target="me.timetabler.data.Subject">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.SubjectSet" target="me.timetabler.data.Subject">
+    <edge source="me.timetabler.ui.main.Bridge" target="me.timetabler.data.dao.DaoManager">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -579,14 +567,14 @@
       <point x="0.0" y="0.0" />
     </edge>
     <edge source="me.timetabler.map.BuildingCell" target="me.timetabler.map.ImportantCell">
-      <point x="0.6738445394992141" y="-4.954385283422198" />
-      <point x="0.6738445394992141" y="-4.954385283422198" />
-    </edge>
-    <edge source="me.timetabler.data.mariadb.MariaSubjectDao" target="me.timetabler.data.dao.SubjectDao">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
     <edge source="me.timetabler.data.mariadb.MariaDistanceDao" target="me.timetabler.data.dao.DistanceDao">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="me.timetabler.data.mariadb.MariaSubjectDao" target="me.timetabler.data.dao.SubjectDao">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -614,10 +602,6 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.SqlTest" target="me.timetabler.data.Classroom">
-      <point x="0.0" y="0.0" />
-      <point x="0.0" y="0.0" />
-    </edge>
     <edge source="me.timetabler.ui.main.Bridge" target="me.timetabler.data.SubjectSet">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
@@ -626,19 +610,19 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
+    <edge source="me.timetabler.map.ClassroomCell" target="me.timetabler.map.ImportantCell">
+      <point x="2.674047835935653" y="-4.2248630949570725" />
+      <point x="2.674047835935653" y="-4.2248630949570725" />
+    </edge>
     <edge source="me.timetabler.data.LessonPlan" target="me.timetabler.data.Classroom">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.map.ClassroomCell" target="me.timetabler.map.ImportantCell">
+    <edge source="me.timetabler.data.mariadb.MariaClassroomDao" target="me.timetabler.data.sql.SqlBuilder">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
     <edge source="me.timetabler.data.mariadb.MariaSubjectSetDao" target="me.timetabler.data.SubjectSet">
-      <point x="0.0" y="0.0" />
-      <point x="0.0" y="0.0" />
-    </edge>
-    <edge source="me.timetabler.data.mariadb.MariaClassroomDao" target="me.timetabler.data.sql.SqlBuilder">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -690,11 +674,11 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.Building">
+    <edge source="me.timetabler.data.mariadb.MariaPeriodDao" target="me.timetabler.data.sql.SqlBuilder">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaPeriodDao" target="me.timetabler.data.sql.SqlBuilder">
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.Building">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -714,11 +698,11 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.LessonPlan">
+    <edge source="me.timetabler.data.mariadb.MariaStaffDao" target="me.timetabler.data.sql.JoinClause">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.mariadb.MariaStaffDao" target="me.timetabler.data.sql.JoinClause">
+    <edge source="me.timetabler.data.mariadb.MariaLessonPlanDao" target="me.timetabler.data.LessonPlan">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -734,10 +718,6 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.SqlTest" target="me.timetabler.data.Building">
-      <point x="0.0" y="0.0" />
-      <point x="0.0" y="0.0" />
-    </edge>
     <edge source="me.timetabler.data.mariadb.MariaStaffDao" target="me.timetabler.data.sql.SqlBuilder">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
@@ -750,11 +730,11 @@
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.Classroom" target="me.timetabler.data.Building">
+    <edge source="me.timetabler.data.Period" target="me.timetabler.data.Day">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
-    <edge source="me.timetabler.data.Period" target="me.timetabler.data.Day">
+    <edge source="me.timetabler.data.Classroom" target="me.timetabler.data.Building">
       <point x="0.0" y="0.0" />
       <point x="0.0" y="0.0" />
     </edge>
@@ -771,14 +751,14 @@
       <point x="0.0" y="0.0" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="0.30000000000000004" x="1176.6666666666665" y="4906.0" />
+  <settings layout="Hierarchic Group" zoom="0.6" x="2376.333333333333" y="6511.0" />
   <SelectedNodes />
   <Categories>
     <Category>Fields</Category>
-    <Category>Constructors</Category>
-    <Category>Methods</Category>
-    <Category>Properties</Category>
     <Category>Inner Classes</Category>
+    <Category>Constructors</Category>
+    <Category>Properties</Category>
+    <Category>Methods</Category>
   </Categories>
   <SCOPE>All</SCOPE>
   <VISIBILITY>private</VISIBILITY>

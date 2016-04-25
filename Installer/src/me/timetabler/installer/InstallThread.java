@@ -37,7 +37,7 @@ public class InstallThread extends Task<Void> {
     private boolean success = true;
 
     /**
-     * Initaliises the class. The installPath must exist, be a directory and have write permissions.
+     * Initialises the class. The installPath must exist, be a directory and have write permissions.
      * @param installPath The path to install the system to.
      * @param password The password for the root user.
      */
@@ -182,6 +182,12 @@ public class InstallThread extends Task<Void> {
         }
     }
 
+    /**
+     * Installs, secures and sets up the database. The data dir is the directory where the database will install the
+     * tables. The base dir is the root directory of the database install directory, containing bin and lib.
+     * @param dataDir The data dir for the database.
+     * @param baseDir The base dir for the database.
+     */
     private void installDb(File dataDir, File baseDir) {
         //Setup command to install system tables
         List<String> cmd = new ArrayList<>();

@@ -37,10 +37,13 @@ public class MariaDbManager implements AutoCloseable {
         Log.debug("Starting MariaDB with [" + (command.size() - 1) + "] arguments");
         Log.verbose("Staring MariaDB with the following arguments [" + command.toString() + ']');
 
+        //Ensure the server has fully initialised before returning.
+        //MariaDB does all its logging to its error stream for some reason.
         process = new ProcessBuilder().command(command).start();
         Scanner scanner = new Scanner(process.getErrorStream());
         String line;
         while ((line = scanner.nextLine()) != null) {
+            //The server outputs 'ready for connections' upon finishing initialisation, and 'shutdown' when closing.
             if (line.contains("ready for connections")) {
                 break;
             } else if (line.contains("shutdown")) {
@@ -52,6 +55,7 @@ public class MariaDbManager implements AutoCloseable {
             }
         }
 
+        //Ensure the server is closed when the program closes.
         Runtime.getRuntime().addShutdownHook(new Thread (() -> process.destroy()));
 
         if (!process.isAlive()) {

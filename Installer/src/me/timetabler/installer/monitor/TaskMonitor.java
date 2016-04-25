@@ -42,6 +42,8 @@ public class TaskMonitor {
         loader.setLocation(getClass().getResource("monitor.fxml"));
         try {
             stage.setScene(new Scene(loader.load()));
+            task.setOnFailed(event -> {
+            });
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("IOException has occurred!");
