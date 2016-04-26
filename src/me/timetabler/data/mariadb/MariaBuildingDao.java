@@ -219,7 +219,7 @@ public class MariaBuildingDao implements BuildingDao {
 
             if (delete == null || delete.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("building", StatementType.DELETE)
-                        .addWhereClause("is=?");
+                        .addWhereClause("id=?");
                 delete = connection.prepareStatement(builder.build());
             }
 

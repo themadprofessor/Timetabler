@@ -196,12 +196,12 @@ public class MainController implements Initializable {
                 }
 
                 if (buildings != null) {
-                    buildings.forEach(building -> bridge.call("addToTable", "buildingTable",
+                    buildings.forEach(building -> bridge.call("addToTableHideRmBut", "buildingTable",
                             new String[]{String.valueOf(building.id), building.buildingName}));
                 }
 
                 if (classrooms != null) {
-                    classrooms.forEach(classroom -> bridge.call("addToTable", "classroomTable",
+                    classrooms.forEach(classroom -> bridge.call("addToTableHideRmBut", "classroomTable",
                             new String[]{String.valueOf(classroom.id), classroom.name, String.valueOf(classroom.building.id)}));
                 }
 

@@ -263,13 +263,10 @@ function clearTable(tableName) {
  */
 function addToTableHideRmBut(tableName, data) {
     addToTable(tableName, data);
-    
+
     var rows = document.getElementById(tableName).rows;
-    
-    for (var i = 1; i < rows.length; i++) {
-        var cells = rows[i];
-        java.verbose("Hidding remove button for row with ID [" + cells[0].innerHTML + ']');
-        var butt = cells[cells.length - 1].firstElementChild;
-        butt.style.display = 'none';
-    }
+    var cells = rows[rows.length - 1].cells;
+    java.verbose("Hidding remove button for row with ID [" + cells[0].innerHTML + ']');
+    var butt = cells[cells.length - 1].firstElementChild;
+    butt.style.display = 'none';
 }

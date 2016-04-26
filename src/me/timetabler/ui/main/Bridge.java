@@ -23,6 +23,9 @@ import netscape.javascript.JSObject;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * The bridge between the Javascript and the Java objects.
@@ -307,6 +310,44 @@ public class Bridge {
                 }
 
                 break;
+            case "Building":
+            case "building":
+                try {
+                    Log.debug("Removing Building.");
+                    Log.verbose("Building [" + data + ']');
+                    Building subjectSet = new Building();
+                    subjectSet.id = Integer.parseInt(data.split(",")[0].replace("]", ""));
+                    daoManager.getBuildingDao().delete(subjectSet);
+                    bridge.call("setSuccess", true);
+                } catch (DataAccessException | DataUpdateException e) {
+                    Log.error(e);
+                    DataExceptionHandler.handleJavaFx(e, "building", false);
+                    bridge.call("setSuccess", false);
+                } catch (DataConnectionException e) {
+                    Log.error(e);
+                    DataExceptionHandler.handleJavaFx(e, null, true);
+                }
+
+                break;
+            case "Classroom":
+            case "classroom":
+                try {
+                    Log.debug("Removing Classroom.");
+                    Log.verbose("Classroom [" + data + ']');
+                    Classroom subjectSet = new Classroom();
+                    subjectSet.id = Integer.parseInt(data.split(",")[0].replace("]", ""));
+                    daoManager.getClassroomDao().delete(subjectSet);
+                    bridge.call("setSuccess", true);
+                } catch (DataAccessException | DataUpdateException e) {
+                    Log.error(e);
+                    DataExceptionHandler.handleJavaFx(e, "classroom", false);
+                    bridge.call("setSuccess", false);
+                } catch (DataConnectionException e) {
+                    Log.error(e);
+                    DataExceptionHandler.handleJavaFx(e, null, true);
+                }
+
+                break;
         }
     }
 
@@ -348,9 +389,9 @@ public class Bridge {
             stage.setScene(new Scene(vBox, 300, 100));
             stage.show();
             Log.debug("Opened dialog");
+            ExecutorService loaderThread = Executors.newSingleThreadExecutor();
 
             loader.setOnSucceeded((event) -> Platform.runLater(() -> {
-
                 try {
                     daoManager.getBuildingDao().getAll().forEach(building -> bridge.call("addToTableHideRmBut", "buildingTable",
                             new String[]{String.valueOf(building.id), building.buildingName}));
@@ -368,16 +409,27 @@ public class Bridge {
                 } catch (DataConnectionException e) {
                     DataExceptionHandler.handleJavaFx(e, "classroom", true);
                 }
+                stage.close();
+                loaderThread.shutdown();
             }));
+            loaderThread.execute(loader);
             Log.debug("Started map loader thread");
         });
     }
 
+    /**
+     * Loads the data from a file of the given data type into the data source and display the data in the given table.
+     * The file is chosen within this method.
+     * @param dataType The type of data to be loaded.
+     * @param tableName The ID of the table to display the data with
+     */
     public void loadFromFile(String dataType, String tableName) {
+        //Select the file
         FileChooser chooser = new FileChooser();
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
         chooser.setTitle("Select CSV Data File.");
         File file = chooser.showOpenDialog(null);
+        //Only continue if a file is selected.
         if (file == null) {
             bridge.call("setSuccess", false);
             Log.warning("No file selected for bulk loading!");

@@ -153,7 +153,7 @@
         <div class="contact-inner">
             <h2 class="title text-center">Building</h2>
             <p class="intro text-center">View school building information and import map data.</p>
-            <button type="button" class="btn btn-noborder" data-toggle="modal" id="buildingAddButton" onclick="loadMap()">
+            <button type="button" class="btn btn-noborder" id="buildingAddButton" onclick="loadMap()">
                 <span class="glyphicon glyphicon-import"></span>
             </button>
             <table id="buildingTable" class="table table-hover">
@@ -171,7 +171,7 @@
         <div class="contact-inner">
             <h2 class="title text-center">Classrooms</h2>
             <p class="intro text-center">View and edit school classroom information.<br>Each classroom needs a building ID and subject ID before timetabling can begin.</p>
-            <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#classroomModal" id="classroomAddButton">
+            <button type="button" class="btn btn-noborder" id="classroomAddButton" onclick="loadMap()">
                 <span class="glyphicon glyphicon-import"></span>
             </button>
             <table id="classroomTable" class="table table-hover">

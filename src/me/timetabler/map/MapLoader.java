@@ -19,7 +19,14 @@ import java.util.*;
  * the map data in the database.
  */
 public class MapLoader extends Task<Void> {
+    /**
+     * The configuration map containing configuration data for map loading.
+     */
     private Map<String, String> config;
+
+    /**
+     * The daoManager which will be used to store the building, classroom and distance data.
+     */
     private DaoManager daoManager;
 
     /**
@@ -46,7 +53,7 @@ public class MapLoader extends Task<Void> {
         Map<String, SchoolMap> buildings = new HashMap<>();
         Set<Building> buildingsDb = new HashSet<>();
         HashMap<String, ClassroomCell> classRoomList = new HashMap<>();
-        ArrayList<Distance> distances = new ArrayList<>();
+        HashSet<Distance> distances = new HashSet<>(); //Use set as eliminates duplicates
 
         updateMessage("Loading Top Map.");
         updateProgress(0, 6);
@@ -62,7 +69,7 @@ public class MapLoader extends Task<Void> {
         //Loads all other map files
         updateMessage("Loading Other Maps");
         updateProgress(1, 6);
-        //Get all the files in ampFolder which is a file, ends with .csv and is not top_map.
+        //Get all the files in mapFolder which is a file, ends with .csv and is not top_map.
         File[] files = mapFolder.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".csv") && !pathname.getPath().endsWith(config.get("top_map")));
         for (File file : files) {
             buildings.put(file.getName().replace(".csv", ""), new SchoolMap(file));
@@ -94,11 +101,23 @@ public class MapLoader extends Task<Void> {
                 DataExceptionHandler.handleJavaFx(e, "BuildingCell", false);
             } catch (DataConnectionException e) {
                 Log.debug("Exception thrown by [" + building.name + ']');
-                DataExceptionHandler.handleJavaFx(e, "BuidlingCell", true);
+                DataExceptionHandler.handleJavaFx(e, "BuildingCell", true);
             }
         });
+        Building topBuilding = new Building();
+        topBuilding.buildingName = "Top";
+        try {
+            topBuilding.id = daoManager.getBuildingDao().insert(topBuilding);
+            buildingsDb.add(topBuilding);
+        } catch (DataAccessException | DataUpdateException e) {
+            Log.debug("Exception thrown by [Top]");
+            DataExceptionHandler.handleJavaFx(e, "BuildingCell", false);
+        } catch (DataConnectionException e) {
+            Log.debug("Exception thrown by [Top]");
+            DataExceptionHandler.handleJavaFx(e, "BuildingCell", true);
+        }
 
-        //Return null
+        //Return nothing
         return null;
     }
 }

@@ -4,6 +4,9 @@ import me.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A type of cell which contains of the important cells within it in its map.<br>
@@ -14,6 +17,8 @@ public class BuildingCell implements ImportantCell {
      * The important cells within this building.
      */
     private ArrayList<ImportantCell> important;
+
+    private HashMap<ImportantCell, Integer> distances;
 
     /**
      * The unique name of this building.
@@ -27,6 +32,7 @@ public class BuildingCell implements ImportantCell {
     public BuildingCell(String name) {
         this.name = name;
         important = new ArrayList<>();
+        distances = new HashMap<>();
     }
 
     /**
@@ -51,6 +57,18 @@ public class BuildingCell implements ImportantCell {
     }
 
     /**
+     * Gets all the buildings within this building, which will be empty if there are none.
+     * @return A list of all the buildings within this building, which can be empty.
+     */
+    public List<BuildingCell> getSubBuildings() {
+        ArrayList<BuildingCell> buildingCells = new ArrayList<>();
+        important.parallelStream()
+                .filter(importantCell -> importantCell instanceof BuildingCell)
+                .forEach(buildingCell -> buildingCells.add((BuildingCell) buildingCell));
+        return buildingCells;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -63,11 +81,6 @@ public class BuildingCell implements ImportantCell {
      */
     @Override
     public HashMap<ImportantCell, Integer> getDistances() {
-        HashMap<ImportantCell, Integer> distances = new HashMap<>();
-        important.forEach(cell -> {
-            Log.verbose(cell + " Distances Found By " + name);
-            distances.putAll(cell.getDistances());
-        });
         return distances;
     }
 

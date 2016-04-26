@@ -93,6 +93,17 @@ public class SchoolMap {
                     building.init(map);
                 }
             }));
+            Walker walker = new Walker(this);
+            optionalBuildingCells.forEach(startBuilding -> optionalBuildingCells.forEach(endBuilding -> {
+                if (!startBuilding.equals(endBuilding)
+                        && !startBuilding.getDistances().containsKey(endBuilding)
+                        || !endBuilding.getDistances().containsKey(startBuilding)) {
+                    int distance = walker.walk(getCoordinates(startBuilding).get(), getCoordinates(endBuilding).get());
+                    startBuilding.getDistances().put(endBuilding, distance);
+                    endBuilding.getDistances().put(startBuilding, distance);
+                    Log.debug("Distance [" + distance + "] between " + startBuilding + " and " + endBuilding);
+                }
+            }));
         } else {
             Log.warning("No Buildings Found!");
         }
