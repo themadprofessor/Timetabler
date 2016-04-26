@@ -79,10 +79,10 @@
             <i class="fa fa-plus fa-2x"></i>
         </button>
         <button type="button" class="btn btn-noborder" onclick="loadFile('Staff', 'staffTable')" data-toggle="tooltip"
-                data-placement="right" title="Import staff data from a file">
+                data-placement="right" title="Import staff data from a file. WARNING empties table first!">
             <span class="glyphicon glyphicon-import"></span>
         </button>
-        <button type="button" class=" btn btn-noborder" onclick="clearTable('subjectTable')" data-toggle="tooltip"
+        <button type="button" class=" btn btn-noborder" onclick="clearTable('staffTable')" data-toggle="tooltip"
                 data-placement="right" title="Remove all staff">
             <span class="glyphicon glyphicon-trash"></span>
         </button>
@@ -130,7 +130,11 @@
             <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#yearModal" id="yearAddButton">
                 <i class="fa fa-plus fa-2x"></i>
             </button>
-            <button type="button" class=" btn btn-noborder" onclick="clearTable('subjectTable')" data-toggle="tooltip"
+            <button type="button" class="btn btn-noborder" onclick="loadFile('SchoolYear', 'yearTable')" data-toggle="tooltip"
+                    data-placement="right" title="Import year group data from a file. WARNING empties table first!">
+                <span class="glyphicon glyphicon-import"></span>
+            </button>
+            <button type="button" class=" btn btn-noborder" onclick="clearTable('yearTable')" data-toggle="tooltip"
                     data-placement="right" title="Remove all years">
                 <span class="glyphicon glyphicon-trash"></span>
             </button>
@@ -190,7 +194,11 @@
             <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#setModal" id="learningSetAddButton">
                 <i class="fa fa-plus fa-2x"></i>
             </button>
-            <button type="button" class=" btn btn-noborder" onclick="clearTable('subjectTable')" data-toggle="tooltip"
+            <button type="button" class="btn btn-noborder" onclick="loadFile('LearningSet', 'setTable')" data-toggle="tooltip"
+                    data-placement="right" title="Import set data from a file. WARNING empties table first!">
+                <span class="glyphicon glyphicon-import"></span>
+            </button>
+            <button type="button" class=" btn btn-noborder" onclick="clearTable('setTable')" data-toggle="tooltip"
                     data-placement="right" title="Remove all sets">
                 <span class="glyphicon glyphicon-trash"></span>
             </button>
@@ -212,7 +220,11 @@
             <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#classModal" id="classAddButton">
                 <i class="fa fa-plus fa-2x"></i>
             </button>
-            <button type="button" class=" btn btn-noborder" onclick="clearTable('subjectTable')" data-toggle="tooltip"
+            <button type="button" class="btn btn-noborder" onclick="loadFile('SubjectSet', 'classTable')" data-toggle="tooltip"
+                    data-placement="right" title="Import class data from a file. WARNING empties table first!">
+                <span class="glyphicon glyphicon-import"></span>
+            </button>
+            <button type="button" class=" btn btn-noborder" onclick="clearTable('classTable')" data-toggle="tooltip"
                     data-placement="right" title="Remove all classes">
                 <span class="glyphicon glyphicon-trash"></span>
             </button>

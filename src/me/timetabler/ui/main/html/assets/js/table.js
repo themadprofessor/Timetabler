@@ -240,6 +240,10 @@ function loadFile(dataType, tableName) {
     java.loadFromFile(dataType, tableName);
 }
 
+/**
+ * Clears all entries from the given table by clicking the remove button in the last cell of each row.
+ * @param tableName The ID of the table to be cleared.
+ */
 function clearTable(tableName) {
     java.debug("Clearing table [" + tableName + ']');
     var rows = document.getElementById(tableName).rows;
@@ -249,5 +253,23 @@ function clearTable(tableName) {
         java.verbose("Removing row with ID [" + cells[0].innerHTML + ']');
         var butt = cells[cells.length - 1].firstElementChild;
         butt.click();
+    }
+}
+
+/**
+ * Adds a building or classroom to the given
+ * @param tableName
+ * @param data
+ */
+function addToTableHideRmBut(tableName, data) {
+    addToTable(tableName, data);
+    
+    var rows = document.getElementById(tableName).rows;
+    
+    for (var i = 1; i < rows.length; i++) {
+        var cells = rows[i];
+        java.verbose("Hidding remove button for row with ID [" + cells[0].innerHTML + ']');
+        var butt = cells[cells.length - 1].firstElementChild;
+        butt.style.display = 'none';
     }
 }

@@ -1,5 +1,6 @@
 package me.timetabler.data.mariadb;
 
+import javafx.scene.control.Alert;
 import me.timetabler.data.Staff;
 import me.timetabler.data.Subject;
 import me.timetabler.data.dao.StaffDao;
@@ -9,9 +10,12 @@ import me.timetabler.data.sql.JoinClause;
 import me.timetabler.data.sql.JoinType;
 import me.timetabler.data.sql.SqlBuilder;
 import me.timetabler.data.sql.StatementType;
+import me.timetabler.ui.main.JavaFxBridge;
 import me.util.Log;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -284,18 +288,93 @@ public class MariaStaffDao implements StaffDao {
 
         try {
             if (loadFile == null || loadFile.isClosed()) {
-                loadFile = connection.prepareStatement("LOAD DATA INFILE '?' INTO TABLE classroom FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';");
+                SqlBuilder builder = new SqlBuilder("staff", StatementType.INSERT)
+                        .addColumns("id", "staffName", "subjectId", "hoursPerWeek")
+                        .addValues("?", "?", "?", "?");
+                loadFile = connection.prepareStatement(builder.toString());
             }
 
-            loadFile.setString(1, file.getAbsolutePath());
+            StringBuilder failedBuilder = new StringBuilder();
+            try {
+                Log.info("Will load staff file [" + file + ']');
+                Files.lines(file.toPath()).sequential().forEach(line -> {
+                    try {
+                        String[] split = line.split(",");
+                        if (split.length == 3) {
+                            if (!split[1].chars().allMatch(Character::isDigit)) {
+                                failedBuilder.append("Ignoring line [")
+                                        .append(line)
+                                        .append("] as subjectId column is not an unsigned integer.\n");
+                            } if (!split[2].chars().allMatch(Character::isDigit)) {
+                                failedBuilder.append("Ignoring line [")
+                                        .append(line)
+                                        .append("] as hoursPerWeek column is not an unsigned integer.\n");
+                            } else {
+                                loadFile.setNull(1, Types.INTEGER);
+                                loadFile.setString(2, split[0]);
+                                loadFile.setInt(3, Integer.parseInt(split[1]));
+                                loadFile.setInt(4, Integer.parseInt(split[2]));
+                                Log.verbose("Loaded staff entry without id [" + line + ']');
+                            }
+                        } else if (split.length == 4) {
+                            if (!split[0].chars().allMatch(Character::isDigit)) {
+                                failedBuilder.append("Ignoring line [")
+                                        .append(line)
+                                        .append("] as id column is not an unsigned integer.\n");
+                            } else if (!split[2].chars().allMatch(Character::isDigit)) {
+                                failedBuilder.append("Ignoring line [")
+                                        .append(line)
+                                        .append("] as subjectId column is not an unsigned integer.\n");
+                            } else if (!split[3].chars().allMatch(Character::isDigit)) {
+                                failedBuilder.append("Ignoring line [")
+                                        .append(line)
+                                        .append("] as hoursPerWeek column is not an unsigned integer.\n");
+                            } else {
+                                loadFile.setInt(1, Integer.parseInt(split[0]));
+                                loadFile.setString(2, split[1]);
+                                loadFile.setInt(3, Integer.parseInt(split[2]));
+                                loadFile.setInt(4, Integer.parseInt(split[3]));
+                                Log.verbose("Loaded line [" + line + ']');
+                            }
+                        } else {
+                            failedBuilder.append("Ignoring line [")
+                                    .append(line)
+                                    .append("] as there is an incorrect number of columns. It should be 4.\n");
+                        }
+
+                        //Use batch statement as it is faster and easier
+                        //The batch will be overwritten if this method is not called, e.g. exception thrown
+                        loadFile.addBatch();
+                    } catch (SQLException e) {
+                        //Thrown only if data cannot be added
+                        failedBuilder.append("Failed to load line [")
+                                .append(line)
+                                .append("]\n");
+                    }
+                });
+                Log.info("Finished Loading File");
+            } catch (IOException e) {
+                //Should only happen if file goes missing during reading
+                Log.error(e);
+                JavaFxBridge.createAlert(Alert.AlertType.ERROR, "IO Exception", null, "Is [" + file.toString() + "] still there?\nAn IO Exception has occurred [" + e.toString() + "]", false);
+            }
+
+            if (failedBuilder.length() > 0) {
+                Log.warning(failedBuilder);
+                JavaFxBridge.createAlert(Alert.AlertType.WARNING, "Failed to load entries!", "Some entries could not be loaded!", failedBuilder.toString(), false);
+            }
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing DataAccessException!");
             throw new DataAccessException(e);
         }
 
         try {
-            loadFile.executeUpdate();
+            int[] results = loadFile.executeBatch();
+            Log.debug("Loaded [" + results.length + "] subject entries");
             return true;
+        } catch (BatchUpdateException e) {
+            JavaFxBridge.createAlert(Alert.AlertType.WARNING, "Could not load file!", "Could not load all entries from file!", "The system successfully loaded [" + e.getUpdateCounts().length + "] entries from [" + file + ']', false);
+            return false;
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
             throw new DataUpdateException(e);
@@ -315,6 +394,7 @@ public class MariaStaffDao implements StaffDao {
             if (insert != null && !insert.isClosed()) insert.close();
             if (update != null && !update.isClosed()) update.close();
             if (delete != null && !delete.isClosed()) delete.close();
+            if (loadFile != null && !loadFile.isClosed()) loadFile.close();
             if (connection != null && !connection.isClosed()) connection.close();
         } catch (SQLException e) {
             Log.error(e);

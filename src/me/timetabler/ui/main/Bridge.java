@@ -1,7 +1,6 @@
 package me.timetabler.ui.main;
 
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -24,7 +23,6 @@ import netscape.javascript.JSObject;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  * The bridge between the Javascript and the Java objects.
@@ -317,6 +315,8 @@ public class Bridge {
      * in the background.
      */
     public void loadMap() {
+        bridge.call("clearTable", "buildingTable");
+        bridge.call("clearTable", "classroomTable");
         Platform.runLater(() -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Map Files", "*.csv"));
@@ -350,8 +350,9 @@ public class Bridge {
             Log.debug("Opened dialog");
 
             loader.setOnSucceeded((event) -> Platform.runLater(() -> {
+
                 try {
-                    daoManager.getBuildingDao().getAll().forEach(building -> bridge.call("addToTable", "buildingTable",
+                    daoManager.getBuildingDao().getAll().forEach(building -> bridge.call("addToTableHideRmBut", "buildingTable",
                             new String[]{String.valueOf(building.id), building.buildingName}));
                 } catch (DataAccessException e) {
                     DataExceptionHandler.handleJavaFx(e, "building", false);
@@ -360,7 +361,7 @@ public class Bridge {
                 }
 
                 try {
-                    daoManager.getClassroomDao().getAll().forEach(classroom -> bridge.call("addToTable", "classroomTable",
+                    daoManager.getClassroomDao().getAll().forEach(classroom -> bridge.call("addToTableHideRmBut", "classroomTable",
                             new String[]{String.valueOf(classroom.id), classroom.name, String.valueOf(classroom.building.id)}));
                 } catch (DataAccessException e) {
                     DataExceptionHandler.handleJavaFx(e, "classroom", false);
@@ -391,12 +392,13 @@ public class Bridge {
                     boolean success = daoManager.getSubjectDao().loadFile(file);
                     Log.debug("Successfully Loaded [" + success + ']');
 
-                    if (success) {
-                        List<Subject> newSubjects = daoManager.getSubjectDao().getAll();
+                    List<Subject> newSubjects = daoManager.getSubjectDao().getAll();
 
-                        Log.debug("Adding [" + newSubjects.size() + ']');
-                        newSubjects.forEach(subject -> bridge.call("addToTable", tableName, new String[]{String.valueOf(subject.id), subject.name}));
-                    }
+                    Log.debug("Adding [" + newSubjects.size() + ']');
+                    newSubjects.forEach(subject -> bridge.call("addToTable", tableName, new String[]{
+                            String.valueOf(subject.id),
+                            subject.name
+                    }));
                 } catch (DataAccessException | DataUpdateException e) {
                     DataExceptionHandler.handleJavaFx(e, dataType, false);
                 } catch (DataConnectionException e) {
@@ -408,7 +410,99 @@ public class Bridge {
                 break;
             case "Staff":
             case "staff":
+                try {
+                    bridge.call("clearTable", tableName);
+                    boolean success = daoManager.getStaffDao().loadFile(file);
+                    Log.debug("Successfully Loaded [" + success + ']');
 
+                    List<Staff> newStaff = daoManager.getStaffDao().getAll();
+
+                    Log.debug("Adding [" + newStaff.size() + ']');
+                    newStaff.forEach(staff -> bridge.call("addToTable", tableName, new String[]{
+                            String.valueOf(staff.id),
+                            staff.name,
+                            String.valueOf(staff.subject.id),
+                            String.valueOf(staff.hoursPerWeek)
+                    }));
+                } catch (DataAccessException | DataUpdateException e) {
+                    DataExceptionHandler.handleJavaFx(e, dataType, false);
+                } catch (DataConnectionException e) {
+                    DataExceptionHandler.handleJavaFx(e, dataType, true);
+                } catch (IllegalArgumentException e) {
+                    JavaFxBridge.createAlert(Alert.AlertType.WARNING, "Cannot Read File!", null, "The data file needs to have read permissions for [" + System.getProperty("user.name") + ']', false);
+                }
+                break;
+            case "SchoolYear":
+            case "schoolYear":
+                try {
+                    bridge.call("clearTable", tableName);
+                    boolean success = daoManager.getSchoolYearDao().loadFile(file);
+                    Log.debug("Successfully Loaded [" + success + ']');
+
+                    List<SchoolYear> newSchoolYears = daoManager.getSchoolYearDao().getAll();
+
+                    Log.debug("Adding [" + newSchoolYears.size() + ']');
+                    newSchoolYears.forEach(schoolYear -> bridge.call("addToTable", tableName, new String[]{
+                            String.valueOf(schoolYear.id),
+                            schoolYear.schoolYearName
+                    }));
+                } catch (DataAccessException | DataUpdateException e) {
+                    DataExceptionHandler.handleJavaFx(e, dataType, false);
+                } catch (DataConnectionException e) {
+                    DataExceptionHandler.handleJavaFx(e, dataType, true);
+                } catch (IllegalArgumentException e) {
+                    JavaFxBridge.createAlert(Alert.AlertType.WARNING, "Cannot Read File!", null, "The data file needs to have read permissions for [" + System.getProperty("user.name") + ']', false);
+                }
+
+                break;
+            case "LearningSet":
+            case "learningSet":
+                try {
+                    bridge.call("clearTable", tableName);
+                    boolean success = daoManager.getLearningSetDao().loadFile(file);
+                    Log.debug("Successfully Loaded [" + success + ']');
+
+                    List<LearningSet> newLearningSets = daoManager.getLearningSetDao().getAll();
+
+                    Log.debug("Adding [" + newLearningSets.size() + ']');
+                    newLearningSets.forEach(learningSet -> bridge.call("addToTable", tableName, new String[]{
+                            String.valueOf(learningSet.id),
+                            learningSet.name}
+                    ));
+                } catch (DataAccessException | DataUpdateException e) {
+                    DataExceptionHandler.handleJavaFx(e, dataType, false);
+                } catch (DataConnectionException e) {
+                    DataExceptionHandler.handleJavaFx(e, dataType, true);
+                } catch (IllegalArgumentException e) {
+                    JavaFxBridge.createAlert(Alert.AlertType.WARNING, "Cannot Read File!", null, "The data file needs to have read permissions for [" + System.getProperty("user.name") + ']', false);
+                }
+
+                break;
+            case "SubjectSet":
+            case "subjectSet":
+                try {
+                    bridge.call("clearTable", tableName);
+                    boolean success = daoManager.getSubjectSetDao().loadFile(file);
+                    Log.debug("Successfully Loaded [" + success + ']');
+
+                    List<SubjectSet> newSubjectSets = daoManager.getSubjectSetDao().getAll();
+
+                    Log.debug("Adding [" + newSubjectSets.size() + ']');
+                    newSubjectSets.forEach(subjectSet -> bridge.call("addToTable", tableName, new String[]{
+                            String.valueOf(subjectSet.id),
+                            String.valueOf(subjectSet.learningSet.id),
+                            String.valueOf(subjectSet.subject.id),
+                            String.valueOf(subjectSet.schoolYear.id)
+                    }));
+                } catch (DataAccessException | DataUpdateException e) {
+                    DataExceptionHandler.handleJavaFx(e, dataType, false);
+                } catch (DataConnectionException e) {
+                    DataExceptionHandler.handleJavaFx(e, dataType, true);
+                } catch (IllegalArgumentException e) {
+                    JavaFxBridge.createAlert(Alert.AlertType.WARNING, "Cannot Read File!", null, "The data file needs to have read permissions for [" + System.getProperty("user.name") + ']', false);
+                }
+
+                break;
         }
     }
 }

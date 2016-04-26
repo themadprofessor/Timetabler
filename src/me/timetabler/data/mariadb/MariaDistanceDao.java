@@ -68,11 +68,6 @@ public class MariaDistanceDao implements DistanceDao {
      */
     private PreparedStatement delete;
 
-    /**
-     * A PreparedStatement to load the distance data from a file into the database.
-     */
-    private PreparedStatement loadFile;
-
     public MariaDistanceDao(Connection connection) {
         this.connection = connection;
     }
@@ -390,39 +385,12 @@ public class MariaDistanceDao implements DistanceDao {
 
     /**
      * {@inheritDoc}
-     * This method will delete the distance data from a MariaDB database.
-     * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
+     * This method does not load any data. It just throws an UnsupportedOperationException as distance data should only
+     * be loaded via the map loading mechanism.
      */
     @Override
     public boolean loadFile(File file) throws DataAccessException, DataUpdateException {
-        if (file == null) {
-            throw new NullPointerException("Data File Cannot Be Null!");
-        } else if (!file.exists()) {
-            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Exist!");
-        } else if (file.isDirectory()) {
-            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Not Be A Directory!");
-        } else if (!file.canRead()) {
-            throw new IllegalArgumentException("Data File [" + file.getAbsolutePath() + "] Must Have Read Permissions For User [" + System.getProperty("user.name") + "]!");
-        }
-
-        try {
-            if (loadFile == null || loadFile.isClosed()) {
-                loadFile = connection.prepareStatement("LOAD DATA INFILE '?' INTO TABLE distance FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n';");
-            }
-
-            loadFile.setString(1, file.getAbsolutePath());
-        } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing DataAccessException!");
-            throw new DataAccessException(e);
-        }
-
-        try {
-            loadFile.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
-            throw new DataUpdateException(e);
-        }
+        throw new UnsupportedOperationException("Distance data should only be loaded via the map loading mechanism!");
     }
 
     /**
@@ -431,11 +399,11 @@ public class MariaDistanceDao implements DistanceDao {
     @Override
     public void close() {
         try {
-            selectAll.close();
-            selectAllRoomEnd.close();
-            selectAllRoomStart.close();
-            selectId.close();
-            selectTwoRooms.close();
+            if (selectAll != null) selectAll.close();
+            if (selectAllRoomEnd != null) selectAllRoomEnd.close();
+            if (selectAllRoomStart != null) selectAllRoomStart.close();
+            if (selectId != null) selectId.close();
+            if (selectTwoRooms != null) selectTwoRooms.close();
         } catch (SQLException e) {
             Log.error(e);
         }

@@ -312,10 +312,10 @@ public class MariaSubjectDao implements SubjectDao {
                 loadFile = connection.prepareStatement(builder.build());
             }
 
-            StringBuffer failedBuilder = new StringBuffer();
+            StringBuilder failedBuilder = new StringBuilder();
             try {
                 Log.info("Will load subject file [" + file + ']');
-                Files.lines(file.toPath()).forEach(line -> {
+                Files.lines(file.toPath()).sequential().forEach(line -> {
                     try {
                         String[] split = line.split(",");
                         if (split.length == 0) {
@@ -378,7 +378,7 @@ public class MariaSubjectDao implements SubjectDao {
             Log.debug("Loaded [" + results.length + "] subject entries");
             return true;
         } catch (BatchUpdateException e) {
-            JavaFxBridge.createAlert(Alert.AlertType.WARNING, "Could not load file!", "Could not load all entries from file!", "The system successfully loaded [" + e.getLargeUpdateCounts().length + "] entries from [" + file + ']', false);
+            JavaFxBridge.createAlert(Alert.AlertType.WARNING, "Could not load file!", "Could not load all entries from file!", "The system successfully loaded [" + e.getUpdateCounts().length + "] entries from [" + file + ']', false);
             return false;
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
