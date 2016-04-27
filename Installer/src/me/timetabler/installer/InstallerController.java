@@ -9,6 +9,7 @@ import javafx.stage.DirectoryChooser;
 import me.timetabler.installer.monitor.TaskMonitor;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -63,14 +64,22 @@ public class InstallerController implements Initializable {
             alert.setContentText("Please specify an password before continuing.");
             alert.showAndWait();
         } else {
-            InstallThread installThread = new InstallThread(new File(installPath.getText()), password.getText().toCharArray());
-            TaskMonitor monitor = new TaskMonitor(installThread);
-            monitor.setOnClose(event -> installThread.cancel());
-            monitor.setTitle("Installing Timetabler");
-            if (monitor.ready) {
-                monitor.show();
-                Thread thread = new Thread(installThread, "Background Installer Thread");
-                thread.start();
+            try {
+                InstallThread installThread = new InstallThread(new File(installPath.getText()), password.getText().toCharArray());
+                TaskMonitor monitor = new TaskMonitor(installThread);
+                monitor.setOnClose(event -> installThread.cancel());
+                monitor.setTitle("Installing Timetabler");
+                if (monitor.ready) {
+                    monitor.show();
+                    Thread thread = new Thread(installThread, "Background Installer Thread");
+                    thread.start();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Could not start installation!");
+                alert.setHeaderText("A problem with the selected folder has be found!");
+                alert.setContentText(e.getMessage());
             }
         }
     }
