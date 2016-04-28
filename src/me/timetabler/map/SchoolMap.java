@@ -91,6 +91,7 @@ public class SchoolMap {
             optionalBuildingCells.forEach(building -> buildings.forEach((name, map) -> {
                 if (building.name.equals(name)) {
                     building.init(map);
+                    building.getSubBuildings().forEach(buildingCell -> buildingCell.init(buildings.get(buildingCell.name)));
                 }
             }));
             Walker walker = new Walker(this);

@@ -13,6 +13,7 @@ import java.nio.file.NotDirectoryException;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * A background thread which installs the system to the given path and sets the root password to be the given password.
@@ -197,7 +198,36 @@ public class InstallThread extends Task<Void> {
             cmd.add(baseDir.getPath() + "/bin/mysqld.exe");
         } else {
             cmd.add(baseDir.getPath() + "/bin/mysqld");
+            cmd.add("--no-defaults");
+            cmd.add("--basedir=" + baseDir);
+            cmd.add("--datadir=" + dataDir);
+            cmd.add("--socket=./mysqld.sock");
         }
+
+        Process serverProcess = null;
+        try {
+            serverProcess = new ProcessBuilder().command(cmd).start();
+            Scanner scanner = new Scanner(serverProcess.getErrorStream());
+            String line;
+            while ((line = scanner.nextLine()) != null) {
+                //The server outputs 'ready for connections' upon finishing initialisation, and 'shutdown' when closing.
+                if (line.contains("ready for connections")) {
+                    break;
+                } else if (line.contains("shutdown")) {
+                    try {
+                        serverProcess.destroyForcibly().waitFor();
+                        updateProgress(-1, 5);
+                        updateMessage("Failed to start database process!");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            displayException(e);
+            success = false;
+        }
+
 
     }
 

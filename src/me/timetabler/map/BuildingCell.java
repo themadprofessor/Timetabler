@@ -18,6 +18,9 @@ public class BuildingCell implements ImportantCell {
      */
     private ArrayList<ImportantCell> important;
 
+    /**
+     * The distances between this building and other important cells, but not the important cells within the building.
+     */
     private HashMap<ImportantCell, Integer> distances;
 
     /**
@@ -46,6 +49,7 @@ public class BuildingCell implements ImportantCell {
         if (important.isEmpty()) {
             throw new IllegalStateException("No Important Cells Found in BuildingCell [" + name +']');
         }
+
         important.forEach(source -> important.forEach(destination -> {
             if (!source.equals(destination) && (!source.getDistances().containsKey(destination) || !destination.getDistances().containsKey(source))) {
                 int distance = walker.walk(schoolMap.getCoordinates(source).get(), schoolMap.getCoordinates(destination).get());
@@ -69,6 +73,18 @@ public class BuildingCell implements ImportantCell {
     }
 
     /**
+     * Gets all the classrooms within this building, which can be empty if there are none.
+     * @return A list of all the classrooms within this building, which can be empty.
+     */
+    public List<ClassroomCell> getSubClassrooms() {
+        ArrayList<ClassroomCell> classroomCells = new ArrayList<>();
+        important.parallelStream()
+                .filter(importantCell -> importantCell instanceof ClassroomCell)
+                .forEach(importantCell -> classroomCells.add((ClassroomCell) importantCell));
+        return classroomCells;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -82,6 +98,28 @@ public class BuildingCell implements ImportantCell {
     @Override
     public HashMap<ImportantCell, Integer> getDistances() {
         return distances;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BuildingCell that = (BuildingCell) o;
+
+        return name.equals(that.name);
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 
     /**

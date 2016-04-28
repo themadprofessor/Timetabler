@@ -1,6 +1,8 @@
 package me.timetabler.ui.main;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -16,6 +18,7 @@ import me.timetabler.data.exceptions.DataConnectionException;
 import me.timetabler.data.exceptions.DataExceptionHandler;
 import me.timetabler.data.exceptions.DataUpdateException;
 import me.timetabler.map.MapLoader;
+import me.timetabler.ui.monitor.TaskMonitor;
 import me.util.Log;
 import me.util.MapBuilder;
 import netscape.javascript.JSObject;
@@ -356,24 +359,28 @@ public class Bridge {
      * in the background.
      */
     public void loadMap() {
-        bridge.call("clearTable", "buildingTable");
         bridge.call("clearTable", "classroomTable");
+        bridge.call("clearTable", "buildingTable");
         Platform.runLater(() -> {
+            //Select top map file
             FileChooser fileChooser = new FileChooser();
             fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Map Files", "*.csv"));
             fileChooser.setTitle("Select top map file.");
             File topMap = fileChooser.showOpenDialog(new Stage());
             Log.debug("Chosen top map file [" + topMap + "]");
 
+            //Select map folder
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Select map folder.");
             File mapFolder = directoryChooser.showDialog(new Stage());
             Log.debug("Chosen map folder [" + mapFolder + "]");
 
+            //Create map loader
             MapLoader loader = new MapLoader(new MapBuilder<>(new HashMap<String, String>())
                     .put("top_map", topMap.getAbsolutePath())
                     .put("other_maps", mapFolder.getAbsolutePath()).build(), daoManager);
 
+            /*//Create monitoring window, which will log each message change
             Stage stage = new Stage();
             Label label = new Label();
             VBox vBox = new VBox();
@@ -381,6 +388,9 @@ public class Bridge {
             label.textProperty().bind(loader.messageProperty());
             progressBar.progressProperty().bind(loader.progressProperty());
             progressBar.prefWidthProperty().bind(vBox.widthProperty());
+            loader.messageProperty().addListener((observable, oldValue, newValue) -> {
+                Log.info(newValue);
+            });
 
             vBox.getChildren().add(label);
             vBox.getChildren().add(progressBar);
@@ -391,6 +401,7 @@ public class Bridge {
             Log.debug("Opened dialog");
             ExecutorService loaderThread = Executors.newSingleThreadExecutor();
 
+            //Add all the buildings and classrooms to the ui when the loader is done
             loader.setOnSucceeded((event) -> Platform.runLater(() -> {
                 try {
                     daoManager.getBuildingDao().getAll().forEach(building -> bridge.call("addToTableHideRmBut", "buildingTable",
@@ -409,10 +420,45 @@ public class Bridge {
                 } catch (DataConnectionException e) {
                     DataExceptionHandler.handleJavaFx(e, "classroom", true);
                 }
-                stage.close();
                 loaderThread.shutdown();
             }));
-            loaderThread.execute(loader);
+            //Start loader
+            loaderThread.execute(loader);*/
+
+            TaskMonitor monitor = new TaskMonitor(loader);
+            monitor.setTitle("Map Loader");
+            monitor.setOnClose(event -> Platform.runLater(() -> {
+                try {
+                    daoManager.getBuildingDao().getAll().forEach(building -> bridge.call("addToTableHideRmBut",
+                            "buildingTable",
+                            new String[]{String.valueOf(building.id), building.buildingName}));
+                } catch (DataAccessException e) {
+                    DataExceptionHandler.handleJavaFx(e, "building", false);
+                } catch (DataConnectionException e) {
+                    DataExceptionHandler.handleJavaFx(e, "building", true);
+                }
+
+                try {
+                    daoManager.getClassroomDao().getAll().forEach(classroom -> bridge.call("addToTableHideRmBut",
+                            "classroomTable",
+                            new String[]{
+                                    String.valueOf(classroom.id),
+                                    classroom.name,
+                                    String.valueOf(classroom.building.id),
+                                    String.valueOf(classroom.subject.id)
+                            }));
+                } catch (DataAccessException e) {
+                    DataExceptionHandler.handleJavaFx(e, "classroom", false);
+                } catch (DataConnectionException e) {
+                    DataExceptionHandler.handleJavaFx(e, "classroom", true);
+                }
+            }));
+
+            if (monitor.ready) {
+                monitor.show();
+                Thread loaderThread = new Thread(loader, "Map Loader Thread");
+                loaderThread.start();
+            }
             Log.debug("Started map loader thread");
         });
     }

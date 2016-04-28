@@ -29,6 +29,8 @@ public class Staff implements DataType {
      */
     int currentHoursPerWeek;
 
+    protected Classroom lastClassroom;
+
     /**
      * The default constructor, which does not initialise any members of the object.
      */
@@ -47,5 +49,27 @@ public class Staff implements DataType {
         this.name = name;
         this.subject = subject;
         this.hoursPerWeek = hoursPerWeek;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Staff staff = (Staff) o;
+
+        return id == staff.id;
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return id;
     }
 }

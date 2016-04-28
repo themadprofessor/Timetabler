@@ -24,6 +24,8 @@ public class Classroom implements DataType {
      */
     public Subject subject;
 
+    protected boolean isAvailable;
+
     /**
      * The default constructor, which does not initialise the members of the object.
      */
@@ -42,6 +44,14 @@ public class Classroom implements DataType {
         this.name = name;
         this.building = building;
         this.subject = subject;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return name;
     }
 
     /**

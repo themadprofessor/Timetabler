@@ -5,6 +5,7 @@ import me.timetabler.data.exceptions.DataAccessException;
 import me.timetabler.data.exceptions.DataConnectionException;
 import me.timetabler.data.exceptions.DataExceptionHandler;
 
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,25 +33,32 @@ public class TimetableThread implements Runnable {
 
                 List<LessonPlan> lessonPlans = null;
                 List<Staff> staff = null;
+                List<Classroom> classrooms = null;
 
                 try {
                     // get all lessonPlans for this subject
                     lessonPlans = daoManager.getLessonPlanDao().getAllBySubject(subject);
-
-                } catch (DataConnectionException e) {
+                } catch (DataAccessException e) {
                     DataExceptionHandler.handleJavaFx(e, "lessonPlan", false);
                     lessonPlans = new ArrayList<>();
-                } catch (DataAccessException e) {
+                } catch (DataConnectionException e) {
                     DataExceptionHandler.handleJavaFx(e, null, true);
                 }
 
                 try {
                     // get all staff who teach the subject
                     staff = daoManager.getStaffDao().getAllBySubject(subject);
-
-                } catch (DataConnectionException e) {
+                } catch (DataAccessException e) {
                     DataExceptionHandler.handleJavaFx(e, "staff", false);
                     staff = new ArrayList<>();
+                } catch (DataConnectionException e) {
+                    DataExceptionHandler.handleJavaFx(e, null, true);
+                }
+
+                try {
+                    classrooms = daoManager.getClassroomDao().getAll();
+                } catch (DataConnectionException e) {
+                    DataExceptionHandler.handleJavaFx(e, "classrooms", false);
                 } catch (DataAccessException e) {
                     DataExceptionHandler.handleJavaFx(e, null, true);
                 }
@@ -117,10 +125,7 @@ public class TimetableThread implements Runnable {
                     }
                 }*/
 
-
-
                 if (lessonsForSubjectSet.get(0).staff == null) { //Only check first as all will be set if the first is set
-
                     Set<SubjectSet> possibleConflicts = new HashSet<>(); //A set containing every subjectSet which happens at the same time as the current subjectSet
                     for (Set<LessonPlan> overloadedPeriod : overloadedPeriods) {
                         if (overloadedPeriod.stream().anyMatch(lessonPlan -> lessonPlan.subjectSet.id == subjectSet.id)) {
@@ -142,7 +147,7 @@ public class TimetableThread implements Runnable {
                             }
                         });
 
-                        if (Collections.disjoint(possibleConflicts, subjectSetsForStaff)) { //disjoin returns true if the collections has no elements in common
+                        if (Collections.disjoint(possibleConflicts, subjectSetsForStaff)) { //disjoint returns true if the collections has no elements in common
                             staff.currentHoursPerWeek += lessonsForSubjectSet.size();
                             for (LessonPlan lessonPlan : lessonPlans) {
                                 if (lessonPlan.subjectSet.id == subjectSet.id) {
@@ -208,6 +213,60 @@ public class TimetableThread implements Runnable {
         }*/
 
         return true;
+    }
+
+    private void putLessonPlansIntoClassrooms(List<LessonPlan> lessonPlans, List<Classroom> classrooms, List<Subject> subjects, List<Distance> distances) {
+        //TODO: Iter through each subject, iter through each day, allocate period 1 randomly, iter through each period,
+        //TODO: check if teacher teaching in period, if is find closest available room, if not move on
+
+
+        subjects.forEach(subject -> {
+            List<List<LessonPlan>> week = new ArrayList<>(5);
+            Collections.fill(week, new ArrayList<>());
+            lessonPlans.stream()
+                    .filter(lessonPlan -> lessonPlan.subjectSet.subject.equals(subject))
+                    .forEach(lessonPlan -> week.get(lessonPlan.period.day.id - 1).add(lessonPlan));
+
+            List<Period> periods;
+            for (int dayNo = 0; dayNo < week.size(); dayNo++) {
+                try {
+                    periods = daoManager.getPeriodDao().getAllByDay(daoManager.getDayDao().getById(dayNo + 1).get());
+                } catch (DataAccessException e) {
+                    DataExceptionHandler.handleJavaFx(e, "period", false);
+                    return;
+                } catch (DataConnectionException e) {
+                    DataExceptionHandler.handleJavaFx(e, null, true);
+                    return;
+                }
+
+                List<LessonPlan> day = week.get(dayNo);
+                List<LessonPlan> firstPeriod = new ArrayList<>();
+                day.forEach(lessonPlan -> {
+                    if (lessonPlan.period.startTime.equals(LocalTime.of(9, 10))) {
+                        firstPeriod.add(lessonPlan);
+                    }
+                });
+                classrooms.stream().filter(classroom -> classroom.subject.equals(subject)).forEach(classroom -> {
+                    for (LessonPlan lessonPlan : firstPeriod) {
+                        if (lessonPlan.classroom == null) {
+                            lessonPlan.classroom = classroom;
+                            //lessonPlan.staff;
+                            break;
+                        }
+                    }
+                });
+
+                for (int periodNo = 1; periodNo < day.size(); periodNo++) {
+                    List<LessonPlan> period = new ArrayList<>();
+                    for (LessonPlan lessonPlan : day) {
+                        if (lessonPlan.period.equals(periods.get(periodNo))) {
+                            period.add(lessonPlan);
+                        }
+                    }
+
+                }
+            }
+        });
     }
 
 }

@@ -98,8 +98,11 @@ public class LoginController implements Initializable {
         }
 
         if (authenticator.authenticate(config.get("username"), password.getText().toCharArray())) {
+            config.put("password", password.getText());
+            daoManager.updateConfig(config);
+
             Log.info("Successfully authenticated.");
-            //Open main window anc close auth window.
+            //Open main window and closes auth window.
             Scene scene = null;
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("../main/main.fxml"));

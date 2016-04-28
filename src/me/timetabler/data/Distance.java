@@ -64,6 +64,16 @@ public class Distance implements DataType {
      * {@inheritDoc}
      */
     @Override
+    public String toString() {
+        return "startRoom=" + startRoom +
+                ", endRoom=" + endRoom +
+                ", distance=" + distance;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public int hashCode() {
         int result = id;
         result = 31 * result + startRoom.hashCode();

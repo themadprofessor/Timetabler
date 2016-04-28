@@ -1,12 +1,13 @@
 <component name="libraryTable">
   <library name="common-compress">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/Installer/lib/common-compress" />
+      <root url="jar://$PROJECT_DIR$/Installer/lib/common-compress/commons-compress-1.11.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$PROJECT_DIR$/Installer/lib/common-compress/commons-compress-1.11-javadoc.jar!/" />
     </JAVADOC>
-    <SOURCES />
-    <jarDirectory url="file://$PROJECT_DIR$/Installer/lib/common-compress" recursive="false" />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/Installer/lib/common-compress/commons-compress-1.11-src.zip!/commons-compress-1.11-src/src/main/java" />
+    </SOURCES>
   </library>
 </component>

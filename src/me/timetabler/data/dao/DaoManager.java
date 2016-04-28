@@ -86,10 +86,7 @@ public interface DaoManager extends AutoCloseable {
      */
     SubjectSetDao getSubjectSetDao() throws DataConnectionException;
 
-    /**
-     * Closes all the resources required by the program.
-     */
-    void close();
+    void updateConfig(Map<String, String> config);
 
     /**
      * Returns a DaoManager to correspond with the given config's entry 'type'. The config will be given to the

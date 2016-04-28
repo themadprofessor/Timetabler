@@ -102,6 +102,14 @@ public class MariaDaoManager implements DaoManager {
 
     /**
      * {@inheritDoc}
+     */
+    @Override
+    public void updateConfig(Map<String, String> config) {
+        source = dbManager.getDataSource(config);
+    }
+
+    /**
+     * {@inheritDoc}
      * Using the lazy initialisation pattern, the staffDao object is initialised when it is needed. Also, the
      * connection object is checked and passed to staffDao, if staffDao is initialised and its connection
      * object is uninitialised or closed.
