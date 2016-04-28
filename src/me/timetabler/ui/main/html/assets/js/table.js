@@ -300,6 +300,22 @@ function addToTableHideRmBut(tableName, data) {
     butt.style.display = 'none';
 }
 
+/**
+ * Calls java.timetable to begin timetabling.
+ */
 function timetable() {
-    
+    java.timetable();
+}
+
+function updateTable(tableName, newData) {
+    var rows = document.getElementById(tableName).rows;
+
+    for (var i = 1; i < rows.length; i++) {
+        var cells = rows[i].cells;
+        var id = cells[0].innerHTML;
+
+        for (var j = 1; j < newData.length; j++) {
+            var thisData = newData[i].split();
+        }
+    }
 }

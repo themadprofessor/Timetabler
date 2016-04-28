@@ -604,6 +604,13 @@ public class Bridge {
         Platform.runLater(() -> {
             TimetableThread timetableThread = new TimetableThread(daoManager);
             TaskMonitor monitor = new TaskMonitor(timetableThread);
+            monitor.setOnClose(event -> {
+                try {
+                    daoManager.getLessonPlanDao().getAll();
+                } catch (DataAccessException | DataConnectionException e) {
+                    e.printStackTrace();
+                }
+            });
             monitor.setTitle("Timetabling");
             Thread timetablingThread = new Thread(timetableThread, "Timetable Thread");
             monitor.show();
