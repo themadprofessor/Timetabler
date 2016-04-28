@@ -129,7 +129,7 @@ function addClass() {
         var year = document.getElementById("classYear").value;
     } catch (err) {
         java.warning(err);
-        alert("Failed to add class!\nThe name field must be present!");
+        alert("Failed to add class!\nEach field must be present!");
         return;
     }
 
@@ -142,6 +142,35 @@ function addClass() {
         document.getElementById("className").value = "";
     }
     //No alert needed as success is false if exception in Java, which produces alert.
+}
+
+function addLesson() {
+    try {
+        var period = document.getElementById("lessonPeriod").value;
+        var subjectSet = document.getElementById("lessonClass").value;
+        var classroom = document.getElementById("lessonClassroom").value;
+        var staff = document.getElementById("lessonStaff").value;
+    } catch (err) {
+        java.warning(err);
+        alert("Failed to add lesson!\nThe period and class field must be present!")
+        return;
+    }
+
+    var data = "[" + period + "," + subjectSet;
+    if (classroom != -1) {
+        data = "," + data + "," + classroom;
+    }
+    if (staff != -1) {
+        data = "," + data + "," + staff;
+    }
+    data = "" + data + "]";
+    var id = java.add("Lesson", data);
+    java.debug("Adding lesson");
+    java.verbose("  " + data);
+    if (success == true) {
+        addToTable("lessonTable", [id, period, subjectSet, classroom, staff]);
+        $("#lessonModal").modal("hide");
+    }
 }
 
 /**
@@ -269,4 +298,8 @@ function addToTableHideRmBut(tableName, data) {
     java.verbose("Hidding remove button for row with ID [" + cells[0].innerHTML + ']');
     var butt = cells[cells.length - 1].firstElementChild;
     butt.style.display = 'none';
+}
+
+function timetable() {
+    
 }

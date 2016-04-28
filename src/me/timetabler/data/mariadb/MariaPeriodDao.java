@@ -78,7 +78,7 @@ public class MariaPeriodDao implements PeriodDao {
             }
             ResultSet set = selectAll.executeQuery();
             while (set.next()) {
-                Period period = new Period(set.getInt(1), new Day(set.getInt(4), set.getString(5)), set.getTime(2).toLocalTime(), set.getTime(3).toLocalTime());
+                Period period = new Period(set.getInt(1), new Day(set.getInt(2), set.getString(3)), set.getTime(4).toLocalTime(), set.getTime(5).toLocalTime());
                 periods.add(period);
             }
             set.close();

@@ -345,12 +345,12 @@ public class MapLoader extends Task<Void> {
                 sameTrips.add(distance);
 
                 //Sort the list in order of the distance, remove all the same trips from the full list to avoid
-                //duplicates, add the last distance in the sorted list back as it will be the shortest.
+                //duplicates, add the first distance in the sorted list back as it will be the shortest.
                 sameTrips.sort((o1, o2) -> o1.distance - o2.distance);
                 distances.removeAll(sameTrips);
                 if (sameTrips.size() > 1) {
-                    distances.add(sameTrips.get(sameTrips.size() - 1));
-                    Log.verbose("Adding shortest distance for a trip [" + sameTrips.get(sameTrips.size() - 1) + ']');
+                    distances.add(sameTrips.get(0));
+                    Log.verbose("Adding shortest distance for a trip [" + sameTrips.get(0) + ']');
                 } else {
                     distances.add(sameTrips.get(0));
                     Log.verbose("Adding distance for new trip [" + sameTrips.get(0) + ']');

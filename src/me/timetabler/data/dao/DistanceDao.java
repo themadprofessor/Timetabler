@@ -3,6 +3,7 @@ package me.timetabler.data.dao;
 import me.timetabler.data.Classroom;
 import me.timetabler.data.Distance;
 import me.timetabler.data.exceptions.DataAccessException;
+import me.timetabler.data.exceptions.DataUpdateException;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,4 +30,13 @@ public interface DistanceDao extends MutableDao<Distance> {
      * @throws DataAccessException Thrown if the data cannot be accessed.
      */
     List<Distance> getAllDistancesFrom(Classroom classroom) throws DataAccessException;
+
+    /**
+     * Deletes all the distance entries stored by the data source. This will return true if it completes successfully,
+     * or false if it does not.
+     * @return Returns true if the data is deleted successfully, or false otherwise.
+     * @throws DataAccessException Thrown if the data cannot be accessed.
+     * @throws DataUpdateException Thrown if the data cannot be updated.
+     */
+    boolean deleteAll() throws DataAccessException, DataUpdateException;
 }

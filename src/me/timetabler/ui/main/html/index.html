@@ -51,6 +51,8 @@
                             <li><a class="scrollto" href="#classrooms">Classrooms</a></li>
                             <li><a class="scrollto" href="#learningSets">Sets</a></li>
                             <li><a class="scrollto" href="#classes">Classes</a></li>
+                            <li><a class="scrollto" href="#lessons">Lessons</a></li>
+                            <li><a class="scrollto" herf="#timetable">Timetable</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -240,6 +242,33 @@
     </div>
 </section>
 
+<section id="lessons" class="features section has-pattern">
+    <div class="container">
+        <div class="contact-inner">
+            <h2 class="title text-center">Lessons</h2>
+            <p class="intro text-center">View and edit lesson information</p>
+            <button type="button" class="btn btn-noborder" data-toggle="modal" data-target="#lessonModal" id="lessonAddButton">
+                <i class="fa fa-plus fa-2x"></i>
+            </button>
+            <button type="button" class="btn btn-noborder" onclick="clearTable('lessonTable')" data-toggle="tooltip"
+                    data-placement="right" title="Remove all lessons">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button><button type="button" class="btn btn-noborder" onclick="timetable()">
+                <span class="glyphicon glyphicon-play"></span>
+            </button>
+            <table id="lessonTable" class="table table-hover">
+                <thead>
+                <th>ID</th>
+                <th>Period ID</th>
+                <th>Subject Set ID</th>
+                <th>Classroom ID</th>
+                <th>Staff ID</th>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+
 <footer class="footer">
     <div class="container text-center">
         <small class="copyright">Created by Stuart Reilly for Hitchin Boys' School</small>
@@ -371,6 +400,48 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" onclick="addClass()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="lessonModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Lesson</h4>
+            </div>
+            <div class="modal-body">
+                <form class="" action="index.html" method="post">
+                    <div class="form-group">
+                        <label for="lessonPeriod">Period</label>
+                        <select class="from-control" id="lessonPeriod"></select>
+                        <p class="help-block">The period this lesson is taught in.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="lessonClass">Class</label>
+                        <select class="from-control" id="lessonClass"></select>
+                        <p class="help-block">The class taught in this lesson.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="lessonClassroom">Classroom</label>
+                        <select class="from-control" id="lessonClassroom">
+                            <option value="-1">N/A</option>
+                        </select>
+                        <p class="help-block">The classroom this lesson will be taught in.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="lessonStaff">Staff</label>
+                        <select class="from-control" id="lessonStaff">
+                            <option value="-1">N/A</option>
+                        </select>
+                        <p class="help-block">The member of staff teaching this lesson.</p>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="addLesson()">Add</button>
             </div>
         </div>
     </div>

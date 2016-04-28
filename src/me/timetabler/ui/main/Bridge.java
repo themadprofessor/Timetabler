@@ -206,6 +206,36 @@ public class Bridge {
                 }
 
                 return subjectSet.id;
+            case "Lesson":
+            case "lesson":
+                LessonPlan lessonPlan = new LessonPlan();
+                String[] s = data.replace("[", "").replace("]", "").split(",");
+
+                Period period = new Period();
+                period.id = Integer.parseInt(s[0]);
+                SubjectSet subSet = new SubjectSet();
+                subSet.id = Integer.parseInt(s[1]);
+
+                lessonPlan.period = period;
+                lessonPlan.subjectSet = subSet;
+                if (s.length > 2) {
+                    Classroom classroom = new Classroom();
+                    classroom.id = Integer.parseInt(s[2]);
+                    Staff staff = new Staff();
+                    staff.id = Integer.parseInt(s[3]);
+                }
+
+                try {
+                    lessonPlan.id = daoManager.getLessonPlanDao().insert(lessonPlan);
+                    bridge.call("setSuccess", true);
+                } catch (DataAccessException | DataUpdateException e) {
+                    DataExceptionHandler.handleJavaFx(e, "lesson plan", false);
+                    bridge.call("setSuccess", false);
+                } catch (DataConnectionException e) {
+                    DataExceptionHandler.handleJavaFx(e, null, true);
+                }
+
+                return lessonPlan.id;
             default:
                 return -1;
         }
@@ -359,6 +389,15 @@ public class Bridge {
      * in the background.
      */
     public void loadMap() {
+        try {
+            daoManager.getDistanceDao().deleteAll();
+        } catch (DataAccessException | DataUpdateException e) {
+            DataExceptionHandler.handleJavaFx(e, "distance", false);
+            return;
+        } catch (DataConnectionException e) {
+            DataExceptionHandler.handleJavaFx(e, null, true);
+            return;
+        }
         bridge.call("clearTable", "classroomTable");
         bridge.call("clearTable", "buildingTable");
         Platform.runLater(() -> {
@@ -380,51 +419,7 @@ public class Bridge {
                     .put("top_map", topMap.getAbsolutePath())
                     .put("other_maps", mapFolder.getAbsolutePath()).build(), daoManager);
 
-            /*//Create monitoring window, which will log each message change
-            Stage stage = new Stage();
-            Label label = new Label();
-            VBox vBox = new VBox();
-            ProgressBar progressBar = new ProgressBar();
-            label.textProperty().bind(loader.messageProperty());
-            progressBar.progressProperty().bind(loader.progressProperty());
-            progressBar.prefWidthProperty().bind(vBox.widthProperty());
-            loader.messageProperty().addListener((observable, oldValue, newValue) -> {
-                Log.info(newValue);
-            });
-
-            vBox.getChildren().add(label);
-            vBox.getChildren().add(progressBar);
-            vBox.setFillWidth(true);
-
-            stage.setScene(new Scene(vBox, 300, 100));
-            stage.show();
-            Log.debug("Opened dialog");
-            ExecutorService loaderThread = Executors.newSingleThreadExecutor();
-
-            //Add all the buildings and classrooms to the ui when the loader is done
-            loader.setOnSucceeded((event) -> Platform.runLater(() -> {
-                try {
-                    daoManager.getBuildingDao().getAll().forEach(building -> bridge.call("addToTableHideRmBut", "buildingTable",
-                            new String[]{String.valueOf(building.id), building.buildingName}));
-                } catch (DataAccessException e) {
-                    DataExceptionHandler.handleJavaFx(e, "building", false);
-                } catch (DataConnectionException e) {
-                    DataExceptionHandler.handleJavaFx(e, "building", true);
-                }
-
-                try {
-                    daoManager.getClassroomDao().getAll().forEach(classroom -> bridge.call("addToTableHideRmBut", "classroomTable",
-                            new String[]{String.valueOf(classroom.id), classroom.name, String.valueOf(classroom.building.id)}));
-                } catch (DataAccessException e) {
-                    DataExceptionHandler.handleJavaFx(e, "classroom", false);
-                } catch (DataConnectionException e) {
-                    DataExceptionHandler.handleJavaFx(e, "classroom", true);
-                }
-                loaderThread.shutdown();
-            }));
-            //Start loader
-            loaderThread.execute(loader);*/
-
+            //Create a monitoring window for the loader
             TaskMonitor monitor = new TaskMonitor(loader);
             monitor.setTitle("Map Loader");
             monitor.setOnClose(event -> Platform.runLater(() -> {
@@ -444,8 +439,8 @@ public class Bridge {
                             new String[]{
                                     String.valueOf(classroom.id),
                                     classroom.name,
-                                    String.valueOf(classroom.building.id),
-                                    String.valueOf(classroom.subject.id)
+                                    classroom.building.buildingName,
+                                    classroom.subject.name
                             }));
                 } catch (DataAccessException e) {
                     DataExceptionHandler.handleJavaFx(e, "classroom", false);
@@ -454,6 +449,7 @@ public class Bridge {
                 }
             }));
 
+            //Start the loader
             if (monitor.ready) {
                 monitor.show();
                 Thread loaderThread = new Thread(loader, "Map Loader Thread");
@@ -602,6 +598,13 @@ public class Bridge {
 
                 break;
         }
+    }
+
+    public void timetable() {
+        Platform.runLater(() -> {
+            TimetableThread timetableThread = new TimetableThread(daoManager);
+
+        });
     }
 }
 

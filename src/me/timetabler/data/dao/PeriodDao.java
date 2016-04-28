@@ -11,7 +11,7 @@ import java.util.List;
  * {@inheritDoc}
  * This dao will return period data.
  */
-public interface PeriodDao extends Dao {
+public interface PeriodDao extends Dao<Period> {
     /**
      * Returns a list containing all the periods in a given day. The list implementation is to be determined by the
      * implementation.

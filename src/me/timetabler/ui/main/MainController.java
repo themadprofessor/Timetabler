@@ -76,6 +76,8 @@ public class MainController implements Initializable {
                 List<SubjectSet> subjectSets = null;
                 List<Building> buildings = null;
                 List<Classroom> classrooms = null;
+                List<Period> periods = null;
+                List<LessonPlan> lessonPlans = null;
 
                 //Get lists of all the data from the database.
                 try {
@@ -146,6 +148,26 @@ public class MainController implements Initializable {
                     DataExceptionHandler.handleJavaFx(e, null, true);
                 }
 
+                try {
+                    periods = daoManager.getPeriodDao().getAll();
+                } catch (DataAccessException e) {
+                    Log.warning(e);
+                    DataExceptionHandler.handleJavaFx(e, "period", false);
+                } catch (DataConnectionException e) {
+                    Log.error(e);
+                    DataExceptionHandler.handleJavaFx(e, null, true);
+                }
+
+                try {
+                    lessonPlans = daoManager.getLessonPlanDao().getAll();
+                } catch (DataAccessException e) {
+                    Log.warning(e);
+                    DataExceptionHandler.handleJavaFx(e, "lesson plan", false);
+                } catch (DataConnectionException e) {
+                    Log.error(e);
+                    DataExceptionHandler.handleJavaFx(e, null, true);
+                }
+
                 //Print debug info about the lists.
                 Log.debug("Adding [" + (subjects != null ? subjects.size() : 0) + "] rows to the subject table");
                 Log.debug("Adding [" + (staff != null ? staff.size() : 0) + "] rows to the staff table");
@@ -154,6 +176,7 @@ public class MainController implements Initializable {
                 Log.debug("Adding [" + (subjectSets != null ? subjectSets.size() : 0) + "] rows to the subjectSet table");
                 Log.debug("Adding [" + (buildings != null ? buildings.size() : 0) + "] rows to the building table");
                 Log.debug("Adding [" + (classrooms != null ? classrooms.size() : 0) + "] rows to the classroom table");
+                Log.debug("Adding [" + (lessonPlans != null ? lessonPlans.size() : 0) + "] rows the less table");
 
                 //Get the Javascript handle to run Javascript on the HTML.
                 JSObject bridge = (JSObject) engine.executeScript("window");
@@ -170,9 +193,12 @@ public class MainController implements Initializable {
                 }
 
                 if (staff != null) {
-                    staff.forEach(staff1 -> bridge.call("addToTable", "staffTable",
-                            new String[]{String.valueOf(staff1.id), staff1.name, String.valueOf(staff1.subject.id),
-                                    String.valueOf(staff1.hoursPerWeek)}));
+                    staff.forEach(staff1 -> {
+                        bridge.call("addToTable", "staffTable",
+                                new String[]{String.valueOf(staff1.id), staff1.name, String.valueOf(staff1.subject.id),
+                                        String.valueOf(staff1.hoursPerWeek)});
+                        bridge.call("addToSelect", "lessonStaff", staff1.name, String.valueOf(staff1.id));
+                    });
                 }
 
                 if (years != null) {
@@ -190,9 +216,14 @@ public class MainController implements Initializable {
                 }
 
                 if (subjectSets != null) {
-                    subjectSets.forEach(subjectSet -> bridge.call("addToTable", "classTable",
+                    subjectSets.forEach(subjectSet -> {
+                        bridge.call("addToTable", "classTable",
                             new String[]{String.valueOf(subjectSet.id), String.valueOf(subjectSet.subject.id),
-                                    String.valueOf(subjectSet.learningSet.id), String.valueOf(subjectSet.schoolYear.id)}));
+                                    String.valueOf(subjectSet.learningSet.id), String.valueOf(subjectSet.schoolYear.id)});
+                        bridge.call("addToSelect", "lessonClass",
+                                subjectSet.schoolYear.schoolYearName + " " + subjectSet.learningSet.name + " " + subjectSet.subject.name,
+                                String.valueOf(subjectSet.id));
+                    });
                 }
 
                 if (buildings != null) {
@@ -201,8 +232,25 @@ public class MainController implements Initializable {
                 }
 
                 if (classrooms != null) {
-                    classrooms.forEach(classroom -> bridge.call("addToTableHideRmBut", "classroomTable",
-                            new String[]{String.valueOf(classroom.id), classroom.name, String.valueOf(classroom.building.id)}));
+                    classrooms.forEach(classroom -> {
+                        bridge.call("addToTableHideRmBut", "classroomTable",
+                                new String[]{String.valueOf(classroom.id), classroom.name, String.valueOf(classroom.building.id)});
+                        bridge.call("addToSelect", "lessonClassroom", classroom.name, String.valueOf(classroom.id));
+                    });
+                }
+
+                if (periods != null) {
+                    periods.forEach(period -> bridge.call("addToSelect", "lessonPeriod",
+                            period.day.name + " " + period.startTime.toString(), String.valueOf(period.id)));
+                }
+
+                if (lessonPlans != null) {
+                    lessonPlans.forEach(lessonPlan -> bridge.call("addToTable", "lessonTable",
+                            new String[]{String.valueOf(lessonPlan.id),
+                                    String.valueOf(lessonPlan.period.day.name + lessonPlan.period.startTime.toString()),
+                                    String.valueOf(lessonPlan.subjectSet.id),
+                                    String.valueOf(lessonPlan.staff.id),
+                                    String.valueOf(lessonPlan.classroom.id)}));
                 }
 
                 engine.executeScript("console.log = function(msg) {java.out(msg);}");

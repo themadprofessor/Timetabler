@@ -265,6 +265,33 @@ public class MariaDistanceDao implements DistanceDao {
 
     /**
      * {@inheritDoc}
+     */
+    @Override
+    public boolean deleteAll() throws DataAccessException, DataUpdateException {
+        boolean success = false;
+
+        try {
+            if (delete == null || delete.isClosed()) {
+                delete = connection.prepareStatement("DELETE FROM distance;");
+            }
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
+            throw new DataAccessException(e);
+        }
+
+        try {
+            delete.execute();
+            success = true;
+        } catch (SQLException e) {
+            Log.debug("Caught [" + e + "] so throwing a DataUpdateException!");
+            throw new DataUpdateException(e);
+        }
+
+        return success;
+    }
+
+    /**
+     * {@inheritDoc}
      * This method will insert the distance data into a MariaDB database.
      * This method assumes the connection member is not null and open. Therefore, should be called through MariaDaoManager.
      */
