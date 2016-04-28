@@ -603,7 +603,11 @@ public class Bridge {
     public void timetable() {
         Platform.runLater(() -> {
             TimetableThread timetableThread = new TimetableThread(daoManager);
-
+            TaskMonitor monitor = new TaskMonitor(timetableThread);
+            monitor.setTitle("Timetabling");
+            Thread timetablingThread = new Thread(timetableThread, "Timetable Thread");
+            monitor.show();
+            timetablingThread.start();
         });
     }
 }
