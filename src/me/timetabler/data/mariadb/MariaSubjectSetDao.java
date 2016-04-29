@@ -357,7 +357,7 @@ public class MariaSubjectSetDao implements SubjectSetDao {
         try {
             if (loadFile == null || loadFile.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("subjectSet", StatementType.INSERT)
-                        .addColumns("id", "setId", "subjectId", "schoolYearId")
+                        .addColumns("id", "subjectId", "setId", "schoolYearId")
                         .addValues("?", "?", "?", "?");
                 loadFile = connection.prepareStatement(builder.build());
             }

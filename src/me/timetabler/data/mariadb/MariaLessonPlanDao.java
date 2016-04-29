@@ -97,18 +97,13 @@ public class MariaLessonPlanDao implements LessonPlanDao {
     @Override
     public List<LessonPlan> getAll() throws DataAccessException {
         ArrayList<LessonPlan> lessonPlans = new ArrayList<>();
-
         try {
             if (selectAll == null || selectAll.isClosed()) {
                 SqlBuilder builder = new SqlBuilder("lessonPlan", StatementType.SELECT)
                         .addColumns("lessonPlan.id", "subject.id", "subject.subjectName",
-                                "staff.id", "staff.staffName", "staff.hoursPerWeek", "classroom.id", "classroom.roomName",
-                                "building.id", "building.buildingName", "period.id", "dayOfWeek.id",
+                                "lessonPlan.staffId", "lessonPlan.classroomId", "period.id", "dayOfWeek.id",
                                 "dayOfWeek.dayOfWeek", "period.startTime", "period.endTime", "subjectSet.id",
                                 "learningSet.id", "learningSet.setName", "schoolYear.id", "schoolYear.schoolYearName")
-                        .addJoinClause(new JoinClause(JoinType.INNER, "staff", "lessonPlan.staffId=staff.id"))
-                        .addJoinClause(new JoinClause(JoinType.INNER, "classroom", "lessonPlan.classroomId=classroom.id"))
-                        .addJoinClause(new JoinClause(JoinType.INNER, "building", "classroom.buildingId=building.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "period", "lessonPlan.periodId=period.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "dayOfWeek", "period.dayId=dayOfWeek.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "subjectSet", "lessonPlan.subjectSetId=subjectSet.id"))
@@ -121,13 +116,31 @@ public class MariaLessonPlanDao implements LessonPlanDao {
             ResultSet set = selectAll.executeQuery();
             while (set.next()) {
                 Subject subject = new Subject(set.getInt(2), set.getString(3));
-                Staff staff = new Staff(set.getInt(4), set.getString(5), subject, set.getInt(6));
-                Classroom classroom = new Classroom(set.getInt(7), set.getString(8),
-                        new Building(set.getInt(9), set.getString(10)), subject);
-                Period period = new Period(set.getInt(11),
-                        new Day(set.getInt(12), set.getString(13)), set.getTime(14).toLocalTime(), set.getTime(15).toLocalTime());
-                SubjectSet subjectSet = new SubjectSet(set.getInt(16), subject, new LearningSet(set.getInt(17), set.getString(18)),
-                        new SchoolYear(set.getInt(19), set.getString(20)));
+
+                int staffId = set.getInt(4);
+                Staff staff;
+                if (!set.wasNull()){
+                    staff = new Staff();
+                    staff.id = staffId;
+                } else {
+                    staff = new Staff();
+                    staff.id = -1;
+                }
+
+                int classroomId = set.getInt(5);
+                Classroom classroom;
+                if (!set.wasNull()) {
+                    classroom = new Classroom();
+                    classroom.id = classroomId;
+                } else {
+                    classroom = new Classroom();
+                    classroom.id = -1;
+                }
+
+                Period period = new Period(set.getInt(6),
+                        new Day(set.getInt(7), set.getString(8)), set.getTime(9).toLocalTime(), set.getTime(10).toLocalTime());
+                SubjectSet subjectSet = new SubjectSet(set.getInt(11), subject, new LearningSet(set.getInt(12), set.getString(13)),
+                        new SchoolYear(set.getInt(14), set.getString(15)));
 
                 LessonPlan lessonPlan = new LessonPlan(set.getInt(1), staff, classroom, period, subjectSet);
                 lessonPlans.add(lessonPlan);
@@ -357,21 +370,27 @@ public class MariaLessonPlanDao implements LessonPlanDao {
                         .addWhereClause("subjectSet.subjectId=?");
                 selectAllSubject = connection.prepareStatement(builder.build());
             }
-            selectAllSubject.setInt(19, subject.id);
+            selectAllSubject.setInt(1, subject.id);
 
             ResultSet set = selectAllSubject.executeQuery();
             while (set.next()) {
                 int staffId = set.getInt(2);
-                Staff staff = null;
+                Staff staff;
                 if (!set.wasNull()){
                     staff = new Staff(staffId, set.getString(3), subject, set.getInt(4));
+                } else {
+                    staff = new Staff();
+                    staff.id = -1;
                 }
 
                 int classroomId = set.getInt(5);
-                Classroom classroom = null;
+                Classroom classroom;
                 if (!set.wasNull()) {
                     classroom = new Classroom(classroomId, set.getString(6),
                             new Building(set.getInt(7), set.getString(8)), subject);
+                } else {
+                    classroom = new Classroom();
+                    classroom.id = -1;
                 }
 
                 Period period = new Period(set.getInt(9),

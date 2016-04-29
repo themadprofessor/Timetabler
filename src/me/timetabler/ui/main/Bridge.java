@@ -1,13 +1,7 @@
 package me.timetabler.ui.main;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -26,9 +20,6 @@ import netscape.javascript.JSObject;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * The bridge between the Javascript and the Java objects.
@@ -606,7 +597,18 @@ public class Bridge {
             TaskMonitor monitor = new TaskMonitor(timetableThread);
             monitor.setOnClose(event -> {
                 try {
-                    daoManager.getLessonPlanDao().getAll();
+                    List<LessonPlan> timetabled = daoManager.getLessonPlanDao().getAll();
+                    StringBuffer builder = new StringBuffer();
+                    timetabled.forEach(lessonPlan -> builder.append(lessonPlan.id)
+                            .append(',')
+                            .append(lessonPlan.period.id)
+                            .append(',')
+                            .append(lessonPlan.subjectSet.id)
+                            .append(',')
+                            .append(lessonPlan.classroom.id)
+                            .append(',')
+                            .append(lessonPlan.staff.id));
+                    bridge.call("updateTable", "lessonTable", builder.toString());
                 } catch (DataAccessException | DataConnectionException e) {
                     e.printStackTrace();
                 }

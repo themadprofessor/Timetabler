@@ -5,3 +5,5 @@ LOAD DATA INFILE '/home/stuart/Programming/IdeaProjects/Timetabler/assets/testDa
 LOAD DATA INFILE '/home/stuart/Programming/IdeaProjects/Timetabler/assets/testData/staff.csv' INTO TABLE staff FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
 LOAD DATA INFILE '/home/stuart/Programming/IdeaProjects/Timetabler/assets/testData/buildings.csv' INTO TABLE building FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
 LOAD DATA INFILE '/home/stuart/Programming/IdeaProjects/Timetabler/assets/testData/classrooms.csv' INTO TABLE classroom FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
+
+LOAD DATA INFILE '/home/stuart/Programming/IdeaProjects/Timetabler/lessonPlans.csv' INTO TABLE lessonPlan FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' (id, @vstaff, @vroom, periodId, subjectSetId) set staffId = nullif(@vstaff,''), classroomId = nullif(@vroom,'');

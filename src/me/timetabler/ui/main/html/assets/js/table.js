@@ -307,15 +307,27 @@ function timetable() {
     java.timetable();
 }
 
+/**
+ * Updates the given table with the given data.
+ * @param tableName The id of the table to update.
+ * @param newData An array of the new data.
+ */
 function updateTable(tableName, newData) {
     var rows = document.getElementById(tableName).rows;
 
-    for (var i = 1; i < rows.length; i++) {
-        var cells = rows[i].cells;
-        var id = cells[0].innerHTML;
+    for (var i = 1; i < newData.length; i++) {
+        var thisData = newData[i].split(",");
 
-        for (var j = 1; j < newData.length; j++) {
-            var thisData = newData[i].split();
+        for (var j = 1; j < rows.length; j++) {
+            var cells = rows[j].cells;
+            var id = cells[0].innerHTML;
+            
+            if (id == thisData[0]) {
+                for (var k = 1; k < thisData.length; k++) {
+                    cells[k].innerHTML = thisData[k];
+                }
+                break;
+            }
         }
     }
 }

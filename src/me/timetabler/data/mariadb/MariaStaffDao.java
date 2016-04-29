@@ -315,6 +315,7 @@ public class MariaStaffDao implements StaffDao {
                                 loadFile.setInt(3, Integer.parseInt(split[1]));
                                 loadFile.setInt(4, Integer.parseInt(split[2]));
                                 Log.verbose("Loaded staff entry without id [" + line + ']');
+                                loadFile.addBatch();
                             }
                         } else if (split.length == 4) {
                             if (!split[0].chars().allMatch(Character::isDigit)) {
@@ -335,16 +336,13 @@ public class MariaStaffDao implements StaffDao {
                                 loadFile.setInt(3, Integer.parseInt(split[2]));
                                 loadFile.setInt(4, Integer.parseInt(split[3]));
                                 Log.verbose("Loaded line [" + line + ']');
+                                loadFile.addBatch();
                             }
                         } else {
                             failedBuilder.append("Ignoring line [")
                                     .append(line)
                                     .append("] as there is an incorrect number of columns. It should be 4.\n");
                         }
-
-                        //Use batch statement as it is faster and easier
-                        //The batch will be overwritten if this method is not called, e.g. exception thrown
-                        loadFile.addBatch();
                     } catch (SQLException e) {
                         //Thrown only if data cannot be added
                         failedBuilder.append("Failed to load line [")
