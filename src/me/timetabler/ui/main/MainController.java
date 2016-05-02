@@ -234,7 +234,12 @@ public class MainController implements Initializable {
                 if (classrooms != null) {
                     classrooms.forEach(classroom -> {
                         bridge.call("addToTableHideRmBut", "classroomTable",
-                                new String[]{String.valueOf(classroom.id), classroom.name, String.valueOf(classroom.building.id)});
+                                new String[]{
+                                        String.valueOf(classroom.id),
+                                        classroom.name,
+                                        String.valueOf(classroom.building.id),
+                                        String.valueOf(classroom.subject.id)
+                                });
                         bridge.call("addToSelect", "lessonClassroom", classroom.name, String.valueOf(classroom.id));
                     });
                 }
@@ -247,7 +252,7 @@ public class MainController implements Initializable {
                 if (lessonPlans != null) {
                     lessonPlans.forEach(lessonPlan -> bridge.call("addToTable", "lessonTable",
                             new String[]{String.valueOf(lessonPlan.id),
-                                    String.valueOf(lessonPlan.period.day.name + lessonPlan.period.startTime.toString()),
+                                    String.valueOf(lessonPlan.period.id),
                                     String.valueOf(lessonPlan.subjectSet.id),
                                     String.valueOf(lessonPlan.staff.id),
                                     String.valueOf(lessonPlan.classroom.id)}));

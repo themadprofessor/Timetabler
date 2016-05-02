@@ -95,7 +95,8 @@ public class SchoolMap {
                 }
             }));
             Walker walker = new Walker(this);
-            optionalBuildingCells.forEach(startBuilding -> optionalBuildingCells.forEach(endBuilding -> {
+            ArrayList<ImportantCell> importantCells = getAllImportantCells();
+            importantCells.forEach(startBuilding -> importantCells.forEach(endBuilding -> {
                 if (!startBuilding.equals(endBuilding)
                         && !startBuilding.getDistances().containsKey(endBuilding)
                         || !endBuilding.getDistances().containsKey(startBuilding)) {

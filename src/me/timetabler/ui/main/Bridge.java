@@ -417,7 +417,10 @@ public class Bridge {
                 try {
                     daoManager.getBuildingDao().getAll().forEach(building -> bridge.call("addToTableHideRmBut",
                             "buildingTable",
-                            new String[]{String.valueOf(building.id), building.buildingName}));
+                            new String[]{
+                                    String.valueOf(building.id),
+                                    building.buildingName
+                            }));
                 } catch (DataAccessException e) {
                     DataExceptionHandler.handleJavaFx(e, "building", false);
                 } catch (DataConnectionException e) {
@@ -430,8 +433,8 @@ public class Bridge {
                             new String[]{
                                     String.valueOf(classroom.id),
                                     classroom.name,
-                                    classroom.building.buildingName,
-                                    classroom.subject.name
+                                    String.valueOf(classroom.building.id),
+                                    String.valueOf(classroom.subject.id)
                             }));
                 } catch (DataAccessException e) {
                     DataExceptionHandler.handleJavaFx(e, "classroom", false);
