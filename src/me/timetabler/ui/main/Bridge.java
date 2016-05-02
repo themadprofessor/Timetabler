@@ -591,6 +591,9 @@ public class Bridge {
         }
     }
 
+    /**
+     * Put staff and classrooms into lessonPlans, based on the distance the member of staff has to travel between lessons.
+     */
     public void timetable() {
         Platform.runLater(() -> {
             TimetableThread timetableThread = new TimetableThread(daoManager);

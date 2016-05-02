@@ -136,7 +136,7 @@ public class MariaSchoolYearDao implements SchoolYearDao {
     public int insert(SchoolYear schoolYear) throws DataUpdateException, DataAccessException {
         int id = -1;
 
-        if (schoolYear == null || schoolYear.schoolYearName == null || !schoolYear.schoolYearName.isEmpty()) {
+        if (schoolYear == null || schoolYear.schoolYearName == null || schoolYear.schoolYearName.isEmpty()) {
             return id;
         }
 

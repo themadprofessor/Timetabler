@@ -127,6 +127,10 @@ function addClass() {
         var subject = document.getElementById("classSubject").value;
         var set = document.getElementById("classSet").value;
         var year = document.getElementById("classYear").value;
+        if (subject.length == 0 || set.length == 0 || year.length == 0) {
+            alert("Please ensure a value is specified for the subject, set and year group! " +
+                "If their respective tables are empty, there will be no options in the selections.");
+        }
     } catch (err) {
         java.warning(err);
         alert("Failed to add class!\nEach field must be present!");
@@ -150,6 +154,10 @@ function addLesson() {
         var subjectSet = document.getElementById("lessonClass").value;
         var classroom = document.getElementById("lessonClassroom").value;
         var staff = document.getElementById("lessonStaff").value;
+        if (subjectSet.length == 0) {
+            alert("Please specify a class! If the class table is empty, there will no options to select from.");
+            return;
+        }
     } catch (err) {
         java.warning(err);
         alert("Failed to add lesson!\nThe period and class field must be present!")

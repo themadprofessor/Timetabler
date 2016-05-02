@@ -238,8 +238,6 @@ public class TimetableThread extends Task<Void> {
     }
 
     private List<LessonPlan> putLessonPlansIntoClassrooms(List<LessonPlan> lessonPlans, List<Classroom> classrooms, List<Distance> distances) {
-        //TODO: Iter through each subject, iter through each day, allocate period 1 randomly, iter through each period,
-        //TODO: check if teacher teaching in period, if is find closest available room, if not move on
         List<LessonPlan> timetabledLessons = new ArrayList<>();
 
         //Create a week of periods for this subject
@@ -362,6 +360,4 @@ public class TimetableThread extends Task<Void> {
         }
         return timetabledLessons;
     }
-
-
 }
