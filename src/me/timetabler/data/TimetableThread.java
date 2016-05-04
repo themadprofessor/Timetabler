@@ -5,6 +5,7 @@ import me.timetabler.data.dao.DaoManager;
 import me.timetabler.data.exceptions.DataAccessException;
 import me.timetabler.data.exceptions.DataConnectionException;
 import me.timetabler.data.exceptions.DataExceptionHandler;
+import me.util.Log;
 
 import java.time.LocalTime;
 import java.util.*;
@@ -37,6 +38,7 @@ public class TimetableThread extends Task<Void> {
                 //The id of the top list is the id of the period as it is static data
                 List<Set<LessonPlan>> overloadedPeriod;
                 overloadedPeriod = findOverloadedPeriods(subject, 31);
+                Log.verbose("Found [" + overloadedPeriod.size() + ']');
 
                 List<LessonPlan> lessonPlans = null;
                 List<Staff> staff = null;
@@ -74,6 +76,8 @@ public class TimetableThread extends Task<Void> {
                     return;
                 }
 
+                Log.verbose("Found [" + classrooms.size() + "] classrooms and [" + lessonPlans + "] lessons and [" + staff.size() + "] staff");
+
                 // put staff into lessonPlans for this subject, avoiding teacher being scheduled twice for same period.
                 putStaffIntoLessonPlan(lessonPlans, staff, overloadedPeriod);
 
@@ -109,7 +113,12 @@ public class TimetableThread extends Task<Void> {
 
             // add each lesson to the overloadedPeriod list
             // multiple lessons that are taught during same period will highlight period overloading.
-            lessons.forEach(lessonPlan -> overloadedPeriod.get(lessonPlan.period.id).add(lessonPlan));
+            lessons.forEach(lessonPlan -> {
+                if (overloadedPeriod.get(lessonPlan.period.id) == null) {
+                    overloadedPeriod.set(lessonPlan.period.id, new HashSet<>());
+                }
+                overloadedPeriod.get(lessonPlan.period.id).add(lessonPlan);
+            });
 
         } catch (DataAccessException e) {
             DataExceptionHandler.handleJavaFx(e, "LessonPlan", false);
