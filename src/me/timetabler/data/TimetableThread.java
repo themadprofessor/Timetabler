@@ -34,6 +34,7 @@ public class TimetableThread extends Task<Void> {
             List<Distance> distances = daoManager.getDistanceDao().getAll();
 
             subjects.forEach(subject -> {
+                updateMessage("Timetabling [" + subject.name + ']');
                 // for current subject find periods where multiple classes are taught during the same period for this subject
                 //The id of the top list is the id of the period as it is static data
                 List<Set<LessonPlan>> overloadedPeriod;

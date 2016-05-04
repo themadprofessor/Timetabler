@@ -1,7 +1,6 @@
 package me.timetabler.map;
 
 import javafx.concurrent.Task;
-import javafx.scene.control.Alert;
 import me.timetabler.data.Building;
 import me.timetabler.data.Classroom;
 import me.timetabler.data.Distance;
@@ -107,6 +106,7 @@ public class MapLoader extends Task<Void> {
             Log.verbose("Loaded [" + files.length + "] Extra Maps");
             updateMessage("Initialising Buildings. May Take A Long Time.");
             updateProgress(2, 6);
+            buildings.put("Top", schoolMap);
             schoolMap.init(buildings);
 
             //Check if the task has been cancelled, and stop if it has.
@@ -130,6 +130,9 @@ public class MapLoader extends Task<Void> {
                 for (BuildingCell buildingCell : buildingsToSearch) {
                     List<BuildingCell> subBuildings = buildingCell.getSubBuildings();
                     for (BuildingCell subBuilding : subBuildings) {
+                        if (subBuilding == null) {
+                            Log.error("cry");
+                        }
                         if (!buildingCells.containsKey(subBuilding.name)) {
                             Log.verbose("Found building [" + subBuilding.name + ']');
                             tmpMap.put(subBuilding.name, subBuilding);
@@ -248,6 +251,7 @@ public class MapLoader extends Task<Void> {
      */
     private String addClassroomsToDb(List<ClassroomCell> classrooms, Building building, Map<String, Classroom> classroomsDb) {
         StringBuilder failedBuilder = new StringBuilder();
+        classrooms.remove(null);
 
         //Load the classrooms for the top map
         classrooms.stream().sequential().forEach(classroomCell -> {
