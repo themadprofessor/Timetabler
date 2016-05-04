@@ -11,7 +11,6 @@ import me.timetabler.data.dao.DaoManager;
 import me.timetabler.data.exceptions.DataAccessException;
 import me.timetabler.data.exceptions.DataConnectionException;
 import me.timetabler.data.exceptions.DataExceptionHandler;
-import me.timetabler.ui.main.Bridge;
 import me.util.Log;
 import me.util.LogLevel;
 import netscape.javascript.JSObject;
@@ -218,8 +217,8 @@ public class MainController implements Initializable {
                 if (subjectSets != null) {
                     subjectSets.forEach(subjectSet -> {
                         bridge.call("addToTable", "classTable",
-                            new String[]{String.valueOf(subjectSet.id), String.valueOf(subjectSet.subject.id),
-                                    String.valueOf(subjectSet.learningSet.id), String.valueOf(subjectSet.schoolYear.id)});
+                            new String[]{String.valueOf(subjectSet.id), String.valueOf(subjectSet.learningSet.id),
+                                    String.valueOf(subjectSet.subject.id), String.valueOf(subjectSet.schoolYear.id)});
                         bridge.call("addToSelect", "lessonClass",
                                 subjectSet.schoolYear.schoolYearName + " " + subjectSet.learningSet.name + " " + subjectSet.subject.name,
                                 String.valueOf(subjectSet.id));
