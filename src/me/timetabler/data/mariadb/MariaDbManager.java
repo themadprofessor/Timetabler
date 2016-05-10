@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -42,24 +43,28 @@ public class MariaDbManager implements AutoCloseable {
         process = new ProcessBuilder().command(command).start();
         Scanner scanner = new Scanner(process.getErrorStream());
         String line;
-        while ((line = scanner.nextLine()) != null) {
-            //The server outputs 'ready for connections' upon finishing initialisation, and 'shutdown' when closing.
-            if (line.contains("ready for connections")) {
-                break;
-            } else if (line.contains("shutdown")) {
-                try {
-                    process.destroyForcibly().waitFor();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        try {
+            while ((line = scanner.nextLine()) != null) {
+                //The server outputs 'ready for connections' upon finishing initialisation, and 'shutdown' when closing.
+                if (line.contains("ready for connections")) {
+                    break;
+                } else if (line.contains("shutdown")) {
+                    try {
+                        process.destroyForcibly().waitFor();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+        } catch (NoSuchElementException e) {
+            JavaFxBridge.createAlert(Alert.AlertType.ERROR, "Failed to start database!", null, "Failed to start database server. It closed with the error code [" + process.exitValue() +']', true);
         }
 
         //Ensure the server is closed when the program closes.
         Runtime.getRuntime().addShutdownHook(new Thread (() -> process.destroy()));
 
         if (!process.isAlive()) {
-            JavaFxBridge.createAlert(Alert.AlertType.ERROR, "Failed to start database!", null, "Failed to start database server. It close with the error code [" + process.exitValue() +']', true);
+            JavaFxBridge.createAlert(Alert.AlertType.ERROR, "Failed to start database!", null, "Failed to start database server. It closed with the error code [" + process.exitValue() +']', true);
         }
     }
 

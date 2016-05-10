@@ -50,4 +50,28 @@ public class LessonPlan implements DataType {
         this.period = period;
         this.subjectSet = subjectSet;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LessonPlan that = (LessonPlan) o;
+
+        return id == that.id && period.equals(that.period) && subjectSet.equals(that.subjectSet);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + period.hashCode();
+        result = 31 * result + subjectSet.hashCode();
+        return result;
+    }
 }

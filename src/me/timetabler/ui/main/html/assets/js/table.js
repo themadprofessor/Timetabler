@@ -308,6 +308,10 @@ function addToTableHideRmBut(tableName, data) {
     butt.style.display = 'none';
 }
 
+function clearMapData() {
+    
+}
+
 /**
  * Calls java.timetable to begin timetabling.
  */
@@ -322,9 +326,7 @@ function timetable() {
  */
 function updateTable(tableName, newData) {
     var rows = document.getElementById(tableName).rows;
-
-    for (var i = 1; i < newData.length; i++) {
-        var thisData = newData[i].split(",");
+        var thisData = newData.split(",");
 
         for (var j = 1; j < rows.length; j++) {
             var cells = rows[j].cells;
@@ -337,5 +339,4 @@ function updateTable(tableName, newData) {
                 break;
             }
         }
-    }
 }

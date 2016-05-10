@@ -5,6 +5,8 @@ import me.timetabler.data.dao.DaoManager;
 import me.timetabler.data.exceptions.DataAccessException;
 import me.timetabler.data.exceptions.DataConnectionException;
 import me.timetabler.data.exceptions.DataExceptionHandler;
+import me.timetabler.data.exceptions.DataUpdateException;
+import me.util.LambdaBreakException;
 import me.util.Log;
 
 import java.time.LocalTime;
@@ -24,22 +26,44 @@ public class TimetableThread extends Task<Void> {
     /**
      * Gives each lesson a staff member and classroom on a per subject basis, taking into account the distances between
      * each lesson for each member of staff.
-     * @return
+     * @return Nothing.
      */
     @Override
     public Void call() {
-        try {
-            // get all subjects
-            List<Subject> subjects = daoManager.getSubjectDao().getAll();
-            List<Distance> distances = daoManager.getDistanceDao().getAll();
+        // get all subjects
+        List<Subject> subjects;
+        List<Distance> distances;
+        StringBuilder failedLog = new StringBuilder();
 
+        try {
+            subjects = daoManager.getSubjectDao().getAll();
+        } catch (DataAccessException e) {
+            updateMessage("Failed to access subject data due to the error [" + e + "]\n" +
+                    "Please restart the timetabler and send the logs to your system administrator if this occurs again.");
+            return null;
+        } catch (DataConnectionException e) {
+            DataExceptionHandler.handleJavaFx(e, null, true);
+            return null;
+        }
+        try {
+            distances = daoManager.getDistanceDao().getAll();
+        } catch (DataAccessException e) {
+            updateMessage("Failed to access distance data due to the error [" + e + "]\n" +
+                    "Please restart the timetabler and send the logs to your system administrator if this occurs again.");
+            return null;
+        } catch (DataConnectionException e) {
+            DataExceptionHandler.handleJavaFx(e, null, true);
+            return null;
+        }
+
+        try {
             subjects.forEach(subject -> {
                 updateMessage("Timetabling [" + subject.name + ']');
                 // for current subject find periods where multiple classes are taught during the same period for this subject
                 //The id of the top list is the id of the period as it is static data
                 List<Set<LessonPlan>> overloadedPeriod;
                 overloadedPeriod = findOverloadedPeriods(subject, 31);
-                Log.verbose("Found [" + overloadedPeriod.size() + ']');
+                Log.verbose("Found [" + overloadedPeriod.size() + "] overloaded periods");
 
                 List<LessonPlan> lessonPlans = null;
                 List<Staff> staff = null;
@@ -49,35 +73,47 @@ public class TimetableThread extends Task<Void> {
                     // get all lessonPlans for this subject
                     lessonPlans = daoManager.getLessonPlanDao().getAllBySubject(subject);
                 } catch (DataAccessException e) {
-                    DataExceptionHandler.handleJavaFx(e, "lessonPlan", false);
-                    return;
+                    failedLog.append("Could not access the lesson data!\nThe error was [")
+                            .append(e)
+                            .append("]\nPlease restart the timetabler and send the logs to your system administrator")
+                            .append(" if this occurs again.");
+                    Log.error(e);
+                    throw new LambdaBreakException();
                 } catch (DataConnectionException e) {
                     DataExceptionHandler.handleJavaFx(e, null, true);
-                    return;
+                    throw new LambdaBreakException();
                 }
 
                 try {
                     // get all staff who teach the subject
                     staff = daoManager.getStaffDao().getAllBySubject(subject);
                 } catch (DataAccessException e) {
-                    DataExceptionHandler.handleJavaFx(e, "staff", false);
-                    return;
+                    failedLog.append("Could not access the staff data!\nThe error was [")
+                            .append(e)
+                            .append("]\nPlease restart the timetabler and send the logs to your system administrator")
+                            .append(" if this occurs again.");
+                    Log.error(e);
+                    throw new LambdaBreakException();
                 } catch (DataConnectionException e) {
                     DataExceptionHandler.handleJavaFx(e, null, true);
-                    return;
+                    throw new LambdaBreakException();
                 }
 
                 try {
                     classrooms = daoManager.getClassroomDao().getAll();
                 } catch (DataConnectionException e) {
-                    DataExceptionHandler.handleJavaFx(e, "classrooms", false);
-                    return;
+                    failedLog.append("Could not access the classroom data!\nThe error was [")
+                            .append(e)
+                            .append("]\nPlease restart the timetabler and send the logs to your system administrator")
+                            .append(" if this occurs again.");
+                    Log.error(e);
+                    throw new LambdaBreakException();
                 } catch (DataAccessException e) {
                     DataExceptionHandler.handleJavaFx(e, null, true);
-                    return;
+                    throw new LambdaBreakException();
                 }
 
-                Log.verbose("Found [" + classrooms.size() + "] classrooms and [" + lessonPlans + "] lessons and [" + staff.size() + "] staff");
+                Log.verbose("Found [" + classrooms.size() + "] classrooms and [" + lessonPlans.size() + "] lessons and [" + staff.size() + "] staff");
 
                 // put staff into lessonPlans for this subject, avoiding teacher being scheduled twice for same period.
                 putStaffIntoLessonPlan(lessonPlans, staff, overloadedPeriod);
@@ -90,24 +126,44 @@ public class TimetableThread extends Task<Void> {
                         .filter(classroom -> classroom.subject.equals(subject))
                         .collect(Collectors.toList());
                 //Put classrooms into lessonPlans for this subject.
-                putLessonPlansIntoClassrooms(lessonPlans, subjectRooms, subjectDistance);
+                //putLessonPlansIntoClassrooms(lessonPlans, subjectRooms, subjectDistance);
+                lessonPlans.forEach(lessonPlan -> {
+                    try {
+                        daoManager.getLessonPlanDao().update(lessonPlan);
+                    } catch (DataAccessException | DataUpdateException e) {
+                        failedLog.append("Could not update the lesson data!\nThe error was [")
+                                .append(e)
+                                .append("]\nPlease restart the timetabler and send the logs to your system administrator")
+                                .append(" if this occurs again.");
+                        Log.error(e);
+                        throw new LambdaBreakException();
+                    } catch (DataConnectionException e) {
+                        DataExceptionHandler.handleJavaFx(e, null, true);
+                        throw new LambdaBreakException();
+                    }
+                });
             });
-        } catch (DataAccessException e) {
-            DataExceptionHandler.handleJavaFx(e, "Subject", false);
-        } catch (DataConnectionException e) {
-            DataExceptionHandler.handleJavaFx(e, "Subject", true);
+        } catch (LambdaBreakException e) {
+            if (failedLog.length() > 0) {
+                updateMessage(failedLog.toString());
+            }
+            return null;
         }
+
+        updateMessage("Done");
         return null;
     }
 
     /**
-     * Populates a list of lists with all the subjectSets of the given subject taught at any time. The inner list can
+     * Populates a list of lists with all the subjectSets of the given subject taught at any time. The inner set can
      * contain any of elements
      * @param subject The subject which the subjectSets will be taught
      */
     private List<Set<LessonPlan>> findOverloadedPeriods(Subject subject, int size) {
-        List<Set<LessonPlan>> overloadedPeriod = new ArrayList<>(size);
-        Collections.fill(overloadedPeriod, new HashSet<>());
+        List<Set<LessonPlan>> overloadedPeriod = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            overloadedPeriod.add(new HashSet<>());
+        }
 
         try {
             List<LessonPlan> lessons = daoManager.getLessonPlanDao().getAllBySubject(subject);
@@ -115,9 +171,6 @@ public class TimetableThread extends Task<Void> {
             // add each lesson to the overloadedPeriod list
             // multiple lessons that are taught during same period will highlight period overloading.
             lessons.forEach(lessonPlan -> {
-                if (overloadedPeriod.get(lessonPlan.period.id) == null) {
-                    overloadedPeriod.set(lessonPlan.period.id, new HashSet<>());
-                }
                 overloadedPeriod.get(lessonPlan.period.id).add(lessonPlan);
             });
 
@@ -157,7 +210,7 @@ public class TimetableThread extends Task<Void> {
                     }
                 }*/
 
-                if (lessonsForSubjectSet.get(0).staff == null) { //Only check first as all will be set if the first is set
+                if (lessonsForSubjectSet.get(0).staff.id == -1) { //Only check first as all will be set if the first is set
                     Set<SubjectSet> possibleConflicts = new HashSet<>(); //A set containing every subjectSet which happens at the same time as the current subjectSet
                     for (Set<LessonPlan> overloadedPeriod : overloadedPeriods) {
                         if (overloadedPeriod.stream().anyMatch(lessonPlan -> lessonPlan.subjectSet.id == subjectSet.id)) {
@@ -174,7 +227,7 @@ public class TimetableThread extends Task<Void> {
 
                         Set<SubjectSet> subjectSetsForStaff = new HashSet<>(); //A set containing the subjectSets taught by the current staff
                         lessonsForSubjectSet.forEach(lessonPlan -> {
-                            if (lessonPlan.staff.id == staff.id) {
+                            if (lessonPlan.staff.id != -1 && lessonPlan.id != staff.id) {
                                 subjectSetsForStaff.add(lessonPlan.subjectSet);
                             }
                         });
@@ -183,7 +236,8 @@ public class TimetableThread extends Task<Void> {
                             staff.currentHoursPerWeek += lessonsForSubjectSet.size();
                             for (LessonPlan lessonPlan : lessonPlans) {
                                 if (lessonPlan.subjectSet.id == subjectSet.id) {
-                                    lessonPlan.staff = staff;
+                                    LessonPlan lesson = new LessonPlan(lessonPlan.id, staff, lessonPlan.classroom, lessonPlan.period, lessonPlan.subjectSet);
+                                    lessonPlans.set(lessonPlans.indexOf(lessonPlan), lesson);
                                 }
                             }
                         }
@@ -194,65 +248,24 @@ public class TimetableThread extends Task<Void> {
             done = lessonPlans.stream().allMatch(lessonPlan -> lessonPlan.staff != null); //Checks if every lessonPlan has a member of staff teaching it
         }
 
-        /*while (!done) {
-            for (LessonPlan lesson : lessonPlans) {
-                if (lesson.staff == null) {
-
-                    for (Staff staff : staffList) {
-                        if (staff.currentHoursPerWeek < staff.hoursPerWeek) {
-                            break;
-                        }
-
-                        boolean conflicts = false;
-
-                        //Gets all lessons currently taught by this member of staff
-                        List<LessonPlan> lessonsByStaff = lessonPlans
-                                .stream()                                               //Turn list into an iterating stream
-                                .filter(lessonPlan -> lessonPlan.staff.id == staff.id)  //Only add lessons who's staff member is the currently processed staff member
-                                .collect(Collectors.toCollection(ArrayList::new));      //Collect all which meet the filter into an ArrayList and return it
-
-                        //Gets all the periods which contain the lessons currently being processed
-                        List<List<LessonPlan>> containsThisLesson = overloadedPeriods
-                                .stream()                                           //Turn the list into an iterating stream
-                                .filter((period) -> period.contains(lesson))        //At each iteration, check if the current lesson is within the list
-                                .collect(Collectors.toCollection(ArrayList::new));  //Collect all which meet the filter into an ArrayList and return it
-
-                        for (List<LessonPlan> period : containsThisLesson) {
-                            Optional<LessonPlan> conflict = lessonsByStaff
-                                    .stream()                   //Turn list into iterating stream
-                                    .filter(period::contains)   //At each iteration, test if the lesson is contained in the period overload list
-                                    .findFirst();               //Only check if one exists, and return its optional
-                            if (conflict.isPresent()) {         //If one was found, set conflicts to true
-                                conflicts = true;
-                            }
-                        }
-
-                        if (!conflicts) {
-                            int count = 0;
-
-                            for (LessonPlan lessonPlan : lessonPlans) {
-                                if (lessonPlan.id == lesson.id) {
-                                    lessonPlan.staff = staff;
-                                    count++;
-                                }
-                            }
-
-                            staff.currentHoursPerWeek += count;
-                        }
-                    }
-                }
-            }
-        }*/
-
         return true;
     }
 
-    private List<LessonPlan> putLessonPlansIntoClassrooms(List<LessonPlan> lessonPlans, List<Classroom> classrooms, List<Distance> distances) {
-        List<LessonPlan> timetabledLessons = new ArrayList<>();
+    /**
+     * Puts the given lesson plans into classrooms based on the distance the member fo staff will have to travel between
+     * each lesson.
+     * @param lessonPlans The lessonPlans to be put into classrooms.
+     * @param classrooms The classrooms to put lessons plans into.
+     * @param distances The distances between the classrooms.
+     * @return The list of lessonPlans after they have been put into classrooms.
+     */
+    private boolean putLessonPlansIntoClassrooms(List<LessonPlan> lessonPlans, List<Classroom> classrooms, List<Distance> distances) {
 
         //Create a week of periods for this subject
-        List<List<LessonPlan>> week = new ArrayList<>(5);
-        Collections.fill(week, new ArrayList<>());
+        List<List<LessonPlan>> week = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            week.add(new ArrayList<>());
+        }
         lessonPlans.stream()
                 .forEach(lessonPlan -> week.get(lessonPlan.period.day.id - 1).add(lessonPlan));
 
@@ -261,14 +274,17 @@ public class TimetableThread extends Task<Void> {
         for (int dayNo = 0; dayNo < week.size(); dayNo++) {
             //Get the periods of this day
             try {
-                periods = daoManager.getPeriodDao().getAllByDay(daoManager.getDayDao().getById(dayNo + 1).get());
+                periods = daoManager.getPeriodDao()
+                        .getAllByDay(daoManager.getDayDao().getById(dayNo + 1)
+                        .orElseThrow(() -> new IllegalStateException("Failed to find periods in a day")));
+                //The above exception should never be thrown
                 periods.sort((o1, o2) -> o1.startTime.getHour() - o2.startTime.getHour());
             } catch (DataAccessException e) {
                 DataExceptionHandler.handleJavaFx(e, "period", false);
-                return timetabledLessons;
+                return false;
             } catch (DataConnectionException e) {
                 DataExceptionHandler.handleJavaFx(e, null, true);
-                return timetabledLessons;
+                return false;
             }
 
             //Get this days lessons and randomly allocate the first period
@@ -281,21 +297,24 @@ public class TimetableThread extends Task<Void> {
             });
             classrooms.stream().forEach(classroom -> {
                 for (LessonPlan lessonPlan : firstPeriod) {
-                    if (lessonPlan.classroom == null) {
+                    if (lessonPlan.classroom.id == -1) {
                         lessonPlan.classroom = classroom;
                         break;
                     }
                 }
             });
             //Store the first period in the timetabled list
-            timetabledLessons.addAll(firstPeriod);
+            firstPeriod.forEach(lessonPlan -> {
+                int index = lessonPlans.indexOf(lessonPlan);
+                lessonPlans.set(index, lessonPlan);
+            });
 
             List<LessonPlan> previousPeriod = new ArrayList<>(firstPeriod);
             //Iterate through the other periods
-            for (int periodNo = 1; periodNo < day.size(); periodNo++) {
+            for (int periodNo = 1; periodNo < 5; periodNo++) {
                 List<LessonPlan> period = new ArrayList<>();
                 for (LessonPlan lessonPlan : day) {
-                    if (lessonPlan.period.equals(periods.get(periodNo))) {
+                    if (lessonPlan.period.equals(periods.get(periodNo-1))) {
                         period.add(lessonPlan);
                     }
                 }
@@ -364,10 +383,9 @@ public class TimetableThread extends Task<Void> {
                     }
                 }
 
-                timetabledLessons.addAll(period);
                 previousPeriod = period;
             }
         }
-        return timetabledLessons;
+        return true;
     }
 }

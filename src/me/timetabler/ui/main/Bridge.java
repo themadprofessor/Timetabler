@@ -18,8 +18,10 @@ import me.util.MapBuilder;
 import netscape.javascript.JSObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 /**
  * The bridge between the Javascript and the Java objects.
@@ -238,6 +240,7 @@ public class Bridge {
      * @param data The data to be removed.
      */
     public void remove(String type, String data) {
+        Log.verbose("Removing [" + data + ']');
         switch (type) {
             case "Subject":
             case "subject":
@@ -245,7 +248,7 @@ public class Bridge {
                     Log.debug("Removing Subject.");
                     Log.verbose("Subject [" + data + ']');
                     Subject subject = new Subject();
-                    subject.id = Integer.parseInt(data.split(",")[0].replace("]", ""));
+                    subject.id = Integer.parseInt(data.split(",")[0]);
                     daoManager.getSubjectDao().delete(subject);
                     bridge.call("setSuccess", true);
                 } catch (DataAccessException | DataUpdateException e) {
@@ -264,7 +267,7 @@ public class Bridge {
                     Log.debug("Removing Staff.");
                     Log.verbose("Staff [" + data + ']');
                     Staff staff = new Staff();
-                    staff.id = Integer.parseInt(data.split(",")[0].replace("]", ""));
+                    staff.id = Integer.parseInt(data.split(",")[0]);
                     daoManager.getStaffDao().delete(staff);
                     bridge.call("setSuccess", true);
                 } catch (DataAccessException | DataUpdateException e) {
@@ -283,7 +286,7 @@ public class Bridge {
                     Log.debug("Removing Year.");
                     Log.verbose("SchoolYear [" + data + ']');
                     SchoolYear year = new SchoolYear();
-                    year.id = Integer.parseInt(data.split(",")[0].replace("]", ""));
+                    year.id = Integer.parseInt(data.split(",")[0]);
                     daoManager.getSchoolYearDao().delete(year);
                     bridge.call("setSuccess", true);
                 } catch (DataAccessException | DataUpdateException e) {
@@ -302,7 +305,7 @@ public class Bridge {
                     Log.debug("Removing LearningSet.");
                     Log.verbose("SchoolLearningSet [" + data + ']');
                     LearningSet learningSet = new LearningSet();
-                    learningSet.id = Integer.parseInt(data.split(",")[0].replace("]", ""));
+                    learningSet.id = Integer.parseInt(data.split(",")[0]);
                     daoManager.getLearningSetDao().delete(learningSet);
                     bridge.call("setSuccess", true);
                 } catch (DataAccessException | DataUpdateException e) {
@@ -321,7 +324,7 @@ public class Bridge {
                     Log.debug("Removing SubjectSet.");
                     Log.verbose("SubjectSet [" + data + ']');
                     SubjectSet subjectSet = new SubjectSet();
-                    subjectSet.id = Integer.parseInt(data.split(",")[0].replace("]", ""));
+                    subjectSet.id = Integer.parseInt(data.split(",")[0]);
                     daoManager.getSubjectSetDao().delete(subjectSet);
                     bridge.call("setSuccess", true);
                 } catch (DataAccessException | DataUpdateException e) {
@@ -339,9 +342,9 @@ public class Bridge {
                 try {
                     Log.debug("Removing Building.");
                     Log.verbose("Building [" + data + ']');
-                    Building subjectSet = new Building();
-                    subjectSet.id = Integer.parseInt(data.split(",")[0].replace("]", ""));
-                    daoManager.getBuildingDao().delete(subjectSet);
+                    Building building = new Building();
+                    building.id = Integer.parseInt(data.split(",")[0]);
+                    daoManager.getBuildingDao().delete(building);
                     bridge.call("setSuccess", true);
                 } catch (DataAccessException | DataUpdateException e) {
                     Log.error(e);
@@ -356,11 +359,12 @@ public class Bridge {
             case "Classroom":
             case "classroom":
                 try {
+                    daoManager.getDistanceDao().deleteAll();
                     Log.debug("Removing Classroom.");
                     Log.verbose("Classroom [" + data + ']');
-                    Classroom subjectSet = new Classroom();
-                    subjectSet.id = Integer.parseInt(data.split(",")[0].replace("]", ""));
-                    daoManager.getClassroomDao().delete(subjectSet);
+                    Classroom classroom = new Classroom();
+                    classroom.id = Integer.parseInt(data.split(",")[0]);
+                    daoManager.getClassroomDao().delete(classroom);
                     bridge.call("setSuccess", true);
                 } catch (DataAccessException | DataUpdateException e) {
                     Log.error(e);
@@ -372,6 +376,31 @@ public class Bridge {
                 }
 
                 break;
+            case "lesson":
+            case "Lesson":
+                try {
+                    Log.debug("Removing Lesson");
+                    Log.verbose("Lesson [" + data + ']');
+                    LessonPlan lessonPlan = new LessonPlan();
+                    lessonPlan.id = Integer.parseInt(data.split(",")[0]);
+                    daoManager.getLessonPlanDao().delete(lessonPlan);
+                    bridge.call("setSuccess", true);
+                } catch (DataAccessException | DataUpdateException e) {
+                    Log.error(e);
+                    DataExceptionHandler.handleJavaFx(e, "lesson plan", false);
+                    bridge.call("setSuccess", false);
+                } catch (DataConnectionException e) {
+                    Log.error(e);
+                    DataExceptionHandler.handleJavaFx(e, null, true);
+                }
+                break;
+        }
+    }
+
+    public void removeAll(String type) {
+        switch (type) {
+            case "staff":
+            case "Staff":
         }
     }
 
@@ -389,8 +418,13 @@ public class Bridge {
             DataExceptionHandler.handleJavaFx(e, null, true);
             return;
         }
-        bridge.call("clearTable", "classroomTable");
-        bridge.call("clearTable", "buildingTable");
+        try {
+            bridge.call("clearTable", "classroomTable");
+            bridge.call("clearTable", "buildingTable");
+        } catch (Exception e) {
+            Log.error(e);
+            return;
+        }
         Platform.runLater(() -> {
             //Select top map file
             FileChooser fileChooser = new FileChooser();
@@ -574,6 +608,7 @@ public class Bridge {
                     Log.debug("Successfully Loaded [" + success + ']');
 
                     List<SubjectSet> newSubjectSets = daoManager.getSubjectSetDao().getAll();
+                    newSubjectSets.sort((set1, set2) -> set1.id - set2.id);
 
                     Log.debug("Adding [" + newSubjectSets.size() + ']');
                     newSubjectSets.forEach(subjectSet -> bridge.call("addToTable", tableName, new String[]{
@@ -604,20 +639,22 @@ public class Bridge {
             monitor.setOnClose(event -> {
                 try {
                     List<LessonPlan> timetabled = daoManager.getLessonPlanDao().getAll();
-                    StringBuffer builder = new StringBuffer();
-                    timetabled.forEach(lessonPlan -> builder.append(lessonPlan.id)
-                            .append(',')
-                            .append(lessonPlan.period.id)
-                            .append(',')
-                            .append(lessonPlan.subjectSet.id)
-                            .append(',')
-                            .append(lessonPlan.classroom.id)
-                            .append(',')
-                            .append(lessonPlan.staff.id));
-                    bridge.call("updateTable", "lessonTable", builder.toString());
+                    List<String> data = new ArrayList<>();
+                    timetabled.forEach(lessonPlan -> {
+                        String builder = String.valueOf(lessonPlan.id) + ',' +
+                                lessonPlan.period.id + ',' +
+                                lessonPlan.subjectSet.id + ',' +
+                                lessonPlan.classroom.id + ',' +
+                                lessonPlan.staff.id;
+                        bridge.call("updateTable", "lessonTable", builder);
+                    });
                 } catch (DataAccessException | DataConnectionException e) {
                     e.printStackTrace();
                 }
+            });
+            timetableThread.setOnFailed(event -> {
+                event.getSource().getException().printStackTrace();
+                JavaFxBridge.createAlert(Alert.AlertType.ERROR, "Failed to timetable", "Failed to timetable!" , "The system failed to timetable because [" + event.getSource().getException() + "]\nPlease view the logs for more information.", false);
             });
             monitor.setTitle("Timetabling");
             Thread timetablingThread = new Thread(timetableThread, "Timetable Thread");

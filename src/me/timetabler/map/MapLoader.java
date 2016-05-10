@@ -34,7 +34,6 @@ public class MapLoader extends Task<Void> {
 
     /**
      * Initialises the MapLoader.
-     *
      * @param config     A map containing the keys 'top_map' and 'other_maps'.
      * @param daoManager The DaoManger to be used by the MapLoader to store the map data.
      */
@@ -130,9 +129,6 @@ public class MapLoader extends Task<Void> {
                 for (BuildingCell buildingCell : buildingsToSearch) {
                     List<BuildingCell> subBuildings = buildingCell.getSubBuildings();
                     for (BuildingCell subBuilding : subBuildings) {
-                        if (subBuilding == null) {
-                            Log.error("cry");
-                        }
                         if (!buildingCells.containsKey(subBuilding.name)) {
                             Log.verbose("Found building [" + subBuilding.name + ']');
                             tmpMap.put(subBuilding.name, subBuilding);
@@ -330,9 +326,10 @@ public class MapLoader extends Task<Void> {
      */
     private String addDistancesToDb(Map<String, Classroom> classrooms, List<ClassroomCell> classroomCells) {
         List<Distance> distances = new ArrayList<>();
+        classroomCells.removeIf(classroomCell -> classroomCell == null);
 
         //Add all the distances from the classrooms in the same building as each other
-        classroomCells.forEach(classroomCell -> classroomCell.getDistances().forEach(((importantCell, dist) -> {
+        classroomCells.forEach(classroomCell -> classroomCell.getDistances().forEach((importantCell, dist) -> {
             if (importantCell instanceof ClassroomCell) {
                 //Create a new distance object for the distance.
                 Distance distance = new Distance();
@@ -360,7 +357,7 @@ public class MapLoader extends Task<Void> {
                     Log.verbose("Adding distance for new trip [" + sameTrips.get(0) + ']');
                 }
             }
-        })));
+        }));
 
         StringBuilder failedBuilder = new StringBuilder();
 

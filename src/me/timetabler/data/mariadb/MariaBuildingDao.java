@@ -50,6 +50,11 @@ public class MariaBuildingDao implements BuildingDao {
     private PreparedStatement delete;
 
     /**
+     * A PreparedStatement to delete all building data from the database.
+     */
+    private PreparedStatement deleteAll;
+
+    /**
      * A PreparedStatement to load the building data from a file into the database.
      */
     private PreparedStatement loadFile;

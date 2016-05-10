@@ -133,7 +133,7 @@ public class MariaPeriodDao implements PeriodDao {
                 SqlBuilder builder = new SqlBuilder("period", StatementType.SELECT)
                         .addColumns("id", "startTime", "endTime")
                         .addWhereClause("dayId=?");
-                selectDay = connection.prepareCall(builder.build());
+                selectDay = connection.prepareStatement(builder.build());
             }
             selectDay.setInt(1, day.id);
             ResultSet set = selectDay.executeQuery();

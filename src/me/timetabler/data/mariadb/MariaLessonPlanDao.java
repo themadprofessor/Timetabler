@@ -359,9 +359,9 @@ public class MariaLessonPlanDao implements LessonPlanDao {
                                 "classroom.roomName", "building.id", "building.buildingName", "period.id", "dayOfWeek.id",
                                 "dayOfWeek.dayOfWeek", "period.startTime", "period.endTime", "subjectSet.id",
                                 "learningSet.id", "learningSet.setName", "schoolYear.id", "schoolYear.schoolYearName", "subjectSet.subjectId")
-                        .addJoinClause(new JoinClause(JoinType.INNER, "staff", "lessonPlan.staffId=staff.id"))
-                        .addJoinClause(new JoinClause(JoinType.INNER, "classroom", "lessonPlan.classroomId=classroom.id"))
-                        .addJoinClause(new JoinClause(JoinType.INNER, "building", "classroom.buildingId=building.id"))
+                        .addJoinClause(new JoinClause(JoinType.LEFT, "staff", "lessonPlan.staffId=staff.id"))
+                        .addJoinClause(new JoinClause(JoinType.LEFT, "classroom", "lessonPlan.classroomId=classroom.id"))
+                        .addJoinClause(new JoinClause(JoinType.LEFT, "building", "classroom.buildingId=building.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "period", "lessonPlan.periodId=period.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "dayOfWeek", "period.dayId=dayOfWeek.id"))
                         .addJoinClause(new JoinClause(JoinType.INNER, "subjectSet", "lessonPlan.subjectSetId=subjectSet.id"))
@@ -389,8 +389,11 @@ public class MariaLessonPlanDao implements LessonPlanDao {
                     classroom = new Classroom(classroomId, set.getString(6),
                             new Building(set.getInt(7), set.getString(8)), subject);
                 } else {
+                    Building building = new Building();
+                    building.id = -1;
                     classroom = new Classroom();
                     classroom.id = -1;
+                    classroom.building = building;
                 }
 
                 Period period = new Period(set.getInt(9),
@@ -490,11 +493,21 @@ public class MariaLessonPlanDao implements LessonPlanDao {
                 update = connection.prepareStatement(builder.build());
             }
 
-            insert.setInt(1, lessonPlan.staff.id);
-            insert.setInt(2, lessonPlan.classroom.id);
-            insert.setInt(3, lessonPlan.period.id);
-            insert.setInt(4, lessonPlan.subjectSet.id);
-            insert.setInt(5, lessonPlan.id);
+            if (lessonPlan.staff.id == -1) {
+                update.setNull(1, Types.INTEGER);
+            } else {
+                update.setInt(1, lessonPlan.staff.id);
+            }
+
+            if (lessonPlan.classroom.id == -1) {
+                update.setNull(2, Types.INTEGER);
+            } else {
+                update.setInt(2, lessonPlan.classroom.id);
+            }
+
+            update.setInt(3, lessonPlan.period.id);
+            update.setInt(4, lessonPlan.subjectSet.id);
+            update.setInt(5, lessonPlan.id);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);
@@ -526,6 +539,7 @@ public class MariaLessonPlanDao implements LessonPlanDao {
                         .addWhereClause("id=?");
                 delete = connection.prepareStatement(builder.build());
             }
+            delete.setInt(1, lessonPlan.id);
         } catch (SQLException e) {
             Log.debug("Caught [" + e + "] so throwing a DataAccessException!");
             throw new DataAccessException(e);
